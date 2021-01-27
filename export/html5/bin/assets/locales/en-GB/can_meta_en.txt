@@ -1,0 +1,9 @@
+flag	UI1	UI2	UI3
+$defaultBtn	No	Next	Yes
+$flow.nointernet.vti.CheckContractorVTI	Paste (CTRL+V) the VoIP N°	(41123456789 format)	
+$helpBtn	SHIFT+Q (more in		
+$voipCopyPaste	Ctrl+C to copy		
+$needUpdate	A new version is available. Close this dialog box and refresh your browser (F5).		
+$describeIssue	Describe the customer's issue:		
+$cycleTime	Estimated time for treatment: <X> day(s)		
+$summary	Summary		

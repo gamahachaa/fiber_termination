@@ -1,0 +1,18 @@
+package;
+
+import tstool.process.Triplet;
+
+/**
+ * ...
+ * @author bb
+ */
+class WhichTicket extends Triplet 
+{
+
+	public function new() 
+	{
+		super();
+		
+	}
+	
+}

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	
+	<!--Add list of files you're including in your localization here
+	    The engine will NOT load any files that are not listed.	
+	-->
+	
+	<!-- <file id="data" value="data.tsv"/> -->
+	<!-- <file id="data" value="more_data.tsv"/> -->
+	<!-- <file id="data" value="flow.txt"/> -->
+    
+    <file id="data" value="can_bo_fr.txt"/>
+	<file id="data" value="can_bo_it.txt"/>
+	<file id="data" value="can_bo_de.txt"/>
+	<file id="data" value="can_bo_en.txt"/> 
+
+    <file id="data" value="can_front_fr.txt"/>
+	<file id="data" value="can_front_it.txt"/>
+	<file id="data" value="can_front_de.txt"/>
+	<file id="data" value="can_front_en.txt"/>
+	
+	
+    <file id="data" value="can_all_fr.txt"/>
+	<file id="data" value="can_all_it.txt"/>
+	<file id="data" value="can_all_de.txt"/>
+	<file id="data" value="can_all_en.txt"/> 
+    
+    <file id="meta" value="meta_fr.txt"/>
+	<file id="meta" value="meta_it.txt"/>
+	<file id="meta" value="meta_de.txt"/>
+	<file id="meta" value="meta_en.txt"/>
+	
+    <file id="validators" value="validator_fr.txt"/>
+    <file id="validators" value="validator_de.txt"/>
+    <file id="validators" value="validator_en.txt"/>
+    <file id="validators" value="validator_it.txt"/>
+    
+    <file id="fonts" value="fonts.xml"/>
+	
+	
+	<!--Add locale entries here.
+	
+	The locale id is the ISO 639-1 country language code with 2-letter country suffix:
+	http://en.wikipedia.org/wiki/ISO_639-1
+	
+	1) Add the locale entry
+	2) Add a corresponding folder with localization content matching the id
+	3) Add a corresponding flag image in the _flags folder matching the id
+	4) Add any labels you want to display the language text in the menu
+	
+	-->
+	<!--Swiss French-->
+	<locale id="fr-FR" is_default="true" sort="0">	
+		<contributors value="Bruno Baudry, Knowledge management"/>
+		<ui language="Language" region="Region" accept="Okay" />
+		<label id="fr-FR" language="Français" region="Suisse FR"/>
+	</locale>
+	<!--Swiss german-->
+	<locale id="de-DE" is_default="false" sort="0">	
+		<contributors value="Bruno Baudry, Knowledge management"/>
+		<ui language="Language" region="Region" accept="Okay" />
+		<label id="de-DE" language="Deutsch" region="Suisse DE"/>
+	</locale>
+    	<locale id="en-GB" is_default="false" sort="0">	
+		<contributors value="Bruno Baudry, Knowledge management"/>
+		<ui language="Language" region="Region" accept="Okay" />
+		<label id="en-GB" language="English" region="Suisse EN"/>
+	</locale>
+    	<locale id="it-IT" is_default="false" sort="0">	
+		<contributors value="Bruno Baudry, Knowledge management"/>
+		<ui language="Language" region="Region" accept="Okay" />
+		<label id="it-IT" language="Italiano" region="Suisse IT"/>
+	</locale>
+
+	
+</data>
