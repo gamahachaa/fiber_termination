@@ -1,5 +1,6 @@
 package front.move;
 
+import tickets._CreateTwoOneThree;
 import tstool.process.Descision;
 
 /**
@@ -9,10 +10,15 @@ import tstool.process.Descision;
 class CheckOTOInAloAlex extends Descision 
 {
 
-	public function new() 
+	override public function onYesClick():Void
 	{
-		super();
-		
+		this._nexts = [{step: _ProceedWithMoveAndApplyCharges, params: []}];
+		super.onYesClick();
+	}
+	override public function onNoClick():Void
+	{
+		this._nexts = [{step: _CreateTwoOneThree, params: []}];
+		super.onNoClick();
 	}
 	
 }

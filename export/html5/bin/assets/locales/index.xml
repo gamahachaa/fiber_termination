@@ -9,32 +9,21 @@
 	<!-- <file id="data" value="more_data.tsv"/> -->
 	<!-- <file id="data" value="flow.txt"/> -->
     
-    <file id="data" value="bo_fr.txt"/>
-	<file id="data" value="bo_it.txt"/>
-	<file id="data" value="bo_de.txt"/>
-	<file id="data" value="bo_en.txt"/> 
+    <file id="data" value="can_all_flow_fr.txt"/>
+    <file id="data" value="can_fees_fr.txt"/>
+    <file id="data" value="can_front_capture_fr.txt"/>
+    <file id="data" value="can_front_move_fr.txt"/>
+    <file id="data" value="can_tickets_fr.txt"/>
+    <file id="data" value="can_wb_fr.txt"/>
 
-    <file id="data" value="front_fr.txt"/>
-	<file id="data" value="front_it.txt"/>
-	<file id="data" value="front_de.txt"/>
-	<file id="data" value="front_en.txt"/>
-	
-	
-    <file id="data" value="all_fr.txt"/>
-	<file id="data" value="all_it.txt"/>
-	<file id="data" value="all_de.txt"/>
-	<file id="data" value="all_en.txt"/> 
     
     <file id="meta" value="meta_fr.txt"/>
-	<file id="meta" value="meta_it.txt"/>
-	<file id="meta" value="meta_de.txt"/>
-	<file id="meta" value="meta_en.txt"/>
-	
-    <file id="validators" value="validator_fr.txt"/>
-    <file id="validators" value="validator_de.txt"/>
-    <file id="validators" value="validator_en.txt"/>
-    <file id="validators" value="validator_it.txt"/>
-    
+    <!--<file id="meta" value="meta_de.txt"/>-->
+    <!--<file id="meta" value="meta_it.txt"/>-->
+    <!--<file id="meta" value="meta_en.txt"/>-->
+	<file id="values" value="ui_values_fr.txt"/>
+
+
     <file id="fonts" value="fonts.xml"/>
 	
 	

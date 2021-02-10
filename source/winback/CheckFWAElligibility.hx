@@ -1,18 +1,32 @@
 package winback;
 
-import tstool.process.Descision;
+
+import fees._InputDates;
+import tstool.process.Triplet;
 
 /**
  * ...
  * @author bb
  */
-class CheckFWAElligibility extends Descision 
+class CheckFWAElligibility extends Triplet 
 {
-
-	public function new() 
+	override public function onYesClick():Void
 	{
-		super();
-		
+		// elligible and accepts
+		this._nexts = [{step: _WaveETFandOrderFWA, params: []}];
+		super.onYesClick();
 	}
 	
+	
+	override public function onNoClick():Void
+	{
+		this._nexts = [{step: _InputDates, params: []}];
+		super.onNoClick();
+	}
+	
+	override public function onMidClick():Void
+	{
+		this._nexts = [{step: _InputDates, params: []}];
+		super.onMidClick();
+	}
 }

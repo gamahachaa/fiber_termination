@@ -1,5 +1,6 @@
 package front.capture;
 
+import tickets._CreateTwoOneSix;
 import tstool.process.Action;
 
 /**
@@ -9,9 +10,10 @@ import tstool.process.Action;
 class _DeathWording extends Action 
 {
 
-	public function new() 
+	override public function onClick():Void
 	{
-		
+		this._nexts = [{step: _CreateTwoOneSix, params: []}];
+		super.onClick();
 	}
 	
 }

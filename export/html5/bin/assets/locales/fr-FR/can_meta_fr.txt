@@ -1,9 +1,0 @@
-flag	UI1	UI2	UI3
-$defaultBtn	Non	Avancer	Oui
-$flow.nointernet.vti.CheckContractorVTI	Coller (CTRL+V) le N° VoIP	(Format 41123456789)	
-$helpBtn	SHIFT+Q (détails dans 		
-$voipCopyPaste	Ctrl+C pour le copier		
-$needUpdate	Une nouvelle version est disponible. Quand tu fermera cette boîte de dialogue la page se rafraîchira pour la charger.		
-$describeIssue	Décris le souci du client :		
-$cycleTime	Temps de traitement estimé : <X> jours(s)		
-$summary	Résumé		

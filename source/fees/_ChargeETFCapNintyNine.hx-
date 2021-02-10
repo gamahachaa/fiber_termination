@@ -1,0 +1,42 @@
+package fees;
+
+import Intro;
+import tickets._CreateTwoOneTwo;
+import tstool.process.Action;
+import tstool.process.Process;
+
+/**
+ * ...
+ * @author bb
+ */
+class _ChargeETFCapNintyNine extends Action 
+{
+
+	override public function onClick():Void
+	{
+		this._nexts = [{step: getNext(), params: []}];
+		super.onClick();
+	}
+	inline function getNext():Class<Process>
+	{
+		var terminationDateArray = Main.HISTORY.findValueOfFirstClassInHistory( _InputDates, _InputDates.TERM_DATE ).value.split(".");
+		
+		var terminationDate:Date = new Date( Std.parseInt(terminationDateArray[2]) , Std.parseInt(terminationDateArray[1]), Std.parseInt(terminationDateArray[0]),0,0,0);
+		var whyLeave = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
+		//
+		var isStandard = !(whyLeave == Intro.MOVE_CANNOT_KEEP || whyLeave == Intro.MOVE_CAN_KEEP || whyLeave ==Intro.MOVE_LEAVE_CH);
+		//
+		var noticePeriod = isStandard? _InputDates.ONE_MONTH*2 : _InputDates.ONE_MONTH;
+		return if (noticePeriod < terminationDate.getTime() - Date.now().getTime() )
+		{
+			/**
+			 * notice not respected
+			 */
+			_AddNoticeNotRespectedFees;
+		}
+		else
+		{
+			_CreateTwoOneTwo;
+		}
+	}
+}

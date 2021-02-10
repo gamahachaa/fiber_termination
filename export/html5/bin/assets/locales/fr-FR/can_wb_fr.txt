@@ -1,0 +1,4 @@
+FLAG	DETAILS	TITLE	ILLUSTRATION	RIGHT-BTN	LEFT-BTN	MID-BTN	QOOK
+$winback.RetainWithSalesSpeech	Analyser le problème technique et le résoudre.<N>(Here everything needed for winback pitch)	Je vais tout faire pour que vous restiez avec nous !  		Reste finalement	Quitte, veut rien savoir...		
+$winback._WaveETFandOrderFWA		Je vais faire annuler tous les frais de résiliation anticipée<N>Et je procpde à la commande		Reste	Quitte Salt		
+$winback.CheckFWAElligibility		Je regarde si votre nouvelle adresse est elligile pour une GigaBox		Elligible et OK	Elligible mais pas OK	Pas elligible	

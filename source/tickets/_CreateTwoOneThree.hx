@@ -14,7 +14,7 @@ class _CreateTwoOneThree extends ActionMail
 
 	public function new() 
 		{
-			super(SOTickets.FIX_2113);
+			super(SOTickets.FIX_213);
 		}
 		override public function create():Void
 		{

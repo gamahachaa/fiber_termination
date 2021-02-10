@@ -1,6 +1,0 @@
-FLAG	DETAILS	TITLE	ILLUSTRATION	RIGHT-BTN	LEFT-BTN	MID-BTN	QOOK
-$test							
-$flow._AddMemoVti		Ajouter une note dans VTI	vti/addnotefr			
-$flow.Intro		Traitement de ticket ou demande client ?		Ticket	Demande client		
-$flow.End	Ajouter memo dans VTI	Fin		Terminer			
-$flow.Tuto							

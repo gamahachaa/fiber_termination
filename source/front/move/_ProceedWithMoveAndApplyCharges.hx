@@ -1,5 +1,7 @@
 package front.move;
 
+import flow.End;
+import flow._AddMemoVti;
 import tstool.process.Action;
 
 /**
@@ -9,9 +11,10 @@ import tstool.process.Action;
 class _ProceedWithMoveAndApplyCharges extends Action 
 {
 
-	public function new() 
+	override public function onClick():Void
 	{
-		
+		this._nexts = [{step: _AddMemoVti, params: []}];
+		super.onClick();
 	}
 	
 }

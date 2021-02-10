@@ -1,0 +1,6 @@
+FLAG	DETAILS	TITLE	ILLUSTRATION	RIGHT-BTN	LEFT-BTN	MID-BTN	QOOK
+$front.capture._ChangeWishDate		Je modifie la date d'activation<N>Et je vous propose geste commercial pour couvrir la facturation de service à double! 		Décalable	Trop tard		https://qoof.salt.ch/customer-process/pay-trouble/request_for_compensation/2_months_goodwill_2_services|https://qoof.salt.ch/knowledge/admin/order/handle_wish_date_changement_requests
+$front.capture._CompareWishAndTermDates		Je regarde si nous pouvons décaler la date d'activation		Décalable	Trop tard		https://qoof.salt.ch/knowledge/admin/order/handle_wish_date_changement_requests
+$front.capture._DeathWording		Permettez moi de vous présenter toutes nos sincères condoléences.<N>Je vais procéder à férmeture de la ligne.<N>Aucun frais ne vous sera demandé.<N>Vous ne recevrez plus de factures.					https://qoof.salt.ch/knowledge/admin/contract/handle_fiber_customer_death
+$front.capture._TransferToWB		Je dois transférer votre appel à notre départment des résilliations					
+$front.capture.CheckContractorVTI		Je regarde votre contrat dans notre CRM				Go	

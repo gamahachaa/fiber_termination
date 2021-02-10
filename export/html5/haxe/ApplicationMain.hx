@@ -32,7 +32,7 @@ class ApplicationMain
 
 		ManifestResources.init(config);
 
-		app.meta["build"] = "48";
+		app.meta["build"] = "7";
 		app.meta["company"] = "";
 		app.meta["file"] = "cantool";
 		app.meta["name"] = "CanTool";
@@ -187,7 +187,7 @@ class ApplicationMain
 					{
 						var current = stage.getChildAt (0);
 
-						if (current == null || !Std.is(current, openfl.display.DisplayObjectContainer))
+						if (current == null || !(current is openfl.display.DisplayObjectContainer))
 						{
 							current = new openfl.display.MovieClip();
 							stage.addChild(current);

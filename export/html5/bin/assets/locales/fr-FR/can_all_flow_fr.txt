@@ -1,0 +1,5 @@
+FLAG	DETAILS	TITLE	ILLUSTRATION	RIGHT-BTN	LEFT-BTN	MID-BTN	QOOK
+$flow._AddMemoVti		Ajouter une note dans VTI	vti/addnotefr			
+$flow.End	Ajouter memo dans VTI	Fin		Terminer			
+$Intro	NO_MORE = à cause de problèmes techniques	Vous souhaitez résiller ou déménager votre contrat Home.<N>Puis-je en connaître la raison ? 					
+$Tuto			ui/tutoKeyboardFR				

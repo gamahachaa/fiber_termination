@@ -2,7 +2,12 @@ package;
 
 
 import front.capture.CheckContractorVTI;
+import haxe.Json;
+import haxe.ds.StringMap;
+import layout.LoginCan;
+import tstool.process.ActionRadios;
 import tstool.process.Descision;
+//import tstool.process.DescisionRadios;
 import tstool.process.Process;
 //import front.capture._CompareWishAndTermDates;
 //import front.capture._DeathWording;
@@ -10,7 +15,7 @@ import tstool.process.Process;
 //import front.fees._InputDates;
 import js.Browser;
 import tstool.MainApp;
-import tstool.process.ActionRadios;
+//import tstool.process.ActionRadios;
 //import tstool.process.Process;
 //import tstool.process.Triplet;
 
@@ -18,7 +23,7 @@ import tstool.process.ActionRadios;
  * ...
  * @author bb
  */
-class Intro extends Descision 
+class Intro extends ActionRadios
 {
 	/**
 	 * @todo implement update radio to fetch Tongue 
@@ -31,11 +36,12 @@ class Intro extends Descision
 	static public var MOVE_CANNOT_KEEP = Main.tongue.get("$flow.Intro_v5", "values");
 	*/
 	static public var WHY_LEAVE:String = "WHY_LEAVE";
-	static public var NO_MORE = "NO_MORE";
+	static public var NO_MORE = "TECH ISSUES";
 	static public var DEATH = "DEATH";
-	static public var PLUG_IN_USE = "OTO PLUG IS IN USE";
+	static public var PLUG_IN_USE = "WANTS TO STAY WITH CURRENT PROVIDER";
 	static public var MOVE_CAN_KEEP = "MOVE HOUSE KEEP FIBER";
 	static public var MOVE_CANNOT_KEEP = "MOVE CAN'T KEEP";
+	static public var NOT_ELLIGIBLE = "NOT ELLIGIBLE AT NEW ADRESS";
 	static public var MOVE_LEAVE_CH = "BYE BYE SWITZERLAND";
 	public function new() 
 	{
@@ -43,12 +49,17 @@ class Intro extends Descision
 		[
 			{
 				title: WHY_LEAVE,
-				values: [
+				values: MainApp.agent.isMember(LoginCan.WINBACK_GROUP_NAME) ?
+				[
+					NO_MORE,
+					NOT_ELLIGIBLE
+				] :[
 					NO_MORE,
 					DEATH,
 					PLUG_IN_USE,
 					MOVE_CAN_KEEP,
-					MOVE_CANNOT_KEEP
+					MOVE_CANNOT_KEEP,
+					MOVE_LEAVE_CH
 				]
 			}
 		]
@@ -57,26 +68,17 @@ class Intro extends Descision
 	}
 	override public function onClick():Void
 	{
-		this._nexts = [{step: CheckContractorVTI}];
-		super.onClick();
+		if(validate()){
+			this._nexts = [{step: CheckContractorVTI}];
+			super.onClick();
+		}
 	}
-	//inline function getNext():Class<Process>
-	//{
-		//return switch (status.get(WHY_LEAVE))
-		//{
-			//case NO_MORE : _TransferToWB;
-			//case DEATH : _DeathWording;
-			//case PLUG_IN_USE : _CompareWishAndTermDates;
-			//case MOVE_CAN_KEEP : IsAdressElligible;
-			//case MOVE_CANNOT_KEEP : _InputDates;
-			//default :;
-		//}
-	//}
 	override public function create():Void
 	{
 		
 		Process.INIT();
 		super.create();
+		
 		//#if !debug
 		Main.VERSION_TRACKER.scriptChangedSignal.add(onNewVersion);
 		Main.VERSION_TRACKER.request();

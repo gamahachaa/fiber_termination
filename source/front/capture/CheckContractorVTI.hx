@@ -3,14 +3,17 @@ package front.capture;
 //import flixel.FlxG;
 
 import flow.End;
-import flow.Intro;
-import front.capture.IsAdressElligible;
+import Intro;
+import front.move.IsAdressElligible;
 import front.capture._CompareWishAndTermDates;
 import front.capture._DeathWording;
 import front.capture._TransferToWB;
-import front.fees._InputDates;
+import fees._InputDates;
+import layout.LoginCan;
 import lime.utils.Assets;
+import tstool.MainApp;
 import tstool.layout.UI;
+import tstool.process.ActionMultipleInput;
 import tstool.process.Process;
 import tstool.salt.Balance;
 import tstool.salt.Contractor;
@@ -18,13 +21,15 @@ import tstool.salt.Role;
 import tstool.utils.VTIdataParser;
 import tstool.process.DescisionMultipleInput;
 import Main;
+import winback.CheckFWAElligibility;
+import winback.RetainWithSalesSpeech;
 //import tstool.utils.XapiTracker;
 
 /**
  * ...
  * @author
  */
-class CheckContractorVTI extends DescisionMultipleInput
+class CheckContractorVTI extends ActionMultipleInput
 {
 	var parser:tstool.utils.VTIdataParser;
 	var sagem:String;
@@ -73,8 +78,8 @@ class CheckContractorVTI extends DescisionMultipleInput
 			]
 		);
 		sagem = Assets.getText("assets/data/sagem_fut.txt");
-		status = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
-		this.yesValidatedSignal.add(canITrack);
+		
+		this.nextValidatedSignal.add(canITrack);
 	}
 	function setReminder()
 	{
@@ -142,34 +147,51 @@ class CheckContractorVTI extends DescisionMultipleInput
 	override public function create():Void
 	{
 		Main.customer.reset();
+		status = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
 		prepareXAPIMainActivity();
-			
+		
 		super.create();
 		parser = new VTIdataParser(account);
 		parser.signal.add( onVtiAccountParsed );
 	}
 	
-	override public function onYesClick():Void
+	override public function onClick():Void
 	{
 		//var contractorID = vtiContractorUI.getInputedText();
-		if (validateYes())
+		if (validate())
 		{
-			this._nexts = [{step: getNext(true)}];
+			this._nexts = [{step: getNext()}];
 			setUpData();
-			super.onYesClick();
+			super.onClick();
 		}
 		
 	}
-	override public function onNoClick():Void
+	
+	//override public function onNoClick():Void
+	//{
+		//if (validateNo())
+		//{
+			//this._nexts = [{step: getNext(false), params: []}];
+			//setUpData();
+			//super.onNoClick();
+		//}
+		//
+	//}
+	inline function getNext():Class<Process>
 	{
-		if (validateNo())
+		return if (!MainApp.agent.isMember(LoginCan.WINBACK_GROUP_NAME))
 		{
-			this._nexts = [{step: getNext(false), params: []}];
-			setUpData();
-			super.onNoClick();
+			if (status == Intro.DEATH){_DeathWording; }
+			else if (status == Intro.PLUG_IN_USE){_CompareWishAndTermDates;}
+			else if (status == Intro.MOVE_CAN_KEEP){IsAdressElligible;}
+			else if (status == Intro.MOVE_LEAVE_CH){_InputDates;}
+			else { _TransferToWB; };
+		}
+		else{
+			status == Intro.NOT_ELLIGIBLE ? CheckFWAElligibility : RetainWithSalesSpeech;
 		}
 		
-	}
+	}	
 	function setUpData()
 	{
 		this.parser.destroy();
@@ -183,13 +205,7 @@ class CheckContractorVTI extends DescisionMultipleInput
 		Main.customer.dataSet.set(CUST_DATA_PRODUCT, [CUST_DATA_PRODUCT_BOX => (isSagem(Main.customer.contract.contractorID)?SAGEM:ARCADYAN)]);
 		setReminder();
 	}
-	inline function getNext(notWinBack:Bool=true):Class<Process>
-	{
-		return if (status == Intro.DEATH){_DeathWording; }
-		else if (status == Intro.PLUG_IN_USE){_CompareWishAndTermDates;}
-		else if (status == Intro.MOVE_CAN_KEEP){IsAdressElligible;}
-		else {notWinBack ? _TransferToWB: _InputDates; };
-	}
+
 	//override function validateNo()
 	//{
 		//return true;

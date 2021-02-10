@@ -1,0 +1,5 @@
+FLAG	TITLE	v1	v2	v3	v4	v5	v6	v7	v8
+$$front.fees._InputDates1	Date de la commande							
+$$front.fees._InputDates2	Date de l'activation							
+$$front.fees._InputDates3	Date de fin souhaitée							
+$flow.Intro	Raison	Ne veut plus Salt	Décès	Encore sous contrat	Déménagement peut garder Salt	Déménagement NE peut PAS garder Salt			

@@ -1,0 +1,18 @@
+package fees;
+
+import fees._RefundActivationFees;
+import tstool.process.Action;
+
+/**
+ * ...
+ * @author bb
+ */
+class _EtfWillBeWaived extends Action 
+{
+	override public function onClick():Void
+	{
+		this._nexts = [{step: _RefundActivationFees, params: []}];
+		super.onClick();
+	}
+	
+}

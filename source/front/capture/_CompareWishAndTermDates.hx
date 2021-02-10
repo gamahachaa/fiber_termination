@@ -1,18 +1,23 @@
 package front.capture;
 
-import tstool.process.ActionMultipleInput;
+import fees._InputDates;
+import tstool.process.Descision;
 
 /**
  * ...
  * @author bb
  */
-class _CompareWishAndTermDates extends ActionMultipleInput 
+class _CompareWishAndTermDates extends Descision 
 {
 
-	public function new(inputs:Array<ValidatedInputs>) 
+	override public function onYesClick():Void
 	{
-		super(inputs);
-		
+		this._nexts = [{step: _ChangeWishDate, params: []}];
+		super.onYesClick();
 	}
-	
+	override public function onNoClick():Void
+	{
+		this._nexts = [{step: _InputDates, params: []}];
+		super.onNoClick();
+	}	
 }
