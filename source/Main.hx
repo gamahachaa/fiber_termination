@@ -1,5 +1,6 @@
 package;
 
+import fees.TestSendTemplate;
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxState;
@@ -102,7 +103,7 @@ class Main extends MainApp
 			/**
 			 * USe this  to debug a slide
 			 */
-			next = new Intro();
+			next = new TestSendTemplate();
 		#else
 			next = new Main.START_STEP();
 		#end

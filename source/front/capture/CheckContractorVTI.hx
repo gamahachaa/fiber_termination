@@ -1,6 +1,6 @@
 package front.capture;
 
-//import flixel.FlxG;
+using tstool.utils.StringUtils;
 
 import flow.End;
 import Intro;
@@ -18,6 +18,7 @@ import tstool.process.Process;
 import tstool.salt.Balance;
 import tstool.salt.Contractor;
 import tstool.salt.Role;
+import tstool.utils.ExpReg;
 import tstool.utils.VTIdataParser;
 import tstool.process.DescisionMultipleInput;
 import Main;
@@ -47,7 +48,7 @@ class CheckContractorVTI extends ActionMultipleInput
 		super(
 			[
 				{
-					ereg:new EReg("^3\\d{7}$","i"),
+					ereg:new EReg(ExpReg.CONTRACTOR_EREG,"i"),
 					input:{
 						width:150,
 						debug: "30001047",
@@ -56,7 +57,7 @@ class CheckContractorVTI extends ActionMultipleInput
 					}
 				},
 				{
-					ereg: new EReg("^41\\d{9}$","i"),
+					ereg: new EReg(ExpReg.MISIDN_INTL,"i"),
 					input:{
 						buddy: CONTRACTOR_ID,
 						width:150,
@@ -66,7 +67,7 @@ class CheckContractorVTI extends ActionMultipleInput
 					}
 				},
 				{
-					ereg: new EReg("^41\\d{9}$","i"),
+					ereg: new EReg(ExpReg.MISIDN_INTL,"i"),
 					input:{
 						buddy: CONTRACTOR_ID,
 						width:150,
@@ -132,9 +133,9 @@ class CheckContractorVTI extends ActionMultipleInput
 		question.applyMarkup(question.text, [UI.THEME.basicEmphasis]);
 		question.drawFrame();
 		positionThis();
-		multipleInputs.inputs.get(CONTRACTOR_ID).inputtextfield.text = Main.customer.contract.contractorID;
-		multipleInputs.inputs.get(VOIP_NUM).inputtextfield.text = Main.customer.contract.voip;
-		multipleInputs.inputs.get(CONTACT_NUM).inputtextfield.text = Main.customer.contract.mobile;
+		multipleInputs.setInputDefault(CONTRACTOR_ID , Main.customer.contract.contractorID);
+		multipleInputs.setInputDefault(VOIP_NUM,Main.customer.contract.voip);
+		multipleInputs.setInputDefault(CONTACT_NUM,Main.customer.contract.mobile);
 		var p = multipleInputs.positionThis();
 		positionButtons(p);
 		positionBottom(p);
@@ -196,11 +197,12 @@ class CheckContractorVTI extends ActionMultipleInput
 	{
 		this.parser.destroy();
 
-		Main.customer.contract.contractorID = multipleInputs.inputs.get(CONTRACTOR_ID).getInputedText();
-		Main.customer.contract.fix =  multipleInputs.inputs.get(VOIP_NUM).getInputedText();		
-		Main.customer.contract.voip = "0" + Main.customer.contract.fix.substr(2);
+		Main.customer.contract.contractorID = multipleInputs.getText(CONTRACTOR_ID);
+		Main.customer.contract.fix =  multipleInputs.getText(VOIP_NUM);		
+		//Main.customer.contract.voip = "0" + Main.customer.contract.fix.substr(2);
+		Main.customer.contract.voip = Main.customer.contract.fix.intlToLocalMSISDN();
 		Main.customer.iri = isSagem(Main.customer.contract.contractorID) ? Main.customer.contract.contractorID : Main.customer.contract.voip;
-		Main.customer.contract.mobile = multipleInputs.inputs.get(CONTACT_NUM).getInputedText();
+		Main.customer.contract.mobile = multipleInputs.getText(CONTACT_NUM);
 		
 		Main.customer.dataSet.set(CUST_DATA_PRODUCT, [CUST_DATA_PRODUCT_BOX => (isSagem(Main.customer.contract.contractorID)?SAGEM:ARCADYAN)]);
 		setReminder();

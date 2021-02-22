@@ -5,6 +5,7 @@ import front.capture.CheckContractorVTI;
 import haxe.Json;
 import haxe.ds.StringMap;
 import layout.LoginCan;
+import lime.system.Clipboard;
 import tstool.process.ActionRadios;
 import tstool.process.Descision;
 //import tstool.process.DescisionRadios;
@@ -68,6 +69,7 @@ class Intro extends ActionRadios
 	}
 	override public function onClick():Void
 	{
+		
 		if(validate()){
 			this._nexts = [{step: CheckContractorVTI}];
 			super.onClick();

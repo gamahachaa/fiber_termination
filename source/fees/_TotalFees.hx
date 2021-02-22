@@ -40,8 +40,10 @@ class _TotalFees extends Action
 	var isActivated:Bool;
 	var isTelesales:Bool;
 	var noticePeriodMinimalDate:Date;
+	var valuesToStore:Map<String, Dynamic>;
 	override public function create():Void
 	{
+		valuesToStore = [];
 		whyLeave = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
 		#if debug
 		trace("create::whyLeave", whyLeave );
@@ -88,13 +90,13 @@ class _TotalFees extends Action
 		buildDetailReport();
 		super.create();
 		this.details.text = _detailTxt;
-		this.question.text = _titleTxt;
+		//this.question.text = _titleTxt;
 	}
 	
 	function buildDetailReport()
 	{
 		var jsonDetails = Json.parse(_detailTxt);
-		var jsonTitle = Json.parse(_titleTxt);
+		//var jsonTitle = Json.parse(_titleTxt);
 		
 		var moveKeep_txt = jsonDetails.moveKeep;
 		var standard_txt = jsonDetails.standard;
@@ -109,30 +111,31 @@ class _TotalFees extends Action
 		var boxSent_txt = jsonDetails.boxSent;
 		var lineActivated_txt = jsonDetails.lineActivated;
 		//var refundActivation_txt = jsonDetails.refundActivation;
-		var main_txt = jsonTitle.main;
-		var totalFees_txt = jsonTitle.totalFees;
-		var refundActivation_txt = jsonTitle.refundActivation;
+		//var main_txt = jsonTitle.main;
+		var totalFees_txt = jsonDetails.totalFees;
+		var refundActivation_txt = jsonDetails.refundActivation;
 		
 		var finalDetailTxt = "";
-		var finalTitleTxt = main_txt + "\n" + Replace.flags(totalFees_txt, ["<TOTAL_FEES>"], [Std.string(totalFees)]);
+		//var finalTitleTxt = main_txt + "\n" + Replace.flags(totalFees_txt, ["<TOTAL_FEES>"], [Std.string(totalFees)]);
 		
 		if (moveAdminFees == 0)
 		{
 			
 			if (waiveETF)
 			{
+				valuesToStore.set("Refund Activation Fees", refundActivationFees);
+				valuesToStore.set("Waive ETF", true);
 				if (isTelesales){
+					valuesToStore.set("Telessales or Door 2 door", true);
 					finalDetailTxt += gracePeriod_txt + "\n";
 					finalDetailTxt += waiveETF_txt+ "\n";
 					finalDetailTxt += refundActivationFees? refundActivation_txt:"";
-					
-					finalTitleTxt += refundActivationFees? "\n" + refundActivation_txt:"";	
 				}
 				else if (cancelationFees > 0){
 					finalDetailTxt += waiveETF_txt+ "\n";
 					finalDetailTxt += Replace.flags(cancellationFees_txt, ["<CANCELATION_FEES>"], [Std.string(cancelationFees)]);
-				finalDetailTxt += refundActivationFees? "\n" + refundActivation_txt:"";
-				finalTitleTxt += refundActivationFees? "\n" + refundActivation_txt:"";
+					finalDetailTxt += refundActivationFees? "\n" + refundActivation_txt:"";
+
 				}
 				else{
 					#if debug
@@ -155,8 +158,13 @@ class _TotalFees extends Action
 					
 					finalDetailTxt += Replace.flags(standard_txt, ["<DATE_ACTIVATION>", "<DATE_TERMINATION>"], ['${activationDate.getDate()}.${activationDate.getMonth()+1}.${activationDate.getFullYear()}', '${termDate.getDate()}.${termDate.getMonth()+1}.${termDate.getFullYear()}']);
 					finalDetailTxt += "\n" + Replace.flags(fullETF_txt, ["<FULL_ETF>", "<MONTH_LEFT>"], [Std.string(finalETF), Std.string(deltaDatesMonth)]);
+					valuesToStore.set("Termination is standard", true);
+					valuesToStore.set("ETF", finalETF);
+					
 				}
 				else{
+					valuesToStore.set("Termination is standard", false);
+					valuesToStore.set("ETF", finalETF);
 					finalDetailTxt += Replace.flags(nonStandard_txt, ["<DATE_ACTIVATION>", "<DATE_TERMINATION>"], ['${activationDate.getDate()}.${activationDate.getMonth()+1}.${activationDate.getFullYear()}', '${termDate.getDate()}.${termDate.getMonth()+1}.${termDate.getFullYear()}']);
 					finalDetailTxt += "\n" + Replace.flags(capETF_txt, ["<FINAL_ETF>", "<FULL_ETF>"], [Std.string(finalETF), Std.string(fullETF)]);
 				}
@@ -164,18 +172,25 @@ class _TotalFees extends Action
 				{
 					var notice = Std.string(noticePeriodMinimalDate.getDate()) +"." + Std.string(noticePeriodMinimalDate.getMonth() + 1) + "." + Std.string(noticePeriodMinimalDate.getFullYear());
 					finalDetailTxt += "\n" + Replace.flags(noticeNotRepected_txt, ["<NOTICE_DAYS>", "<NOTICE_DATE>", "<NOTICE_FEES>"], ['$noticePeriodInDays', notice, '$noticePeriodFees']);
+					valuesToStore.set("Minimum notice date", notice);
+					valuesToStore.set("Notice period", noticePeriodInDays);
+					valuesToStore.set("Notice non respected fees", noticePeriodFees);
 				}
 			}
 			
 		}else{
 			finalDetailTxt = Replace.flags(moveKeep_txt, ["<FEES>"], [Std.string(moveAdminFees)]);
+			valuesToStore.set("Move administration fees", moveAdminFees);
 		}
+		valuesToStore.set("TOTAL TO PAY", totalFees);
+		
 		_detailTxt = finalDetailTxt;
-		_titleTxt = finalTitleTxt;
+		//_titleTxt = finalTitleTxt;
 	}
 	override public function onClick():Void
 	{
-		this._nexts = [{step: notElligibleAtAdress ? _CreateTwoOneTwo: _AskForOTO , params: []}];
+		//this._nexts = [{step: Main.HISTORY.isClassInteractionInHistory(IsAdressElligible, Yes)? TestSendTemplate: _CreateTwoOneTwo , params: []}];
+		this._nexts = [{step: Main.HISTORY.isClassInteractionInHistory(IsAdressElligible, Yes)? _AskForOTO: _CreateTwoOneTwo , params: []}];
 		super.onClick();
 	}
 	function parseDates( values:Map<String,Dynamic> )
@@ -237,16 +252,18 @@ class _TotalFees extends Action
 	
 	override public function pushToHistory(buttonTxt:String, interactionType:Interactions,?values:Map<String,Dynamic>=null):Void
 	{
-		super.pushToHistory(buttonTxt, interactionType, [
-			"refundActivationFees" => refundActivationFees,
-			"isTerminationStandard" => isTerminationStandard,
-			"cancelationFees" => cancelationFees,
-			"noticePeriodInDays" => noticePeriodInDays,
-			"noticePeriodFees" => noticePeriodFees,
-			"moveAdminFees" => moveAdminFees,
-			"fullETF" => fullETF,
-			"finalETF" => finalETF,
-			"waiveETF" => waiveETF
-			]);
+		
+		//super.pushToHistory(buttonTxt, interactionType, [
+			//"refundActivationFees" => refundActivationFees,
+			//"isTerminationStandard" => isTerminationStandard,
+			//"cancelationFees" => cancelationFees,
+			//"noticePeriodInDays" => noticePeriodInDays,
+			//"noticePeriodFees" => noticePeriodFees,
+			//"moveAdminFees" => moveAdminFees,
+			//"fullETF" => fullETF,
+			//"finalETF" => finalETF,
+			//"waiveETF" => waiveETF
+			//]);
+			super.pushToHistory(buttonTxt, interactionType, valuesToStore);
 	}
 }

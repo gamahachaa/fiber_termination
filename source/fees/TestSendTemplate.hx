@@ -1,5 +1,7 @@
 package fees;
 
+import flow.End;
+import tstool.process.Process;
 import tstool.process.TripletTemplate;
 import tstool.salt.SOTemplate;
 
@@ -10,10 +12,12 @@ import tstool.salt.SOTemplate;
 class TestSendTemplate extends TripletTemplate 
 {
 
-	public function new(soTemplate:SOTemplate) 
+	public function new ()
 	{
-		super(soTemplate);
-		
+		super(SOTemplate.FIX_566);
 	}
 	
+	override inline function getNext():Class<Process>{
+		return End;
+	}
 }

@@ -1,0 +1,330 @@
+{
+    "FR": {
+        "meta": {
+            "logoSalt.png ": {
+                "matched": false,
+                "universal": "vtiContractor",
+                "ereg": "contractorEreg"
+            }
+        },
+        "Owner": {
+            "Owner": {
+                "matched": false,
+                "universal": "vtiOwner",
+                "ereg": "personEreg"
+            },
+            "Email": {
+                "matched": false,
+                "universal": "vtiOwnerEmail",
+                "ereg": "emailEreg"
+            },
+            "Validation de l'adresse email": {
+                "matched": false,
+                "universal": "vtiOwnerEmailValidated",
+                "ereg": "allInclusivEreg"
+            }
+        },
+        "Payeur": {
+            "Payeur": {
+                "matched": false,
+                "universal": "vtiPayer",
+                "ereg": "personEreg"
+            },
+            "Email": {
+                "matched": false,
+                "universal": "vtiPayerEmail",
+                "ereg": "emailEreg"
+            }
+        },
+        "Offre : Salt Fiber": {
+            "Numéro(s) de VoIP": {
+                "matched": false,
+                "universal": "vtiVoip",
+                "ereg": "phoneEreg"
+            },
+            "Utilisateur Ligne": {
+                "matched": false,
+                "universal": "vtiUser",
+                "ereg": "personEreg"
+            },
+            "Adresse": {
+                "matched": false,
+                "universal": "vtiAdress",
+                "ereg": "addressEreg"
+            },
+            "Mobile Number": {
+                "matched": false,
+                "universal": "vtiMobile",
+                "ereg": "optionalPhoneEreg"
+            },
+            "Email": {
+                "matched": false,
+                "universal": "vtiUserEmail",
+                "ereg": "emailEreg"
+            }
+        },
+        "Solde courant": {
+            "Balance": {
+                "matched": false,
+                "universal": "vtiBalance",
+                "ereg": "moneyEreg"
+            },
+            "Balance non soldée": {
+                "matched": false,
+                "universal": "vtiOverdue",
+                "ereg": "moneyEreg"
+            },
+            "En retard depuis": {
+                "matched": false,
+                "universal": "vtiOverdueDate",
+                "ereg": "dateEreg"
+            }
+        }
+    },
+    "IT": {
+        "meta": {
+            "logoSalt.png ": {
+                "matched": false,
+                "universal": "vtiContractor",
+                "ereg": "contractorEreg"
+            }
+        },
+        "Owner": {
+            "Owner": {
+                "matched": false,
+                "universal": "vtiOwner",
+                "ereg": "personEreg"
+            },
+            "Email": {
+                "matched": false,
+                "universal": "vtiOwnerEmail",
+                "ereg": "emailEreg"
+            },
+            "Email validation": {
+                "matched": false,
+                "universal": "vtiOwnerEmailValidated",
+                "ereg": "allInclusivEreg"
+            }
+        },
+        "Pagatore": {
+            "Pagatore": {
+                "matched": false,
+                "universal": "vtiPayer",
+                "ereg": "personEreg"
+            },
+            "Email": {
+                "matched": false,
+                "universal": "vtiPayerEmail",
+                "ereg": "emailEreg"
+            }
+        },
+        "Abo : Salt Fiber": {
+            "VoIP Number": {
+                "matched": false,
+                "universal": "vtiVoip",
+                "ereg": "phoneEreg"
+            },
+            "Line user": {
+                "matched": false,
+                "universal": "vtiUser",
+                "ereg": "personEreg"
+            },
+            "Address": {
+                "matched": false,
+                "universal": "vtiAdress",
+                "ereg": "addressEreg"
+            },
+            "Mobile Number": {
+                "matched": false,
+                "universal": "vtiMobile",
+                "ereg": "optionalPhoneEreg"
+            },
+            "Email": {
+                "matched": false,
+                "universal": "vtiUserEmail",
+                "ereg": "emailEreg"
+            }
+        },
+        "Saldo": {
+            "Saldo": {
+                "matched": false,
+                "universal": "vtiBalance",
+                "ereg": "moneyEreg"
+            },
+            "Saldo in ritardo": {
+                "matched": false,
+                "universal": "vtiOverdue",
+                "ereg": "moneyEreg"
+            },
+            "Data di scadenza": {
+                "matched": false,
+                "universal": "vtiOverdueDate",
+                "ereg": "dateEreg"
+            }
+        }
+    },
+    "DE": {
+        "meta": {
+            "logoSalt.png ": {
+                "matched": false,
+                "universal": "vtiContractor",
+                "ereg": "contractorEreg"
+            }
+        },
+        "Owner": {
+            "Owner": {
+                "matched": false,
+                "universal": "vtiOwner",
+                "ereg": "personEreg"
+            },
+            "Email": {
+                "matched": false,
+                "universal": "vtiOwnerEmail",
+                "ereg": "emailEreg"
+            },
+            "Validierung der E-Mail-Adresse": {
+                "matched": false,
+                "universal": "vtiOwnerEmailValidated",
+                "ereg": "allInclusivEreg"
+            }
+        },
+        "Zahler": {
+            "Zahler": {
+                "matched": false,
+                "universal": "vtiPayer",
+                "ereg": "personEreg"
+            },
+            "Email": {
+                "matched": false,
+                "universal": "vtiPayerEmail",
+                "ereg": "emailEreg"
+            }
+        },
+        "Angebot : Salt Fiber": {
+            "VoIP-Nummer": {
+                "matched": false,
+                "universal": "vtiVoip",
+                "ereg": "phoneEreg"
+            },
+            "Benutzer": {
+                "matched": false,
+                "universal": "vtiUser",
+                "ereg": "personEreg"
+            },
+            "Address": {
+                "matched": false,
+                "universal": "vtiAdress",
+                "ereg": "addressEreg"
+            },
+            "Mobile Number": {
+                "matched": false,
+                "universal": "vtiMobile",
+                "ereg": "optionalPhoneEreg"
+            },
+            "Email": {
+                "matched": false,
+                "universal": "vtiUserEmail",
+                "ereg": "emailEreg"
+            }
+        },
+        "Aktueller Saldo": {
+            "Saldo": {
+                "matched": false,
+                "universal": "vtiBalance",
+                "ereg": "moneyEreg"
+            },
+            "Überfälliger Saldo": {
+                "matched": false,
+                "universal": "vtiOverdue",
+                "ereg": "moneyEreg"
+            },
+            "Überfällig seit": {
+                "matched": false,
+                "universal": "vtiOverdueDate",
+                "ereg": "dateEreg"
+            }
+        }
+    },
+    "EN": {
+        "meta": {
+            "logoSalt.png ": {
+                "matched": false,
+                "universal": "vtiContractor",
+                "ereg": "contractorEreg"
+            }
+        },
+        "Owner": {
+            "Owner": {
+                "matched": false,
+                "universal": "vtiOwner",
+                "ereg": "personEreg"
+            },
+            "Email": {
+                "matched": false,
+                "universal": "vtiOwnerEmail",
+                "ereg": "emailEreg"
+            },
+            "Email validation": {
+                "matched": false,
+                "universal": "vtiOwnerEmailValidated",
+                "ereg": "allInclusivEreg"
+            }
+        },
+        "Payer": {
+            "Payer": {
+                "matched": false,
+                "universal": "vtiPayer",
+                "ereg": "personEreg"
+            },
+            "Email": {
+                "matched": false,
+                "universal": "vtiPayerEmail",
+                "ereg": "emailEreg"
+            }
+        },
+        "Abo : Salt Fiber": {
+            "VoIP Number": {
+                "matched": false,
+                "universal": "vtiVoip",
+                "ereg": "phoneEreg"
+            },
+            "User of the line": {
+                "matched": false,
+                "universal": "vtiUser",
+                "ereg": "personEreg"
+            },
+            "Address": {
+                "matched": false,
+                "universal": "vtiAdress",
+                "ereg": "addressEreg"
+            },
+            "Mobile Number": {
+                "matched": false,
+                "universal": "vtiMobile",
+                "ereg": "optionalPhoneEreg"
+            },
+            "Email": {
+                "matched": false,
+                "universal": "vtiUserEmail",
+                "ereg": "emailEreg"
+            }
+        },
+        "Current Balance": {
+            "Balance": {
+                "matched": false,
+                "universal": "vtiBalance",
+                "ereg": "moneyEreg"
+            },
+            "Overdue balance": {
+                "matched": false,
+                "universal": "vtiOverdue",
+                "ereg": "moneyEreg"
+            },
+            "Overdue date": {
+                "matched": false,
+                "universal": "vtiOverdueDate",
+                "ereg": "dateEreg"
+            }
+        }
+    }
+}

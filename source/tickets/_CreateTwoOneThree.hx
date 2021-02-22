@@ -2,14 +2,14 @@ package tickets;
 
 //import End;
 import flow._AddMemoVti;
-import tstool.process.ActionMail;
+import tstool.process.ActionTicket;
 import tstool.salt.SOTickets;
 
 /**
  * ...
  * @author bb
  */
-class _CreateTwoOneThree extends ActionMail 
+class _CreateTwoOneThree extends ActionTicket 
 {
 
 	public function new() 
