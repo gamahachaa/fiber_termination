@@ -16,12 +16,61 @@
     <file id="data" value="can_tickets_fr.txt"/>
     <file id="data" value="can_wb_fr.txt"/>
 
-    
+    <file id="headers" value="headers_fr.txt"/>
+	
     <file id="meta" value="meta_fr.txt"/>
+	
+	    
+    <file id="data" value="can_all_flow__de.txt"/>
+    <file id="data" value="can_fees_de.txt"/>
+    <file id="data" value="can_front_capture_de.txt"/>
+    <file id="data" value="can_front_move_de.txt"/>
+    <file id="data" value="can_tickets_de.txt"/>
+    <file id="data" value="can_wb_de.txt"/>
+
+    <file id="headers" value="headers_de.txt"/>
+	
+    <file id="meta" value="meta_de.txt"/>
+	
+	    
+    <file id="data" value="can_all_flow_de.txt"/>
+    <file id="data" value="can_fees_de.txt"/>
+    <file id="data" value="can_front_capture_de.txt"/>
+    <file id="data" value="can_front_move_de.txt"/>
+    <file id="data" value="can_tickets_de.txt"/>
+    <file id="data" value="can_wb_de.txt"/>
+
+    <file id="headers" value="headers_de.txt"/>
+	
+    <file id="meta" value="meta_de.txt"/>
+	
+	    
+    <file id="data" value="can_all_flow_en.txt"/>
+    <file id="data" value="can_fees_en.txt"/>
+    <file id="data" value="can_front_capture_en.txt"/>
+    <file id="data" value="can_front_move_en.txt"/>
+    <file id="data" value="can_tickets_en.txt"/>
+    <file id="data" value="can_wb_en.txt"/>
+
+    <file id="headers" value="headers_en.txt"/>
+	
+    <file id="meta" value="meta_en.txt"/>
+	
+	    
+    <file id="data" value="can_all_flow_it.txt"/>
+    <file id="data" value="can_fees_it.txt"/>
+    <file id="data" value="can_front_capture_it.txt"/>
+    <file id="data" value="can_front_move_it.txt"/>
+    <file id="data" value="can_tickets_it.txt"/>
+    <file id="data" value="can_wb_it.txt"/>
+
+    <file id="headers" value="headers_it.txt"/>
+	
+    <file id="meta" value="meta_it.txt"/>
     <!--<file id="meta" value="meta_de.txt"/>-->
     <!--<file id="meta" value="meta_it.txt"/>-->
     <!--<file id="meta" value="meta_en.txt"/>-->
-	<file id="values" value="ui_values_fr.txt"/>
+	<!--<file id="values" value="ui_values_fr.txt"/>-->
 
 
     <file id="fonts" value="fonts.xml"/>

@@ -1,0 +1,5 @@
+FLAG	DETAILS	TITLE	ILLUSTRATION	RIGHT-BTN	LEFT-BTN	MID-BTN	QOOK
+$tickets._CreateTwoOneSix		Automatische Erstellung eines Tickets 2.1.6
+$tickets._CreateTwoOneToo		Automatische Erstellung eines Tickets 2.1.3
+$tickets._CreateTwoOneThree		Automatische Erstellung eines Tickets 2.1.3
+$tickets._CreateTicketSixForOne	Ich konnte WINBACK nicht erreichen<N>Wir sind ausserhalb der Öffnungszeiten (8:00 - 17:00 Uhr).	Automatische Erstellung eines Tickets 6.4.1

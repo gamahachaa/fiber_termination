@@ -9,20 +9,24 @@ import front.capture._CompareWishAndTermDates;
 import front.capture._DeathWording;
 import front.capture._TransferToWB;
 import fees._InputDates;
-import layout.LoginCan;
+//import layout.LoginCan;
 import lime.utils.Assets;
+import tickets._CreateTicketSixForOne;
 import tstool.MainApp;
 import tstool.layout.UI;
 import tstool.process.ActionMultipleInput;
 import tstool.process.Process;
+import tstool.salt.Agent;
 import tstool.salt.Balance;
 import tstool.salt.Contractor;
 import tstool.salt.Role;
+import tstool.utils.Constants;
+import tstool.utils.DateToolsBB;
 import tstool.utils.ExpReg;
 import tstool.utils.VTIdataParser;
 import tstool.process.DescisionMultipleInput;
 import Main;
-import winback.CheckFWAElligibility;
+import winback.OkForForFWA;
 import winback.RetainWithSalesSpeech;
 //import tstool.utils.XapiTracker;
 
@@ -50,7 +54,7 @@ class CheckContractorVTI extends ActionMultipleInput
 				{
 					ereg:new EReg(ExpReg.CONTRACTOR_EREG,"i"),
 					input:{
-						width:150,
+						width:200,
 						debug: "30001047",
 						prefix:CONTRACTOR_ID,
 						position: [bottom, left]
@@ -60,7 +64,7 @@ class CheckContractorVTI extends ActionMultipleInput
 					ereg: new EReg(ExpReg.MISIDN_INTL,"i"),
 					input:{
 						buddy: CONTRACTOR_ID,
-						width:150,
+						width:200,
 						debug: "41212180513",
 						prefix:VOIP_NUM,
 						position:[top, right]
@@ -70,7 +74,7 @@ class CheckContractorVTI extends ActionMultipleInput
 					ereg: new EReg(ExpReg.MISIDN_INTL,"i"),
 					input:{
 						buddy: CONTRACTOR_ID,
-						width:150,
+						width:200,
 						debug: "41787878814",
 						prefix:CONTACT_NUM,
 						position:[bottom, left]
@@ -129,9 +133,9 @@ class CheckContractorVTI extends ActionMultipleInput
 		#if debug
 			trace(Main.customer);
 		#end
-		question.text = question.text + " <em>" + Main.customer.contract.owner.name + "<em>";
-		question.applyMarkup(question.text, [UI.THEME.basicEmphasis]);
-		question.drawFrame();
+		//question.text = question.text + " <em>" + Main.customer.contract.owner.name + "<em>";
+		//question.applyMarkup(question.text, [UI.THEME.basicEmphasis]);
+		//question.drawFrame();
 		positionThis();
 		multipleInputs.setInputDefault(CONTRACTOR_ID , Main.customer.contract.contractorID);
 		multipleInputs.setInputDefault(VOIP_NUM,Main.customer.contract.voip);
@@ -168,31 +172,23 @@ class CheckContractorVTI extends ActionMultipleInput
 		
 	}
 	
-	//override public function onNoClick():Void
-	//{
-		//if (validateNo())
-		//{
-			//this._nexts = [{step: getNext(false), params: []}];
-			//setUpData();
-			//super.onNoClick();
-		//}
-		//
-	//}
 	inline function getNext():Class<Process>
 	{
-		return if (!MainApp.agent.isMember(LoginCan.WINBACK_GROUP_NAME))
-		{
-			if (status == Intro.DEATH){_DeathWording; }
-			else if (status == Intro.PLUG_IN_USE){_CompareWishAndTermDates;}
-			else if (status == Intro.MOVE_CAN_KEEP){IsAdressElligible;}
-			else if (status == Intro.MOVE_LEAVE_CH){_InputDates;}
-			else { _TransferToWB; };
+		var now = Date.now();
+		var canTranfer = DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
+		return switch (status)
+		{	
+			case Intro.NO_MORE: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
+			case Intro.DEATH: _DeathWording; 
+			case Intro.PLUG_IN_USE: _CompareWishAndTermDates;
+			case Intro.MOVE_CAN_KEEP: IsAdressElligible;
+			//case Intro.MOVE_CANNOT_KEEP: _InputDates;
+			case Intro.FWA_ELLIGIBLE: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)?OkForForFWA: _InputDates;
+			//case Intro.MOVE_LEAVE_CH: _InputDates;
+			case _:_InputDates;
 		}
-		else{
-			status == Intro.NOT_ELLIGIBLE ? CheckFWAElligibility : RetainWithSalesSpeech;
-		}
-		
-	}	
+	}
+	
 	function setUpData()
 	{
 		this.parser.destroy();

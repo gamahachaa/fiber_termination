@@ -15,10 +15,10 @@ class _CreateTwoOneSix extends ActionTicket
 	{
 		super(SOTickets.FIX_216);
 	}
-	override public function create():Void
-	{
-		this._nextProcesses = [ new flow._AddMemoVti() ];
-		super.create();
-	}
 	
+	override public function onClick():Void
+	{
+		this._nexts = [{step: _AddMemoVti, params: []}];
+		super.onClick();
+	}
 }

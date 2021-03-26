@@ -1,0 +1,5 @@
+FLAG	DETAILS	TITLE	ILLUSTRATION	RIGHT-BTN	LEFT-BTN	MID-BTN	QOOK
+$flow._AddMemoVti		Aggiungere una nota in VTI	vti/addnotefr
+$flow.End	Aggiungere memo in VTI	Fine		Terminare
+$Intro	<em>Problemi tecnici<em> = Secondo il suo parere, non abbastanza rapido; Interruzioni; Funzioni mancanti del Box, ecc.(dopo qualche domanda, trasferisci la chiamata a Winback)<N><em>Il titolare della linea è deceduto<em> = decesso. Si premura di essere ancora più empatico<N><em>Vuole restare con il suo fornitore attuale<em> = ha effettuato l'ordine, ma si accorge di essere ancora sotto contratto e che gli sarano addebitati dei costi per annullare il contratto.<N><em>Trasloca e desidera tenere Salt Home<em> = Cambia il domicilio e desidera tenere Salt Home<N><em>Trasloca, ma non può tenere Salt Home<em> = Cambia il domicilio, ma non può tenere Salt Home<N><em>Lascia la Svizzera<em> = Lascia la Svizzera, trasloca all'estero<N><em>* FWA disponibile (Winback only)<em> = *solamente se sei WINBACK	Per quale motivo?<N>(Continuare in qualità di agente Front o agente Winback) 		Agente Front	Agente Winback
+$Tuto			ui/tutoKeyboardFR

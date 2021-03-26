@@ -1,0 +1,16 @@
+flag	HEADER
+$IntroWHYLEAVE	Reason
+$IntroTECHISSUES	Technical problems
+$IntroDEATH	The owner of the connection has passed away
+$IntroWANTSTOSTAYWITHCURRENTPROVIDER	Wants to stay with current provider
+$IntroMOVEHOUSEKEEPFIBER	Moves and wants to keep Salt Home
+$IntroMOVECANTKEEP	Moves but cannot keep Salt Home
+$IntroNOTELLIGIBLEATNEWADRESS	* FWA is available (Winback only)
+$IntroBYEBYESWITZERLAND	Is leaving Switzerland
+$front.capture.CheckContractorVTIContractorID	Contractor number
+$front.capture.CheckContractorVTIVoIPNumber	VoIP number
+$front.capture.CheckContractorVTIContactNumber	Contact phone number
+$front.move._AskForOTO	OTO ID
+$fees._InputDatesORDERDATE	Order date
+$fees._InputDatesACTIVATIONDATE	Activation date
+$fees._InputDatesTERMDATE	Wished deactivation date

@@ -1,5 +1,6 @@
 package tickets;
 
+import flow._AddMemoVti;
 import tstool.process.ActionTicket;
 import tstool.salt.SOTickets;
 
@@ -9,11 +10,15 @@ import tstool.salt.SOTickets;
  */
 class _CreateTicketSixForOne extends ActionTicket 
 {
-
-	public function new(ticket:SOTickets, ?resolved:Bool=false) 
+	public function new() 
 	{
-		super(ticket, resolved);
-		
+		super(SOTickets.FIX_641);
+	}
+
+	override public function onClick():Void
+	{
+		this._nexts = [{step: _AddMemoVti, params: []}];
+		super.onClick();
 	}
 	
 }

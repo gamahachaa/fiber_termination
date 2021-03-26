@@ -1,19 +1,27 @@
 package front.capture;
 
+import flixel.FlxSubState;
 import flow.End;
-import tstool.process.Action;
+import tickets._CreateTicketSixForOne;
+import tstool.process.Descision;
+//import tstool.process.Action;
+//import tstool.process.ActionMemo;
 
 /**
  * ...
  * @author bb
  */
-class _TransferToWB extends Action 
+class _TransferToWB extends Descision 
 {
 
-	override public function onClick():Void
+	override public function onYesClick():Void
 	{
 		this._nexts = [{step: End}];
-		super.onClick();
+		super.onYesClick();
 	}
-	
+	override public function onNoClick():Void
+	{
+		this._nexts = [{step: _CreateTicketSixForOne}];
+		super.onNoClick();
+	}
 }

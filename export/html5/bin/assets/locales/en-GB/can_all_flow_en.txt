@@ -1,0 +1,5 @@
+FLAG	DETAILS	TITLE	ILLUSTRATION	RIGHT-BTN	LEFT-BTN	MID-BTN	QOOK
+$flow._AddMemoVti		Add a note in VTI	vti/addnotefr				
+$flow.End	Add memo in VTI	End		Terminate			
+$Intro	<em>Technical problems<em> = Not fast enough for his needs; Outages; Missing box features, etc. (after some questions you should transfer the call to WinBack)<N><em>The owner of the connection has passed away<em> = death. Be sure to show more empathy<N><em>Wants to stay with current provider<em> = placed order but realizes he is still under contract and will be charged for leaving.<N><em>Moves and wants to keep Salt<em> = Changes address and wants to keep Salt Home<N><em>Moves but cannot keep Salt Home<em> = Changes address but cannot keep Salt Home<N><em>Is leaving Switzerland<em> = Emigrates from Switzerland, moves abroad <N><em>* FWA is available (Winback only)<em> = * only for WinBack	Why (what reason)?<N>(Continue as Front agent or Winback agent) 		Front Agent	WinBack Agent		
+$Tuto			ui/tutoKeyboardFR				

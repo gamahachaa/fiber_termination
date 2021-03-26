@@ -20,6 +20,9 @@
 -D hscript=2.4.0
 -cp C:/_mesDocs/_haxelibs/tstool
 -D tstool=0.0.0
+--macro UglifyJS.run()
+-cp C:/HaxeToolkit/haxe/lib/uglifyjs/1,0,0/src
+-D uglifyjs=1.0.0
 -cp source
 -cp C:/HaxeToolkit/haxe/lib/openfl/9,0,2/packages/application/src
 -cp C:/HaxeToolkit/haxe/lib/openfl/9,0,2/packages/assets/src
@@ -61,22 +64,23 @@
 -cp C:/HaxeToolkit/haxe/lib/openfl/9,0,2/packages/video/src
 -D tools=7.8.0
 -D lime-canvas
+-D FLX_NO_DEBUG
 -D howlerjs
 -D no-compilation
 -D openfl-html5
+-D NAPE_RELEASE_BUILD
 -D lime-webgl
 -D haxeJSON
 -D lime-dom
 -D lime-howlerjs
 -D lime-html5
--D openfl-disable-handle-error
 -D fdb
 -D html5
 -D web
 --remap flash:openfl
 --macro flixel.system.macros.FlxDefines.run()
 -D haxeJSON
--js export/html5/bin/cantool.js
+-js export/html5/bin/fiber_cmt.js
 -cp export/html5/haxe
 -D html5
 -debug

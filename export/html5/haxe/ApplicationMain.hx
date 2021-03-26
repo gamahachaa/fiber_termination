@@ -15,11 +15,11 @@ class ApplicationMain
 	#if !macro
 	public static function main()
 	{
-		lime.system.System.__registerEntryPoint("cantool", create);
+		lime.system.System.__registerEntryPoint("fiber_cmt", create);
 
 		#if (js && html5)
 		#if (munit || utest)
-		lime.system.System.embed("cantool", null, 1400, 880);
+		lime.system.System.embed("fiber_cmt", null, 1400, 880);
 		#end
 		#else
 		create(null);
@@ -32,10 +32,10 @@ class ApplicationMain
 
 		ManifestResources.init(config);
 
-		app.meta["build"] = "9";
+		app.meta["build"] = "11";
 		app.meta["company"] = "";
-		app.meta["file"] = "cantool";
-		app.meta["name"] = "CanTool";
+		app.meta["file"] = "fiber_cmt";
+		app.meta["name"] = "Fiber CMT";
 		app.meta["packageName"] = "com.example.myapp";
 		app.meta["version"] = "0.0.1";
 
@@ -57,7 +57,7 @@ class ApplicationMain
 			minimized: false,
 			parameters: {},
 			resizable: true,
-			title: "CanTool",
+			title: "Fiber CMT",
 			width: 1400,
 			x: null,
 			y: null,

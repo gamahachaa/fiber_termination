@@ -20,11 +20,7 @@ class LoginCan extends Login
 	var init:Bool;
 	var ck:flixel.addons.ui.FlxUICheckBox;
 	public static inline var WINBACK_GROUP_NAME:String = "WINBACK - TEST";
-	//public function new() 
-	//{
-		//super();
-		//isWinBack = false;
-	//}
+
 	override public function create():Void
 	{
 		isWinBack = false;
@@ -44,11 +40,6 @@ class LoginCan extends Login
 		
 	}
 	
-	//function onSubmit_two() 
-	//{
-		//isWinBack = true;
-		//super.onSubmit();
-	//}
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);

@@ -8,7 +8,7 @@ import tickets._CreateTwoOneTwo;
 import tstool.layout.History.Interactions;
 import tstool.process.Action;
 import tstool.utils.Constants;
-import winback.CheckFWAElligibility;
+import winback.OkForForFWA;
 
 /**
  * ...
@@ -50,7 +50,9 @@ class _TotalFees extends Action
 		#end
 		//elligibleAtAdress = Main.HISTORY.isClassInteractionInHistory(IsAdressElligible, Yes);
 		
-		notElligibleAtAdress = ((whyLeave == Intro.NOT_ELLIGIBLE && Main.HISTORY.isClassInteractionInHistory(CheckFWAElligibility, Mid))|| Main.HISTORY.isClassInteractionInHistory(IsAdressElligible, No));
+		//notElligibleAtAdress = ((whyLeave == Intro.NOT_ELLIGIBLE && Main.HISTORY.isClassInteractionInHistory(CheckFWAElligibility, Mid))|| Main.HISTORY.isClassInteractionInHistory(IsAdressElligible, No));
+		//notElligibleAtAdress = (whyLeave == Intro.FWA_ELLIGIBLE || Main.HISTORY.isClassInteractionInHistory(IsAdressElligible, No));
+		notElligibleAtAdress = Main.HISTORY.isClassInteractionInHistory(IsAdressElligible, No);
 		#if debug
 		trace("create::notElligibleAtAdress", notElligibleAtAdress );
 		#end

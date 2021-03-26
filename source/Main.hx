@@ -7,7 +7,7 @@ import flixel.FlxState;
 import flixel.input.keyboard.FlxKey;
 import flow.End;
 import Intro;
-import layout.LoginCan;
+//import layout.LoginCan;
 import tstool.layout.Login;
 import tstool.layout.UI;
 import tstool.process.Process;
@@ -24,8 +24,8 @@ import lime.utils.Assets;
 //import openfl.display.Sprite;
 import tstool.layout.History;
 //import tstool.layout.Login;
-import tstool.layout.SaltColor;
-import tstool.salt.Agent;
+//import tstool.layout.SaltColor;
+//import tstool.salt.Agent;
 import tstool.salt.Customer;
 import tstool.utils.Csv;
 import tstool.utils.Translator;
@@ -46,20 +46,17 @@ class Main extends MainApp
 	public static var HISTORY:History;
 	public static var adminFile:tstool.utils.Csv;
 	public static var tongue:Translator;
-	//public static var user:Agent;
 	public static var customer:Customer;
 	public static var track:XapiTracker;
 	public static var VERSION:String;
 	public static var VERSION_TRACKER:VersionTracker;
 	public static var LOCATION:Location;
 	public static var DEBUG:Bool;
-	//public static var COOKIE: FlxSave;
-	
-	//public static var LANGS:Array<String> = ["fr-FR", "de-DE", "it-IT", "en-GB"];
-	public static var LANGS = ["fr-FR"];
+	public static inline var DEBUG_LEVEL:Int = 0;
+	public static var LANGS:Array<String> = ["fr-FR","de-DE","en-GB","it-IT"];
 	public static inline var LAST_STEP:Class<FlxState> = End;
 	public static inline var START_STEP:Class<Process> = Intro;
-	public static inline var INTRO_PIC:String = "intro/default.png";
+	public static inline var INTRO_PIC:String = "intro/favicon.png";
 	/**
 	 * FORMAT COLOR
 	 * */
@@ -67,8 +64,8 @@ class Main extends MainApp
 	public function new() 
 	{
 		super({
-				cookie:"cantool_20210205.user",
-				scriptName:"cantool"
+				cookie:"fibercmt_20210205.user",
+				scriptName:"fiber_cmt"
 				
 		});
 		LIB_FOLDER = "../trouble/";
@@ -80,7 +77,7 @@ class Main extends MainApp
 		DEBUG = MainApp.debug;
 		VERSION_TRACKER = MainApp.versionTracker;
 		customer = MainApp.cust;
-		addChild(new FlxGame(1400, 880,LoginCan, 1, 30, 30, true, true));
+		addChild(new FlxGame(1400, 880,Login, 1, 30, 30, true, true));
 	}
 
 	static public function setUpSystemDefault(?block:Bool = false )
@@ -93,7 +90,7 @@ class Main extends MainApp
     static public function MOVE_ON(?old:Bool=false)
 	{
 		
-		var next:Process;
+		var next:Process = new Intro();
 		var tuto:Process = new Tuto();
 		setUpSystemDefault(true);
 		#if !debug
@@ -103,14 +100,11 @@ class Main extends MainApp
 			/**
 			 * USe this  to debug a slide
 			 */
-			next = new TestSendTemplate();
-		#else
-			next = new Main.START_STEP();
+			next = new Intro();
 		#end
 		#if debug
 		trace("Main::MOVE_ON::MOVE_ON", MOVE_ON );
 		#end
 		tongue.initialize(MainApp.agent.mainLanguage, ()->(FlxG.switchState( old ? next : tuto)) );
 	}
-	
 }

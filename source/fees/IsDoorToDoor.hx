@@ -39,7 +39,7 @@ class IsDoorToDoor extends Descision
 		var termDate = new Date(Std.parseInt(termDateTab[2]), Std.parseInt(termDateTab[1]) - 1, Std.parseInt(termDateTab[0]), 0, 0, 0);
 		//var nowRoundMilli:Float = Date.now().getTime() - (Date.now().getTime() % Constants.ONE_DAY_MILLI);
 		//isActivatedLessThanMonth = (nowRoundMilli - activationDate.getTime() < Constants.ONE_MONTH_MILLI);
-		var isDoorToDoorGrace = (termDate.getTime() - orderDate.getTime()) < Constants.ONE_DAY_MILLI * 15;
+		var isDoorToDoorGrace = (termDate.getTime() - orderDate.getTime()) < Constants.ONE_DAY_MILLI * 30;
 		
 		return if (isDoorToDoor && isDoorToDoorGrace){
 			IsActivationFeesPaid;

@@ -1,0 +1,6 @@
+FLAG	DETAILS	TITLE	ILLUSTRATION	RIGHT-BTN	LEFT-BTN	MID-BTN	QOOK
+$front.move.IsAdressElligible		Verifico che Salt Home (Fiber o FWA) sia effettivamente disponibile al suo nuovo indirizzo. 		Fiber disponibile	Non disponibile	FWA disponibile	https://qoof.salt.ch/customer-process/discover/availability_check
+$front.move._AskForOTO	Senza il numero OTO non è possibile effettuare il trasloco.	Potrebbe comunicarmi il numero OTO al suo nuovo indirizzo?
+$front.move._ProceedWithMoveAndApplyCharges		Procedo a effettuare le modifiche.
+$front.move.CanAgentApplyCharges	Se falso: <N>spiegare che il caso deve essere trasferito a un altro dipartimento.	Posso effettuare la modifica in VTI<N> e applicare i costi con il mio manager.		Vero	Falso
+$front.move.CheckOTOInAloAlex	Se la presa è libera, procedere ai cambiamenti in VTI.<N> Altrimenti spiegare che sarà un altro dipartimento che contatterà il partner per liberare la presa OTO, dato che quest'ultima sembra essere ancora legata a un contratto con un altro fornitore.	Verifico nei sistemi dei nostri partner (ALO-ALEX) la disponibilità della presa.		PLUG-IN-USE	OTO-FREE

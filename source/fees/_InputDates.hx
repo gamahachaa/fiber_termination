@@ -26,9 +26,9 @@ class _InputDates extends DescisionMultipleInput
 	*/	
 	//static public inline var MOVE_ADMINFEES:String = "moveAdminFees";
 	//static public inline var FULL_ETF:String = "FULL_ETF";
-	static public inline var ORDER_DATE:String = "ORDER_DATE";
-	static public inline var ACTIVATION_DATE:String = "ACTIVATION_DATE";
-	static public inline var TERM_DATE:String = "TERM_DATE";
+	static public inline var ORDER_DATE:String = "ORDER DATE";
+	static public inline var ACTIVATION_DATE:String = "ACTIVATION DATE";
+	static public inline var TERM_DATE:String = "TERM DATE";
 	//static public inline var NOTICE_PERIODFEES:String = "noticePeriod";
 	
 	static var DATE_REG:String = ExpReg.DATE_REG;

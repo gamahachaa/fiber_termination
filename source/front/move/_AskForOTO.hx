@@ -11,6 +11,7 @@ import tstool.utils.ExpReg;
  */
 class _AskForOTO extends ActionMultipleInput 
 {
+	static inline var OTO_ID:String = "OTO_ID";
 
 	public function new ()
 	{
@@ -19,7 +20,7 @@ class _AskForOTO extends ActionMultipleInput
 			ereg: new EReg(ExpReg.OTO_REG,"i"),
 			input:{
 				width:250,
-				prefix:"OTO_ID",
+				prefix:OTO_ID,
 				position: [bottom, left]
 			}
 		}]
@@ -29,7 +30,7 @@ class _AskForOTO extends ActionMultipleInput
 	
 	override public function onClick():Void
 	{
-		if (validate())
+		if (validate() || this.multipleInputs.getText(OTO_ID).toLowerCase()=="no oto yet"))
 		{
 			this._nexts = [{step: getNext(), params: []}];
 			super.onClick();
