@@ -30,7 +30,7 @@ class _AskForOTO extends ActionMultipleInput
 	
 	override public function onClick():Void
 	{
-		if (validate() || this.multipleInputs.getText(OTO_ID).toLowerCase()=="no oto yet"))
+		if (validate() || this.multipleInputs.getText(OTO_ID).toLowerCase()=="no oto yet" )
 		{
 			this._nexts = [{step: getNext(), params: []}];
 			super.onClick();

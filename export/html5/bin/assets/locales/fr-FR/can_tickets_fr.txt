@@ -2,4 +2,4 @@ FLAG	DETAILS	TITLE	ILLUSTRATION	RIGHT-BTN	LEFT-BTN	MID-BTN	QOOK
 $tickets._CreateTwoOneSix		Création automatique d'un ticket 2.1.6
 $tickets._CreateTwoOneToo		Création automatique d'un ticket 2.1.3
 $tickets._CreateTwoOneThree		Création automatique d'un ticket 2.1.3
-$tickets._CreateTicketSixForOne	Je n'ai pas réussi à joindre WINBACK<N>C'est hors les heures d'ouverture (8h à 17h).	Création automatique d'un ticket 6.4.1
+$tickets._CreateTicketSixForOne	Je n'ai pas réussi à joindre WINBACK<N>C'est hors les heures d'ouverture (<START>h à <START>h).	Création automatique d'un ticket 6.4.1

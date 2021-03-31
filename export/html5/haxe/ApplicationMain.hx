@@ -32,7 +32,7 @@ class ApplicationMain
 
 		ManifestResources.init(config);
 
-		app.meta["build"] = "11";
+		app.meta["build"] = "12";
 		app.meta["company"] = "";
 		app.meta["file"] = "fiber_cmt";
 		app.meta["name"] = "Fiber CMT";
