@@ -1,4 +1,0 @@
-FLAG	DETAILS	TITLE	ILLUSTRATION	RIGHT-BTN	LEFT-BTN	MID-BTN	QOOK
-$winback.RetainWithSalesSpeech	Analizzare il problema tecnico e risolverlo.<N>(Qui c'è tutto il necessario per il winback pitch)	Faccio tutto il possibile affiché lei possa restare con noi!		Resta alla fine	Lascia stare, non ne vuole sapere
-$winback._WaveETFandOrderFWA		Annullo tutti costi di disdetta anticipata. <N> Procedo all'ordine del GigaBox.
-$winback.OkForForFWA		Verifico se al suo nuovo indirizzo è disponibile il GigaBox		Disponibile e lo desidera	Disponibile, ma non lo desidera	Non disponibile

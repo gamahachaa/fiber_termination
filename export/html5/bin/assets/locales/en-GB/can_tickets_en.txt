@@ -1,5 +1,0 @@
-FLAG	DETAILS	TITLE	ILLUSTRATION	RIGHT-BTN	LEFT-BTN	MID-BTN	QOOK
-$tickets._CreateTwoOneSix		Automatic ticket creation 2.1.6					
-$tickets._CreateTwoOneToo		Automatic ticket creation 2.1.3					
-$tickets._CreateTwoOneThree		Automatic ticket creation 2.1.3					
-$tickets._CreateTicketSixForOne	I couldn't reach WinBack<N>It's outside business hours (8am to 5pm).	Automatic ticket creation 6.4.1					

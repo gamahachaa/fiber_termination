@@ -1,6 +1,0 @@
-FLAG	DETAILS	TITLE	ILLUSTRATION	RIGHT-BTN	LEFT-BTN	MID-BTN	QOOK
-$front.move.IsAdressElligible		I am going to verify if the Salt Home (Fiber or FWA) service is available at your new address. 		Fiber available	Not available	FWA available	https://qoof.salt.ch/customer-process/discover/availability_check
-$front.move._AskForOTO	Without the OTO number the move cannot be executed	Can you give me the OTO number at your new address?					
-$front.move._ProceedWithMoveAndApplyCharges		I am making the changes.					
-$front.move.CanAgentApplyCharges	If false: <N>explain that the case should be transferred to another department.	I can make the changes in VTI<N>and apply the charges with my manager.		TRUE	FALSE		
-$front.move.CheckOTOInAloAlex	If the outlet is free, proceed with the changes in VTI.<N>Otherwise explain that another department will take care of contacting the partner to have the OTO outlet released because it seems to be still linked to a contract with another provider.	I check the systems of our partners (ALO-ALEX) the availability of the outlet.		PLUG-IN-USE	OTO-FREE		

@@ -108,6 +108,12 @@ class _InputDates extends DescisionMultipleInput
 			super.onNoClick();
 		}
 	}
+	override public function create()
+	{
+		super.create();
+		if (Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE ).value == Intro.PLUG_IN_USE)
+		this.btnYes.visible = false;
+	}
 	//inline function getNext():Class<Process>{
 		//return CHANGEME;
 	//}
@@ -117,12 +123,13 @@ class _InputDates extends DescisionMultipleInput
 		return true;
 	}
 	*/
-	/*
+	/**
 	override public function validateNo():Bool
 	{
+		if(Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE ).value == Intro.PLUG_IN_USE)
 		return true;
 	}
-	*/
+	**/
 	
 	//override public function onClick():Void
 	//{

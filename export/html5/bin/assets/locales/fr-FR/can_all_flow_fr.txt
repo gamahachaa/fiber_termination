@@ -1,5 +1,0 @@
-FLAG	DETAILS	TITLE	ILLUSTRATION	RIGHT-BTN	LEFT-BTN	MID-BTN	QOOK
-$flow._AddMemoVti		Ajouter une note dans VTI	vti/addnotefr
-$flow.End	Ajouter memo dans VTI	Fin		Terminer
-$Intro	<em>Problèmes techniques<em> = Pas assez rapide à son goût; Coupures; Fonctionalités manquantes de la box, etc. (aprés quelques question tu devra transférer l'appel à Winback)<N><em>Le propriétaire de la ligne est décédé<em> = décès. Prends soin de redoubler d'empathie<N><em>Veut rester avec son fournisseur actuel<em> = il a passé commande mais s'apperçoit qu'il est encore sous contrat et qu'il aura des frais pour quitter.<N><em>Déménage et veut garder Salt<em> = Change de domicile et souhaite conserver Salt Home<N><em>Déménage, mais ne peut garder Salt Home<em> = Change de domicile mais ne peut pas conserver Salt Home<N><em>Émigre hors de suisse<em> = Quitte la Suisse, déménage à l'étranger<N><em>* Elligible à FWA (Winback only)<em> = * seulement si tu es WINBACK	Pour quelle raison ?<N>(Continuer en tant quâgent Front ou agent Winback) 		Agent Front	Agent Winback
-$Tuto			ui/tutoKeyboardFR

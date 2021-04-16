@@ -41,6 +41,18 @@ class _TotalFees extends Action
 	var isTelesales:Bool;
 	var noticePeriodMinimalDate:Date;
 	var valuesToStore:Map<String, Dynamic>;
+	var finalTitleTxt:String;
+	var totalFees_txt:String;
+	static inline var RefundActivationFees:String = "Refund Activation Fees";
+	static inline var WaiveETF:String = "Waive ETF";
+	static inline var TelessalesorDoor2door:String = "Telessales or Door 2 door";
+	static inline var Terminationisstandard:String = "Termination is standard";
+	static inline var ETF:String = "ETF";
+	static inline var Minimumnoticedate:String = "Minimum notice date";
+	static inline var Noticeperiod:String = "Notice period";
+	static inline var Noticenonrespectedfees:String = "Notice non respected fees";
+	static inline var Moveadministrationfees:String = "Move administration fees";
+	static inline var TOTALTOPAY:String = "TOTAL TO PAY";
 	override public function create():Void
 	{
 		valuesToStore = [];
@@ -92,7 +104,9 @@ class _TotalFees extends Action
 		buildDetailReport();
 		super.create();
 		this.details.text = _detailTxt;
-		//this.question.text = _titleTxt;
+		if (moveAdminFees == 0)
+			this.question.text += "\n" + Replace.flags(totalFees_txt, ["<TOTAL_FEES>"], [Std.string(totalFees)]);
+		else this.question.text = "\n" + Replace.flags(totalFees_txt, ["<TOTAL_FEES>"], [Std.string(totalFees)]);
 	}
 	
 	function buildDetailReport()
@@ -100,6 +114,8 @@ class _TotalFees extends Action
 		var jsonDetails = Json.parse(_detailTxt);
 		//var jsonTitle = Json.parse(_titleTxt);
 		
+		var returnAppleTV_txt = jsonDetails.returnAppleTV;
+		var return_gears_txt = jsonDetails.return_gears;
 		var moveKeep_txt = jsonDetails.moveKeep;
 		var standard_txt = jsonDetails.standard;
 		var nonStandard_txt = jsonDetails.nonStandard;
@@ -114,21 +130,20 @@ class _TotalFees extends Action
 		var lineActivated_txt = jsonDetails.lineActivated;
 		//var refundActivation_txt = jsonDetails.refundActivation;
 		//var main_txt = jsonTitle.main;
-		var totalFees_txt = jsonDetails.totalFees;
+		totalFees_txt = jsonDetails.totalFees;
 		var refundActivation_txt = jsonDetails.refundActivation;
 		
 		var finalDetailTxt = "";
-		//var finalTitleTxt = main_txt + "\n" + Replace.flags(totalFees_txt, ["<TOTAL_FEES>"], [Std.string(totalFees)]);
 		
 		if (moveAdminFees == 0)
 		{
 			
 			if (waiveETF)
 			{
-				valuesToStore.set("Refund Activation Fees", refundActivationFees);
-				valuesToStore.set("Waive ETF", true);
+				valuesToStore.set(RefundActivationFees, refundActivationFees);
+				valuesToStore.set(WaiveETF, true);
 				if (isTelesales){
-					valuesToStore.set("Telessales or Door 2 door", true);
+					valuesToStore.set(TelessalesorDoor2door, true);
 					finalDetailTxt += gracePeriod_txt + "\n";
 					finalDetailTxt += waiveETF_txt+ "\n";
 					finalDetailTxt += refundActivationFees? refundActivation_txt:"";
@@ -160,13 +175,13 @@ class _TotalFees extends Action
 					
 					finalDetailTxt += Replace.flags(standard_txt, ["<DATE_ACTIVATION>", "<DATE_TERMINATION>"], ['${activationDate.getDate()}.${activationDate.getMonth()+1}.${activationDate.getFullYear()}', '${termDate.getDate()}.${termDate.getMonth()+1}.${termDate.getFullYear()}']);
 					finalDetailTxt += "\n" + Replace.flags(fullETF_txt, ["<FULL_ETF>", "<MONTH_LEFT>"], [Std.string(finalETF), Std.string(deltaDatesMonth)]);
-					valuesToStore.set("Termination is standard", true);
-					valuesToStore.set("ETF", finalETF);
+					valuesToStore.set(Terminationisstandard, true);
+					valuesToStore.set(ETF, finalETF);
 					
 				}
 				else{
-					valuesToStore.set("Termination is standard", false);
-					valuesToStore.set("ETF", finalETF);
+					valuesToStore.set(Terminationisstandard, false);
+					valuesToStore.set(ETF, finalETF);
 					finalDetailTxt += Replace.flags(nonStandard_txt, ["<DATE_ACTIVATION>", "<DATE_TERMINATION>"], ['${activationDate.getDate()}.${activationDate.getMonth()+1}.${activationDate.getFullYear()}', '${termDate.getDate()}.${termDate.getMonth()+1}.${termDate.getFullYear()}']);
 					finalDetailTxt += "\n" + Replace.flags(capETF_txt, ["<FINAL_ETF>", "<FULL_ETF>"], [Std.string(finalETF), Std.string(fullETF)]);
 				}
@@ -174,20 +189,24 @@ class _TotalFees extends Action
 				{
 					var notice = Std.string(noticePeriodMinimalDate.getDate()) +"." + Std.string(noticePeriodMinimalDate.getMonth() + 1) + "." + Std.string(noticePeriodMinimalDate.getFullYear());
 					finalDetailTxt += "\n" + Replace.flags(noticeNotRepected_txt, ["<NOTICE_DAYS>", "<NOTICE_DATE>", "<NOTICE_FEES>"], ['$noticePeriodInDays', notice, '$noticePeriodFees']);
-					valuesToStore.set("Minimum notice date", notice);
-					valuesToStore.set("Notice period", noticePeriodInDays);
-					valuesToStore.set("Notice non respected fees", noticePeriodFees);
+					valuesToStore.set(Minimumnoticedate, notice);
+					valuesToStore.set(Noticeperiod, noticePeriodInDays);
+					valuesToStore.set(Noticenonrespectedfees, noticePeriodFees);
 				}
 			}
-			
+			finalDetailTxt += "\n\n" + return_gears_txt;
+			if (deltaDatesMonth < 13)
+			{
+				finalDetailTxt += returnAppleTV_txt;
+			}
 		}else{
 			finalDetailTxt = Replace.flags(moveKeep_txt, ["<FEES>"], [Std.string(moveAdminFees)]);
-			valuesToStore.set("Move administration fees", moveAdminFees);
+			valuesToStore.set(Moveadministrationfees, moveAdminFees);
 		}
-		valuesToStore.set("TOTAL TO PAY", totalFees);
-		
+		valuesToStore.set(TOTALTOPAY, totalFees);
+		//finalTitleTxt += "\n\n" + Replace.flags(totalFees_txt, ["<TOTAL_FEES>"], [Std.string(totalFees)]);
 		_detailTxt = finalDetailTxt;
-		//_titleTxt = finalTitleTxt;
+		//_titleTxt += finalTitleTxt;
 	}
 	override public function onClick():Void
 	{
@@ -241,7 +260,7 @@ class _TotalFees extends Action
 		
 		noticePeriodFees = (noticePeriodRespected )? 0 : (isTerminationStandard ? 59.95: 39.95);
 		cancelationFees = isBoxNOTSent ? 199.95 : 0;
-		totalFees = moveAdminFees>0 ? moveAdminFees: finalETF + noticePeriodFees + cancelationFees;
+		totalFees = moveAdminFees > 0 ? moveAdminFees: finalETF + noticePeriodFees + cancelationFees;
 		#if debug
 		trace("computeFees::fullETF", fullETF );
 		trace("computeFees::finalETF", finalETF );

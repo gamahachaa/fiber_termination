@@ -12,12 +12,12 @@ class CheckOTOInAloAlex extends Descision
 
 	override public function onYesClick():Void
 	{
-		this._nexts = [{step: _ProceedWithMoveAndApplyCharges, params: []}];
+		this._nexts = [{step:_CreateTwoOneThree, params: []}];
 		super.onYesClick();
 	}
 	override public function onNoClick():Void
 	{
-		this._nexts = [{step: _CreateTwoOneThree, params: []}];
+		this._nexts = [{step: _ProceedWithMoveAndApplyCharges, params: []}];
 		super.onNoClick();
 	}
 	

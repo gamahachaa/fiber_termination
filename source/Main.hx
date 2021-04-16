@@ -1,6 +1,7 @@
 package;
 
 import fees.TestSendTemplate;
+import fees._InputDates;
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxState;
@@ -41,6 +42,7 @@ import tstool.utils.XapiTracker;
 class Main extends MainApp
 {
 	public static var LIB_FOLDER:String;
+	public static var LIB_FOLDER_LOGIN:String;
 	//public static var MAIL_WRAPPER_URL:String = LIB_FOLDER + "php/mail/index.php";
 	
 	public static var HISTORY:History;
@@ -57,6 +59,7 @@ class Main extends MainApp
 	public static inline var LAST_STEP:Class<FlxState> = End;
 	public static inline var START_STEP:Class<Process> = Intro;
 	public static inline var INTRO_PIC:String = "intro/favicon.png";
+	
 	/**
 	 * FORMAT COLOR
 	 * */
@@ -64,11 +67,13 @@ class Main extends MainApp
 	public function new() 
 	{
 		super({
-				cookie:"fibercmt_20210205.user",
+				cookie:"fibercmt_20210407.user",
 				scriptName:"fiber_cmt"
 				
 		});
 		LIB_FOLDER = "../trouble/";
+		LIB_FOLDER_LOGIN = "/commonlibs/";
+		
 		tongue = MainApp.translator;
 		//COOKIE = MainApp.save;
 		HISTORY = MainApp.stack;
@@ -101,6 +106,7 @@ class Main extends MainApp
 			 * USe this  to debug a slide
 			 */
 			next = new Intro();
+			//next = new _InputDates();
 		#end
 		#if debug
 		trace("Main::MOVE_ON::MOVE_ON", MOVE_ON );

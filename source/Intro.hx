@@ -80,14 +80,21 @@ class Intro extends DescisionRadios
 		);
 		
 	}
-	//override public function onClick():Void
-	//{
-		//
-		//if(validate()){
-			//this._nexts = [{step: CheckContractorVTI}];
-			//super.onClick();
-		//}
-	//}
+	override function changeListener(radioID:String, value:String)
+	{
+		#if debug
+		trace("Intro::changeListener::radioID", radioID );
+		trace("Intro::changeListener::value", value );
+		#end
+		super.changeListener(radioID, value);
+		this.btnNo.visible = true;
+		this.btnYes.visible = true;
+		switch(value)
+		{
+			case FWA_ELLIGIBLE : this.btnYes.visible = false;
+			case _ : this.btnYes.visible = true;
+		}
+	}
 	override public function onYesClick():Void
 	{
 		// FRONT

@@ -1,6 +1,0 @@
-FLAG	DETAILS	TITLE	ILLUSTRATION	RIGHT-BTN	LEFT-BTN	MID-BTN	QOOK
-$front.move.IsAdressElligible		Ich prüfe, ob Salt Home (Fiber oder FWA) tatsächlich an Ihrer neuen Adresse verfügbar ist. 		Fiber verfügbar	Nicht verfügbar	FWA verfügbar	https://qoof.salt.ch/customer-process/discover/availability_check
-$front.move._AskForOTO	Ohne die OTO-ID kann der Umzug nicht durchgeführt werden	Können Sie mir die OTO-ID Ihrer neuen Adresse mitteilen?
-$front.move._ProceedWithMoveAndApplyCharges		Ich fahre mit den Änderungen fort.
-$front.move.CanAgentApplyCharges	Wenn "nein": <N>Erkläre, dass der Fall an eine andere Abteilung weitergeleitet werden muss.	Ich bin in der Lage, die Änderung in VTI vorzunehmen<N> und die Gebühr mithilfe meines Managers anzuwenden.		Ja	Nein
-$front.move.CheckOTOInAloAlex	Wenn die Steckdose frei ist, fahre mit den Änderungen in VTI fort,<N> ansonsten erklärst du, dass eine andere Abteilung den Partner kontaktieren wird, damit die OTO-Dose freigegeben wird, da es so scheint, als wäre sie noch Bestandteil eines Vertrags mit einem anderen Anbieter.	Ich schaue in den Systemen unserer Partner (ALO-ALEX) nach der Verfügbarkeit der Steckdose nach.		PLUG-IN-USE	OTO-FREE

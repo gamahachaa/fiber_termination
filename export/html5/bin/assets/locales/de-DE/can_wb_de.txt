@@ -1,4 +1,0 @@
-FLAG	DETAILS	TITLE	ILLUSTRATION	RIGHT-BTN	LEFT-BTN	MID-BTN	QOOK
-$winback.RetainWithSalesSpeech	Das technische Problem analysieren und lösen.<N>(Hier ist alles, was für einen Winback-Pitch benötigt wird)	Ich werde alles dafür tun, dass Sie bei uns bleiben!  		Bleibt schliesslich	Geht, hat kein weiteres Interesse...
-$winback._WaveETFandOrderFWA		Ich werde alle Gebühren für eine vorzeitige Kündigung annullieren.<N>Und ich fahre mit der Bestellung der Gigabox fort.
-$winback.OkForForFWA		Ich schaue nach, ob die Gigabox an Ihrer neuen Adresse verfügbar ist		Verfügbar und möchte sie	Verfügbar, aber möchte sie nicht	Nicht verfügbar

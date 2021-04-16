@@ -1,4 +1,0 @@
-FLAG	DETAILS	TITLE	ILLUSTRATION	RIGHT-BTN	LEFT-BTN	MID-BTN	QOOK
-$winback.RetainWithSalesSpeech	Analyse the technical problem and solve it.<N>(Here everything needed for winback pitch)	I will do everything I can to make sure you stay with us!  		In the end, stays	Quits, doesn't want to hear about it…		
-$winback._WaveETFandOrderFWA		I will have all early termination fees waived<N>And proceed to order the Gigabox					
-$winback.OkForForFWA		I'll check if at your new address the GigaBox service is available		Available and interested	Available, but not interested	Not available	
