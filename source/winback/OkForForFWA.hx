@@ -2,15 +2,16 @@ package winback;
 
 
 import fees._InputDates;
-import tstool.process.Descision;
+//import tstool.process.Descision;
+import tstool.process.Triplet;
 //import tstool.process.Triplet;
 
 /**
  * ...
  * @author bb
  */
-//class CheckFWAElligibility extends Triplet 
-class OkForForFWA extends Descision
+class OkForForFWA extends Triplet 
+//class OkForForFWA extends Descision
 {
 	override public function onYesClick():Void
 	{
@@ -25,10 +26,11 @@ class OkForForFWA extends Descision
 		this._nexts = [{step: _InputDates, params: []}];
 		super.onNoClick();
 	}
-	/*
+	/**/
 	override public function onMidClick():Void
 	{
 		this._nexts = [{step: _InputDates, params: []}];
 		super.onMidClick();
-	}*/
+	}
+	/**/
 }

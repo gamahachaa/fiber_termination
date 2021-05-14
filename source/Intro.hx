@@ -43,6 +43,15 @@ class Intro extends DescisionRadios
 	*/
 	static public inline var WHY_LEAVE:String = "WHY LEAVE";
 	static public inline var NO_MORE = "TECH ISSUES";
+	//static public inline var BILLING = "BILLING";
+	static public inline var BILLINGUNDERSTANDING = "BILLINGUNDERSTANDING";
+	static public inline var BILLINGFEES = "BILLINGFEES";
+	static public inline var BETTER_OFFER = "BETTER_OFFER";
+	static public inline var PRODUCTAPPLETV = "PRODUCTAPPLETV";
+	static public inline var PRODUCTSALTTV = "PRODUCTSALTTV";
+	static public inline var PRODUCTTECHSPECS = "PRODUCTTECHSPECS";
+	static public inline var PRODUCTVOIP = "PRODUCTVOIP";
+	static public inline var OTHER = "OTHER";
 	static public inline var DEATH = "DEATH";
 	static public inline var PLUG_IN_USE = "WANTS TO STAY WITH CURRENT PROVIDER";
 	static public inline var MOVE_CAN_KEEP = "MOVE HOUSE KEEP FIBER";
@@ -59,6 +68,13 @@ class Intro extends DescisionRadios
 				widthMultiplier:1,
 				values: [
 					NO_MORE,
+					BILLINGUNDERSTANDING,
+					BILLINGFEES,
+					BETTER_OFFER,
+					PRODUCTAPPLETV,
+					PRODUCTSALTTV,
+					PRODUCTTECHSPECS,
+					PRODUCTVOIP,
 					DEATH,
 					PLUG_IN_USE,
 					MOVE_CAN_KEEP,
@@ -67,6 +83,13 @@ class Intro extends DescisionRadios
 					FWA_ELLIGIBLE
 				],labels: [
 					 translate("Intro", NO_MORE, "headers"),
+					 translate("Intro", BILLINGUNDERSTANDING, "headers"),
+					 translate("Intro", BILLINGFEES, "headers"),
+					 translate("Intro", BETTER_OFFER, "headers"),
+					 translate("Intro", PRODUCTAPPLETV, "headers"),
+					 translate("Intro", PRODUCTSALTTV, "headers"),
+					 translate("Intro", PRODUCTTECHSPECS, "headers"),
+					 translate("Intro", PRODUCTVOIP, "headers"),
 					translate("Intro", DEATH, "headers"),
 					translate("Intro", PLUG_IN_USE, "headers"),
 					translate("Intro", MOVE_CAN_KEEP, "headers"),
@@ -80,6 +103,7 @@ class Intro extends DescisionRadios
 		);
 		
 	}
+	
 	override function changeListener(radioID:String, value:String)
 	{
 		#if debug
@@ -125,28 +149,8 @@ class Intro extends DescisionRadios
 		
 		Process.INIT();
 		MainApp.agent.removeGroupAsMember(Agent.WINBACK_GROUP_NAME);
+		
 		super.create();
-		//-	8h-17h Monday to Friday 
-		//var summer = new Date(2021, 2, 28, 0, 0, 0);
-		//var dummy = new Date(2021, 2, 29, 0, 0, 0);
-		//var dummy2 = new Date(2021, 2, 27, 10, 0, 0);
-		//var dummy3 = new Date(2021, 2, 26, 17, 0, 0);
-		//var dummy4 = new Date(2021, 2, 25, 17, 29, 0);
-		//var lastHourCH = 18;
-		//var firstHourCH = 8;
-		
-		var nowLocale = Date.now();
-		//var isSummer = DateToolsBB.isSummerTime(nowLocale);
-		//var lastHourUTC = lastHourCH - (isSummer ? 2 : 1) ;
-		var lastHourUTC = 17;
-		//var firstHourUTC = firstHourCH - (isSummer ? 2 : 1) ;
-		var firstHourUTC = 7;
-		var daysClosed = [0, 6];
-		
-		
-		//trace("---");
-		//trace(DateToolsBB.isWithinHours(firstHourUTC, lastHourUTC, nowLocale));
-		//trace("---");
 		
 		//#if !debug
 		Main.VERSION_TRACKER.scriptChangedSignal.add(onNewVersion);

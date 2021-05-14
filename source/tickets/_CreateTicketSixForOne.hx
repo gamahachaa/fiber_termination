@@ -15,7 +15,13 @@ class _CreateTicketSixForOne extends ActionTicket
 {
 	public function new() 
 	{
-		super(SOTickets.FIX_641);
+		var issue = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
+		var ticket = if (issue == Intro.PRODUCTTECHSPECS || issue == Intro.FWA_ELLIGIBLE || issue == Intro.NO_MORE){
+			SOTickets.FIX_641_TECH;
+		}else{
+			SOTickets.FIX_641_NONTECH;
+		}
+		super(ticket);
 	}
 	override public function create():Void{
 		

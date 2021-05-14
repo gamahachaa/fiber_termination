@@ -1,8 +1,10 @@
 package front.move;
 
 import fees._InputDates;
+import front.capture.CheckContractorVTI;
 import front.capture._TransferToWB;
 import tickets._CreateTicketSixForOne;
+import tstool.process.Process;
 import tstool.process.Triplet;
 import tstool.process.TripletMultipleInput;
 import tstool.salt.Agent;
@@ -17,10 +19,9 @@ import tstool.process.Triplet;
  * ...
  * @author bb
  */
-class IsAdressElligible extends TripletMultipleInput 
+class IsAdressElligible extends TripletMultipleInput
 {
-	
-	
+
 	inline static var ZIP = "Zip";
 	inline static var STREET = "Street";
 	inline static var NUMBER = "Number";
@@ -28,7 +29,8 @@ class IsAdressElligible extends TripletMultipleInput
 	public function new ()
 	{
 		super(
-		[{
+			[
+		{
 			ereg: new EReg(ExpReg.ZIP,"i"),
 			input:{
 				width: 60,
@@ -72,10 +74,10 @@ class IsAdressElligible extends TripletMultipleInput
 				mustValidate: [Yes, Mid]
 			}
 		}
-		]
+			]
 		);
 	}
-override public function onYesClick():Void
+	override public function onYesClick():Void
 	{
 		this._nexts = [{step: _InputMoveDate, params: []}];
 		super.onYesClick();
@@ -87,10 +89,31 @@ override public function onYesClick():Void
 	}
 	override public function onMidClick():Void
 	{
-		var now = Date.now();
-		var canTranfer = DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
-		this._nexts = [{step: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME) ? _InputDates: canTranfer? _TransferToWB : _CreateTicketSixForOne, params: []}];
+
+		this._nexts = [{step: getNext(), params: []}];
 		super.onMidClick();
 	}
-	
+	inline function getNext():Class<Process>
+	{
+		var isGigabox = Main.HISTORY.isClassInteractionInHistory(CheckContractorVTI, Mid);
+		var isWB = MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME);
+		var now = Date.now();
+		var canTranfer = DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
+		return if (isGigabox)
+		{
+			_InputMoveDate;
+		}
+		else if (isWB)
+		{
+			_InputDates;
+		}
+		else if (canTranfer)
+		{
+			_TransferToWB;
+		}
+		else{
+			_CreateTicketSixForOne;
+		}
+	}
+
 }

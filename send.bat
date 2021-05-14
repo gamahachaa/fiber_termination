@@ -2,7 +2,7 @@
 
 @echo off
 
-set DEV=1
+set DEV=0
 echo "START"
 if %DEV%==1 (
 	if "%1"=="" goto :dead
@@ -203,7 +203,7 @@ goto :completed
 
 
 rem PUSH to PROD SERVER  ------------------------------------------------------------------------------------------------------------------------------
-robocopy export\html5\bin "C:\xampp\htdocs\localhost" * /E
+rem robocopy export\html5\bin "C:\xampp\htdocs\localhost" * /E
 
 "C:\_mesProgs\WinSCP\WinSCP.com" ^
   /log="%cd%\WinSCP.log" /ini=nul ^

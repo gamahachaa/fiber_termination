@@ -9,12 +9,14 @@ import front.capture._CompareWishAndTermDates;
 import front.capture._DeathWording;
 import front.capture._TransferToWB;
 import fees._InputDates;
+import tstool.layout.History.Interactions;
+import tstool.process.TripletMultipleInput;
 //import layout.LoginCan;
 import lime.utils.Assets;
 import tickets._CreateTicketSixForOne;
 import tstool.MainApp;
 import tstool.layout.UI;
-import tstool.process.ActionMultipleInput;
+//import tstool.process.ActionMultipleInput;
 import tstool.process.Process;
 import tstool.salt.Agent;
 import tstool.salt.Balance;
@@ -34,7 +36,7 @@ import winback.RetainWithSalesSpeech;
  * ...
  * @author
  */
-class CheckContractorVTI extends ActionMultipleInput
+class CheckContractorVTI extends TripletMultipleInput
 {
 	var parser:tstool.utils.VTIdataParser;
 	var sagem:String;
@@ -46,6 +48,7 @@ class CheckContractorVTI extends ActionMultipleInput
 	public static inline var CUST_DATA_PRODUCT_BOX:String = "BOX";
 	public static inline var SAGEM:String = "Sagem";
 	public static inline var ARCADYAN:String = "Arcadyan";
+	public static inline var FWA:String = "Gigabox";
 
 	public function new()
 	{
@@ -82,9 +85,11 @@ class CheckContractorVTI extends ActionMultipleInput
 				}
 			]
 		);
-		sagem = Assets.getText("assets/data/sagem_fut.txt");
+		//sagem = Assets.getText("assets/data/sagem_fut.txt");
 		
-		this.nextValidatedSignal.add(canITrack);
+		this.yesValidatedSignal.add(canITrack);
+		this.noValidatedSignal.add(canITrack);
+		this.midValidatedSignal.add(canITrack);
 	}
 	function setReminder()
 	{
@@ -153,21 +158,44 @@ class CheckContractorVTI extends ActionMultipleInput
 	{
 		Main.customer.reset();
 		status = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
-		prepareXAPIMainActivity();
+		//prepareXAPIMainActivity();
+		Main.track.setActivity(status.removeWhite());
 		
 		super.create();
 		parser = new VTIdataParser(account);
 		parser.signal.add( onVtiAccountParsed );
 	}
 	
-	override public function onClick():Void
+	override public function onYesClick():Void
 	{
 		//var contractorID = vtiContractorUI.getInputedText();
-		if (validate())
+		if (validate(Next))
 		{
 			this._nexts = [{step: getNext()}];
-			setUpData();
-			super.onClick();
+			setUpData(Yes);
+			super.onYesClick();
+		}
+		
+	}
+	override public function onNoClick():Void
+	{
+		//var contractorID = vtiContractorUI.getInputedText();
+		if (validate(Next))
+		{
+			this._nexts = [{step: getNext()}];
+			setUpData(No);
+			super.onNoClick();
+		}
+		
+	}
+	override public function onMidClick():Void
+	{
+		//var contractorID = vtiContractorUI.getInputedText();
+		if (validate(Next))
+		{
+			this._nexts = [{step: getNext()}];
+			setUpData(Mid);
+			super.onMidClick();
 		}
 		
 	}
@@ -176,11 +204,22 @@ class CheckContractorVTI extends ActionMultipleInput
 	{
 		var now = Date.now();
 		var canTranfer = DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
+		#if debug
+		trace("front.capture.CheckContractorVTI::getNext::status", status );
+		trace("front.capture.CheckContractorVTI::getNext::Agent.WINBACK_GROUP_NAME", Agent.WINBACK_GROUP_NAME );
+		trace("front.capture.CheckContractorVTI::getNext:: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)", MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME) );
+		trace("front.capture.CheckContractorVTI::getNext:: AGENT", MainApp.agent );
+		#end
 		return switch (status)
 		{	
 			case Intro.NO_MORE: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
+			case Intro.BILLINGUNDERSTANDING: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
+			case Intro.BILLINGFEES: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
+			case Intro.PRODUCTTECHSPECS: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
+			case Intro.BETTER_OFFER: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
+			case Intro.OTHER: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
 			case Intro.DEATH: _DeathWording; 
-			case Intro.PLUG_IN_USE: _CompareWishAndTermDates;
+			case Intro.PLUG_IN_USE: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB :_CreateTicketSixForOne ;//_CompareWishAndTermDates
 			case Intro.MOVE_CAN_KEEP: IsAdressElligible;
 			//case Intro.MOVE_CANNOT_KEEP: _InputDates;
 			case Intro.FWA_ELLIGIBLE: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)?OkForForFWA: _InputDates;
@@ -189,7 +228,7 @@ class CheckContractorVTI extends ActionMultipleInput
 		}
 	}
 	
-	function setUpData()
+	function setUpData(what:Interactions)
 	{
 		this.parser.destroy();
 
@@ -197,10 +236,10 @@ class CheckContractorVTI extends ActionMultipleInput
 		Main.customer.contract.fix =  multipleInputs.getText(VOIP_NUM);		
 		//Main.customer.contract.voip = "0" + Main.customer.contract.fix.substr(2);
 		Main.customer.contract.voip = Main.customer.contract.fix.intlToLocalMSISDN();
-		Main.customer.iri = isSagem(Main.customer.contract.contractorID) ? Main.customer.contract.contractorID : Main.customer.contract.voip;
+		Main.customer.iri = what == Yes ? Main.customer.contract.voip : Main.customer.contract.contractorID;
 		Main.customer.contract.mobile = multipleInputs.getText(CONTACT_NUM);
 		
-		Main.customer.dataSet.set(CUST_DATA_PRODUCT, [CUST_DATA_PRODUCT_BOX => (isSagem(Main.customer.contract.contractorID)?SAGEM:ARCADYAN)]);
+		Main.customer.dataSet.set(CUST_DATA_PRODUCT, [CUST_DATA_PRODUCT_BOX => switch(what){case Yes: ARCADYAN; case No:SAGEM; case Mid:FWA; case _:ARCADYAN; }]);
 		setReminder();
 	}
 
@@ -220,20 +259,20 @@ class CheckContractorVTI extends ActionMultipleInput
 			Main.track.setStatementRef(null);
 			Main.track.setCustomer();
 			Main.track.send();
-			Main.track.setVerb("resolved");
+			Main.track.setVerb("resolved");// will be overridden by ticket creation
 		}
 
 	}
-	
+	/*
 	function prepareXAPIMainActivity()
 	{
-		
+		Main.track.setActivity("TRANSFER_WB");
 		if (status == Intro.NO_MORE){ Main.track.setActivity("TRANSFER_WB");} 
 		else if (status == Intro.DEATH){ Main.track.setActivity("DEATH"); }
 		else if (status == Intro.PLUG_IN_USE){Main.track.setActivity("PLUG_IN_USE");}
 		else if (status == Intro.MOVE_CAN_KEEP){Main.track.setActivity("MOVE_CAN_KEEP");}
 		else if (status == Intro.MOVE_CANNOT_KEEP){Main.track.setActivity("MOVE_CANNOT_KEEP");}
 		else {Main.track.setActivity("TRANSFER_WB"); };
-	}
+	} */
 	
 }

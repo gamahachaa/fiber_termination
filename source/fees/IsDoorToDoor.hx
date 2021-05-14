@@ -40,7 +40,11 @@ class IsDoorToDoor extends Descision
 		//var nowRoundMilli:Float = Date.now().getTime() - (Date.now().getTime() % Constants.ONE_DAY_MILLI);
 		//isActivatedLessThanMonth = (nowRoundMilli - activationDate.getTime() < Constants.ONE_MONTH_MILLI);
 		var isDoorToDoorGrace = (termDate.getTime() - orderDate.getTime()) < Constants.ONE_DAY_MILLI * 30;
-		
+		#if debug
+		trace("fees.IsDoorToDoor::getNext::isDoorToDoor", isDoorToDoor );
+		trace("fees.IsDoorToDoor::getNext::isDoorToDoorGrace", isDoorToDoorGrace );
+		trace("fees.IsDoorToDoor::getNext::isActivated", isActivated );
+		#end
 		return if (isDoorToDoor && isDoorToDoorGrace){
 			IsActivationFeesPaid;
 		}
