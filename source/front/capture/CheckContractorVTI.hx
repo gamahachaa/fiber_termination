@@ -212,7 +212,7 @@ class CheckContractorVTI extends TripletMultipleInput
 		#end
 		return switch (status)
 		{	
-			case Intro.NO_MORE: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
+			case Intro.TECH_ISSUES: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
 			case Intro.BILLINGUNDERSTANDING: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
 			case Intro.BILLINGFEES: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
 			case Intro.PRODUCTTECHSPECS: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
@@ -222,7 +222,7 @@ class CheckContractorVTI extends TripletMultipleInput
 			case Intro.PLUG_IN_USE: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB :_CreateTicketSixForOne ;//_CompareWishAndTermDates
 			case Intro.MOVE_CAN_KEEP: IsAdressElligible;
 			//case Intro.MOVE_CANNOT_KEEP: _InputDates;
-			case Intro.FWA_ELLIGIBLE: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)?OkForForFWA: _InputDates;
+			case Intro.NOT_ELLIGIBLE: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)?OkForForFWA: _InputDates;
 			//case Intro.MOVE_LEAVE_CH: _InputDates;
 			case _:_InputDates;
 		}

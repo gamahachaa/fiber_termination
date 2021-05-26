@@ -66,7 +66,7 @@ class IsAdressElligible extends TripletMultipleInput
 		{
 			ereg: new EReg(ExpReg.ADRESS_NUMBER,"i"),
 			input:{
-				width: 40,
+				width: 80,
 				prefix: NUMBER,
 				buddy: STREET,
 				debug: "4",

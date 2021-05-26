@@ -42,21 +42,22 @@ class Intro extends DescisionRadios
 	static public var MOVE_CANNOT_KEEP = Main.tongue.get("$flow.Intro_v5", "values");
 	*/
 	static public inline var WHY_LEAVE:String = "WHY LEAVE";
-	static public inline var NO_MORE = "TECH ISSUES";
-	//static public inline var BILLING = "BILLING";
-	static public inline var BILLINGUNDERSTANDING = "BILLINGUNDERSTANDING";
-	static public inline var BILLINGFEES = "BILLINGFEES";
-	static public inline var BETTER_OFFER = "BETTER_OFFER";
-	static public inline var PRODUCTAPPLETV = "PRODUCTAPPLETV";
-	static public inline var PRODUCTSALTTV = "PRODUCTSALTTV";
-	static public inline var PRODUCTTECHSPECS = "PRODUCTTECHSPECS";
-	static public inline var PRODUCTVOIP = "PRODUCTVOIP";
-	static public inline var OTHER = "OTHER";
+	static public inline var TECH_ISSUES = "technical_modem_connection";//technical_modem_connection ; Technical: modem connection
+	static public inline var BILLINGUNDERSTANDING = "billing_bill_understanding";//billing_bill_understanding ; Billing: understanding the bill
+	static public inline var BILLINGFEES = "billing_reminder";//billing_reminder ; Billing: reminder or suspension fees
+	
+	static public inline var BETTER_OFFER = "offre_betterelsewhere";//offre_betterelsewhere ; Better offer
+	
+	static public inline var PRODUCTAPPLETV = "product_appletv";//product_appletv ; Product: apple tv
+	static public inline var PRODUCTSALTTV = "product_salttv";//product_salttv ; Product: salt tv
+	static public inline var PRODUCTTECHSPECS = "product_tech_specs";//product_tech_specs ; Product: technical characteristics 
+	static public inline var PRODUCTVOIP = "product_voip";//product_voip ; Product: voip
+	static public inline var OTHER = "user_terminate";//user_terminate ; Other: personal/unknown
 	static public inline var DEATH = "DEATH";
 	static public inline var PLUG_IN_USE = "WANTS TO STAY WITH CURRENT PROVIDER";
-	static public inline var MOVE_CAN_KEEP = "MOVE HOUSE KEEP FIBER";
+	static public inline var MOVE_CAN_KEEP = "leaving_location";//leaving_location ; Move: terminated by the customer
 	static public inline var MOVE_CANNOT_KEEP = "MOVE CANT KEEP";
-	static public inline var FWA_ELLIGIBLE = "NOT ELLIGIBLE AT NEW ADRESS";
+	static public inline var NOT_ELLIGIBLE = "leaving_location_not_eligible"; //leaving_location_not_eligible ; Move: not eligible
 	static public inline var MOVE_LEAVE_CH = "BYE BYE SWITZERLAND";
 	public function new() 
 	{
@@ -67,7 +68,7 @@ class Intro extends DescisionRadios
 				hasTranslation:true,
 				widthMultiplier:1,
 				values: [
-					NO_MORE,
+					TECH_ISSUES,
 					BILLINGUNDERSTANDING,
 					BILLINGFEES,
 					BETTER_OFFER,
@@ -80,9 +81,9 @@ class Intro extends DescisionRadios
 					MOVE_CAN_KEEP,
 					MOVE_CANNOT_KEEP,
 					MOVE_LEAVE_CH,
-					FWA_ELLIGIBLE
+					NOT_ELLIGIBLE
 				],labels: [
-					 translate("Intro", NO_MORE, "headers"),
+					 translate("Intro", TECH_ISSUES, "headers"),
 					 translate("Intro", BILLINGUNDERSTANDING, "headers"),
 					 translate("Intro", BILLINGFEES, "headers"),
 					 translate("Intro", BETTER_OFFER, "headers"),
@@ -95,7 +96,7 @@ class Intro extends DescisionRadios
 					translate("Intro", MOVE_CAN_KEEP, "headers"),
 					translate("Intro", MOVE_CANNOT_KEEP, "headers"),
 					translate("Intro", MOVE_LEAVE_CH, "headers"),
-					translate("Intro", FWA_ELLIGIBLE, "headers")
+					translate("Intro", NOT_ELLIGIBLE, "headers")
 				],
 				titleTranslation: translate("Intro", WHY_LEAVE, "headers")
 			}
@@ -115,7 +116,7 @@ class Intro extends DescisionRadios
 		this.btnYes.visible = true;
 		switch(value)
 		{
-			case FWA_ELLIGIBLE : this.btnYes.visible = false;
+			case NOT_ELLIGIBLE : this.btnYes.visible = false;
 			case _ : this.btnYes.visible = true;
 		}
 	}
@@ -123,7 +124,7 @@ class Intro extends DescisionRadios
 	{
 		// FRONT
 		if(validate()){
-			if (status.get(WHY_LEAVE) == FWA_ELLIGIBLE)
+			if (status.get(WHY_LEAVE) == NOT_ELLIGIBLE)
 			{
 				this.rds[0].blink(true);
 			}
