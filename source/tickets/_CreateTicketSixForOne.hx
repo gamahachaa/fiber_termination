@@ -16,7 +16,7 @@ class _CreateTicketSixForOne extends ActionTicket
 	public function new() 
 	{
 		var issue = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
-		var ticket = if (issue == Intro.PRODUCTTECHSPECS || issue == Intro.FWA_ELLIGIBLE || issue == Intro.NO_MORE){
+		var ticket = if (issue == Intro.PRODUCTTECHSPECS || issue == Intro.NOT_ELLIGIBLE || issue == Intro.TECH_ISSUES){
 			SOTickets.FIX_641_TECH;
 		}else{
 			SOTickets.FIX_641_NONTECH;

@@ -73,7 +73,7 @@ class _TotalFees extends Action
 		trace("create::notElligibleAtAdress", notElligibleAtAdress );
 		#end
 
-		isTerminationStandard =  !(whyLeave == Intro.MOVE_LEAVE_CH || notElligibleAtAdress || whyLeave == Intro.FWA_ELLIGIBLE);
+		isTerminationStandard =  !(whyLeave == Intro.MOVE_LEAVE_CH || notElligibleAtAdress || whyLeave == Intro.NOT_ELLIGIBLE);
 		#if debug
 		trace("create::isTerminationStandard", isTerminationStandard );
 		#end

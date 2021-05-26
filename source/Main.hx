@@ -8,6 +8,9 @@ import flixel.FlxState;
 import flixel.input.keyboard.FlxKey;
 import flow.End;
 import Intro;
+import xapi.Agent;
+import xapi.Verb;
+import xapi.types.StatementRef;
 //import layout.LoginCan;
 import tstool.layout.Login;
 import tstool.layout.UI;
@@ -32,6 +35,7 @@ import tstool.utils.Csv;
 import tstool.utils.Translator;
 import tstool.utils.VersionTracker;
 import tstool.utils.XapiTracker;
+import tstool.utils.XapiHelper;
 
 /**
  * ...
@@ -41,6 +45,7 @@ import tstool.utils.XapiTracker;
 
 class Main extends MainApp
 {
+	var xapiHelper:XapiHelper;
 	//public static var LIB_FOLDER:String;
 	public static inline var LIB_FOLDER_LOGIN:String = "/commonlibs/";
 	//public static var MAIL_WRAPPER_URL:String = LIB_FOLDER + "php/mail/index.php";
@@ -73,32 +78,31 @@ class Main extends MainApp
 				
 		});
 		
-		tongue = MainApp.translator;
+		//tongue = MainApp.translator;
 		//COOKIE = MainApp.save;
 		HISTORY = MainApp.stack;
-		LOCATION = MainApp.location;
+		//LOCATION = MainApp.location;
 		track =  MainApp.xapiTracker;
+		xapiHelper = new XapiHelper( Browser.location.origin + LIB_FOLDER_LOGIN );
 		DEBUG = MainApp.debug;
 		VERSION_TRACKER = MainApp.versionTracker;
 		customer = MainApp.cust;
-		addChild(new FlxGame(1400, 880, Login, 1, 30, 30, true, true));
-		var now = Date.now();
-		trace(new Date(now.getFullYear(), now.getMonth() + 1, 0, 0, 0, 0));
+		//addChild(new FlxGame(1400, 880, Login, 1, 30, 30, true, true));
+		//var now = Date.now();
+		//trace(new Date(now.getFullYear(), now.getMonth() + 1, 0, 0, 0, 0));
+		#if debug
+		testXAPI();
+		#end
+		initScreen();
 	}
 
-	static public function setUpSystemDefault(?block:Bool = false )
-	{
-		FlxG.sound.soundTrayEnabled = false;
-		FlxG.mouse.useSystemCursor = block;
-		FlxG.keys.preventDefaultKeys = block ? [FlxKey.BACKSPACE, FlxKey.TAB] : [FlxKey.TAB];
-		//FlxG.keys.preventDefaultKeys = [FlxKey.TAB];
-	}
+	
     static public function MOVE_ON(?old:Bool=false)
 	{
 		
 		var next:Process = new Intro();
 		var tuto:Process = new Tuto();
-		setUpSystemDefault(true);
+		MainApp.setUpSystemDefault(true);
 		#if !debug
 		Main.track.setActor();
 		#end
@@ -112,6 +116,16 @@ class Main extends MainApp
 		#if debug
 		trace("Main::MOVE_ON::MOVE_ON", MOVE_ON );
 		#end
-		tongue.initialize(MainApp.agent.mainLanguage, ()->(FlxG.switchState( old ? next : tuto)) );
+		MainApp.translator.initialize(MainApp.agent.mainLanguage, ()->(FlxG.switchState( old ? next : tuto)) );
+	}
+	function testXAPI()
+	{
+		xapiHelper.setActor(new Agent("bruno.baudry@salt.ch", "bbaudry"));
+		xapiHelper.setVerb(Verb.asked);
+	//xapiHelper.setActivityObject("TESTING", ["en"=>"TESTING"], ["en" => "blah blah"], "Activity", ["https://qook.salt.ch/def" => "YO MAN"]);
+	xapiHelper.setActivityObject("TESTING", ["en"=>"TESTING"],null,"Activity");
+		//xapiHelper.setContext(new Agent("tutor@salt.ch"), "https://qook.salt.ch/TOASTING", "qoom", "fr-FR", ["https://qook.salt.ch/duf" => "YO BRO"]);
+		xapiHelper.addStatementRef(new StatementRef("c0d0b6f6-7d10-4336-9ad7-515abaa15cbf"));
+		xapiHelper.send();
 	}
 }

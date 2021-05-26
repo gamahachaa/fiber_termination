@@ -44,10 +44,11 @@
 	<haxelib name="firetongue" />
 	<haxelib name="hscript" />
 	<haxelib name="tstool" />
+	<haxelib name="xapi" />
+	<haxelib name="lrs" />
+	<haxelib name="thx.core" />
+	<haxelib name="signals" />
 	<haxelib name="uglifyjs" unless="debug" />
-	
-	<!--<haxelib name="xapi" />-->
-	<!--<haxelib name="lrs" />-->
 	<!--<haxelib name="msignal" />-->
 	<!--<haxelib name="thx.core" />-->
 
