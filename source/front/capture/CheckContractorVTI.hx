@@ -9,11 +9,14 @@ import front.capture._CompareWishAndTermDates;
 import front.capture._DeathWording;
 import front.capture._TransferToWB;
 import fees._InputDates;
+import front.move._AskForOTO;
+import tickets._CreateTicketSixForOne_close;
+import tickets._CreateTicketSixForOne_open;
 import tstool.layout.History.Interactions;
 import tstool.process.TripletMultipleInput;
 //import layout.LoginCan;
 import lime.utils.Assets;
-import tickets._CreateTicketSixForOne;
+//import tickets._CreateTicketSixForOne;
 import tstool.MainApp;
 import tstool.layout.UI;
 //import tstool.process.ActionMultipleInput;
@@ -44,6 +47,7 @@ class CheckContractorVTI extends TripletMultipleInput
 	static inline var VOIP_NUM:String = "VoIP Number";
 	static inline var CONTACT_NUM:String = "Contact Number";
 	var status:String;
+	var is_sagem:Bool;
 	public static inline var CUST_DATA_PRODUCT:String = "PRODUCTS";
 	public static inline var CUST_DATA_PRODUCT_BOX:String = "BOX";
 	public static inline var SAGEM:String = "Sagem";
@@ -70,6 +74,7 @@ class CheckContractorVTI extends TripletMultipleInput
 						width:200,
 						debug: "41212180513",
 						prefix:VOIP_NUM,
+						mustValidate: [Yes,No],
 						position:[top, right]
 					}
 				},
@@ -94,22 +99,27 @@ class CheckContractorVTI extends TripletMultipleInput
 	function setReminder()
 	{
 		//081 304 10 13
-			var voip = Main.customer.voIP.split("");
+			/*var voip = Main.customer.voIP.split("");
 			voip.insert(8, " ");
 			voip.insert(6, " ");
 			voip.insert(3, " ");
 			
-			var displayVoip = voip.join("");
-			var owner = Main.customer.contract.owner == null? "": Main.customer.contract.owner.name == null?"":Main.customer.contract.owner.name;
+			var displayVoip = voip.join("");*/
+			var displayVoip = Main.customer.voIP.phonSpaces();
+			var owner = Main.customer.getOwner();
 			var mobile = Main.customer.contract.mobile == "" ? "": "(" + Main.customer.contract.mobile + ")";
 			var iri  = Main.customer.iri == "" ? "" : "(" + Main.customer.iri + ")";
 			//Process.STORAGE.set("reminder", '$displayVoip $iri\n$owner $mobile' );
 			Process.STORAGE.set("CONTRACTOR", Main.customer.contract.contractorID );
-			Process.STORAGE.set("VOIP", displayVoip );
+			if (Main.customer.contract.service != Gigabox) 
+			{
+				Process.STORAGE.set("VOIP", displayVoip );
+			}
 			Process.STORAGE.set("OWNER", owner );
 			Process.STORAGE.set("CONTACT", mobile );
+			Process.STORAGE.set("BOX", is_sagem?SAGEM:  (Main.customer.contract.service == Gigabox ? Std.string(Gigabox) : ARCADYAN) );
 			
-
+          
 			/**
 			 * @TODO keep clipboard trick to fill clipboard with data
 			 */
@@ -122,10 +132,12 @@ class CheckContractorVTI extends TripletMultipleInput
 			trace(profile);
 		#end
 		if (!profile.exists("meta") || !profile.exists("plan")) return;
-		else 
-		Main.customer.contract = new Contractor(
+		else{
+			var voip = profile.get("plan").exists("vtiVoip")? profile.get("plan").get("vtiVoip"): ""; 
+		is_sagem = voip.indexOf("-") > -1;
+			Main.customer.contract = new Contractor(
 			profile.get("meta").exists("vtiContractor")? profile.get("meta").get("vtiContractor"):"",
-			profile.get("plan").exists("vtiVoip")? StringTools.replace(profile.get("plan").get("vtiVoip"), "- ",""):"",
+			is_sagem ? StringTools.replace(voip, "- ",""):voip,
 			profile.get("plan").exists("vtiFix")? profile.get("plan").get("vtiFix"):"",
 			profile.get("plan").exists("vtiMobile")? profile.get("plan").get("vtiMobile"):"",
 			profile.get("plan").exists("vtiAdress")? profile.get("plan").get("vtiAdress"):"",
@@ -133,8 +145,11 @@ class CheckContractorVTI extends TripletMultipleInput
 			profile.exists("payer")? new Role(payer,profile.get("payer").get("vtiPayer"),profile.get("payer").get("vtiPayerEmail")):null,
 			new Role(user, profile.get("plan").get("vtiUser"), profile.get("plan").get("vtiUserEmail")),
 			profile.exists("owner")? StringTools.trim(profile.get("owner").get("vtiOwnerEmailValidated").toLowerCase()) == "ok":false,
-			profile.exists("balance")?new Balance( profile.get("balance").get("vtiBalance"), profile.get("balance").get("vtiOverdue"), profile.get("balance").get("vtiOverdueDate")):null
+			profile.exists("balance")?new Balance( profile.get("balance").get("vtiBalance"), profile.get("balance").get("vtiOverdue"), profile.get("balance").get("vtiOverdueDate")):null,
+			(profile.get("plan").exists("plan") ? (profile.get("plan").get("plan").indexOf("Giga")>-1?Gigabox:Fiber):Fiber)
 		);
+		}
+		
 		#if debug
 			trace(Main.customer);
 		#end
@@ -159,7 +174,7 @@ class CheckContractorVTI extends TripletMultipleInput
 		Main.customer.reset();
 		status = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
 		//prepareXAPIMainActivity();
-		Main.track.setActivity(status.removeWhite());
+		
 		
 		super.create();
 		parser = new VTIdataParser(account);
@@ -202,25 +217,39 @@ class CheckContractorVTI extends TripletMultipleInput
 	
 	inline function getNext():Class<Process>
 	{
-		var now = Date.now();
-		var canTranfer = DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
+		//var now = Date.now();
+		//var canTranfer = DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
+		//var canTranfer = DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHoursMinutes(Constants.FIBER_WINBACK_OPEN_UTC_FLOAT, Constants.FIBER_WINBACK_CLOSE_UTC_FLOAT, now);
+		var canTranfer = DateToolsBB.isUTCDayTimeFloatInRange(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Constants.FIBER_WINBACK_OPEN_UTC_FLOAT, Constants.FIBER_WINBACK_CLOSE_UTC_FLOAT);
 		#if debug
 		trace("front.capture.CheckContractorVTI::getNext::status", status );
 		trace("front.capture.CheckContractorVTI::getNext::Agent.WINBACK_GROUP_NAME", Agent.WINBACK_GROUP_NAME );
 		trace("front.capture.CheckContractorVTI::getNext:: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)", MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME) );
 		trace("front.capture.CheckContractorVTI::getNext:: AGENT", MainApp.agent );
 		#end
+		
 		return switch (status)
 		{	
-			case Intro.TECH_ISSUES: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
-			case Intro.BILLINGUNDERSTANDING: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
-			case Intro.BILLINGFEES: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
-			case Intro.PRODUCTTECHSPECS: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
-			case Intro.BETTER_OFFER: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
-			case Intro.OTHER: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB : _CreateTicketSixForOne;
+			case Intro.TECH_ISSUES: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _CreateTicketSixForOne_open : _CreateTicketSixForOne_close;
+			//case Intro.TECH_ISSUES: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech:  _CreateTicketSixForOne;
+			case Intro.BILLINGUNDERSTANDING: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ?_CreateTicketSixForOne_open : _CreateTicketSixForOne_close;
+			//case Intro.BILLINGUNDERSTANDING: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech:  _CreateTicketSixForOne;
+			case Intro.BILLINGFEES: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _CreateTicketSixForOne_open : _CreateTicketSixForOne_close;
+			//case Intro.BILLINGFEES: MainA_CreateTicketSixForOne_open : _CreateTicketSixForOne_close;pp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech:  _CreateTicketSixForOne;
+			case Intro.PRODUCTTECHSPECS: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _CreateTicketSixForOne_open : _CreateTicketSixForOne_close;
+			//case Intro.PRODUCTTECHSPECS: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech:  _CreateTicketSixForOne;
+			
+			case Intro.BETTER_OFFER: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _CreateTicketSixForOne_open : _CreateTicketSixForOne_close;
+			//case Intro.BETTER_OFFER: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech:  _CaptureBetterOffer;
+			
+			case Intro.OTHER: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _CreateTicketSixForOne_open : _CreateTicketSixForOne_close;
+			//case Intro.OTHER: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech:  _CreateTicketSixForOne;
 			case Intro.DEATH: _DeathWording; 
-			case Intro.PLUG_IN_USE: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _TransferToWB :_CreateTicketSixForOne ;//_CompareWishAndTermDates
-			case Intro.MOVE_CAN_KEEP: IsAdressElligible;
+			case Intro.PLUG_IN_USE: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _CreateTicketSixForOne_open : _CreateTicketSixForOne_close;
+			//case Intro.PLUG_IN_USE: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: _CreateTicketSixForOne ;//_CompareWishAndTermDates
+			case Intro.CANCEL_TO_REACTIVATE: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: canTranfer ? _CreateTicketSixForOne_open : _CreateTicketSixForOne_close;
+			//case Intro.CANCEL_TO_REACTIVATE: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: _CreateTicketSixForOne ;//_CompareWishAndTermDates
+			case Intro.MOVE_CAN_KEEP: MainApp.agent.isMember(Agent.CSR2_GROUP_NAME)? _AskForOTO :IsAdressElligible;
 			//case Intro.MOVE_CANNOT_KEEP: _InputDates;
 			case Intro.NOT_ELLIGIBLE: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)?OkForForFWA: _InputDates;
 			//case Intro.MOVE_LEAVE_CH: _InputDates;
@@ -236,33 +265,38 @@ class CheckContractorVTI extends TripletMultipleInput
 		Main.customer.contract.fix =  multipleInputs.getText(VOIP_NUM);		
 		//Main.customer.contract.voip = "0" + Main.customer.contract.fix.substr(2);
 		Main.customer.contract.voip = Main.customer.contract.fix.intlToLocalMSISDN();
-		Main.customer.iri = what == Yes ? Main.customer.contract.voip : Main.customer.contract.contractorID;
+		Main.customer.iri = (what == No || what == Mid) ? Main.customer.contract.contractorID : Main.customer.contract.voip;
 		Main.customer.contract.mobile = multipleInputs.getText(CONTACT_NUM);
 		
 		Main.customer.dataSet.set(CUST_DATA_PRODUCT, [CUST_DATA_PRODUCT_BOX => switch(what){case Yes: ARCADYAN; case No:SAGEM; case Mid:FWA; case _:ARCADYAN; }]);
 		setReminder();
+		
 	}
 
 	//override function validateNo()
 	//{
 		//return true;
 	//}
-	function isSagem(contrator:String)
-	{
-		return sagem.indexOf(contrator) >-1;
-	}
+	//function isSagem(contrator:String)
+	//{
+		//return sagem.indexOf(contrator) >-1;
+	//}
 	function canITrack(go:Bool)
 	{
 		if (go)
 		{
+			Main.track.initKeepActor();
+			Main.track.setActivity(Intro.GET_VTI_ACTIVITY(status));
 			Main.track.setVerb("initialized");
-			Main.track.setStatementRef(null);
+			//Main.track.setStatementRef(null);
 			Main.track.setCustomer();
+			Main.track.setResolution();
 			Main.track.send();
-			Main.track.setVerb("resolved");// will be overridden by ticket creation
+			//Main.track.setVerb("resolved");// will be overridden by ticket creation
 		}
 
 	}
+	
 	/*
 	function prepareXAPIMainActivity()
 	{

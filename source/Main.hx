@@ -8,6 +8,8 @@ import flixel.FlxState;
 import flixel.input.keyboard.FlxKey;
 import flow.End;
 import Intro;
+import front.capture._TransferToWB;
+import front.move._AskForOTO;
 import xapi.Agent;
 import xapi.Verb;
 import xapi.types.StatementRef;
@@ -72,7 +74,7 @@ class Main extends MainApp
 	public function new() 
 	{
 		super({
-				cookie:"fibercmt_20210407.user",
+				cookie:"fibercmt_20210902.user",
 				scriptName:"fiber_cmt",
 				libFolder: LIB_FOLDER_LOGIN
 				
@@ -83,7 +85,8 @@ class Main extends MainApp
 		HISTORY = MainApp.stack;
 		//LOCATION = MainApp.location;
 		track =  MainApp.xapiTracker;
-		xapiHelper = new XapiHelper( Browser.location.origin + LIB_FOLDER_LOGIN );
+		//xapiHelper = new XapiHelper( Browser.location.origin + LIB_FOLDER_LOGIN );
+		xapiHelper = new XapiHelper( "https://qook.test.salt.ch/commonlibs/" );
 		DEBUG = MainApp.debug;
 		VERSION_TRACKER = MainApp.versionTracker;
 		customer = MainApp.cust;
@@ -91,7 +94,7 @@ class Main extends MainApp
 		//var now = Date.now();
 		//trace(new Date(now.getFullYear(), now.getMonth() + 1, 0, 0, 0, 0));
 		#if debug
-		testXAPI();
+		//testXAPI();
 		#end
 		initScreen();
 	}
@@ -101,16 +104,20 @@ class Main extends MainApp
 	{
 		
 		var next:Process = new Intro();
+		
 		var tuto:Process = new Tuto();
 		MainApp.setUpSystemDefault(true);
 		#if !debug
-		Main.track.setActor();
+		//Main.track.setActor();
 		#end
 		#if debug
 			/**
 			 * USe this  to debug a slide
 			 */
 			next = new Intro();
+			//next = new _AskForOTO();
+			//next = new _TransferToWB();
+			
 			//next = new _InputDates();
 		#end
 		#if debug
@@ -118,14 +125,13 @@ class Main extends MainApp
 		#end
 		MainApp.translator.initialize(MainApp.agent.mainLanguage, ()->(FlxG.switchState( old ? next : tuto)) );
 	}
-	function testXAPI()
+	/*function testXAPI()
 	{
 		xapiHelper.setActor(new Agent("bruno.baudry@salt.ch", "bbaudry"));
 		xapiHelper.setVerb(Verb.asked);
-	//xapiHelper.setActivityObject("TESTING", ["en"=>"TESTING"], ["en" => "blah blah"], "Activity", ["https://qook.salt.ch/def" => "YO MAN"]);
-	xapiHelper.setActivityObject("TESTING", ["en"=>"TESTING"],null,"Activity");
-		//xapiHelper.setContext(new Agent("tutor@salt.ch"), "https://qook.salt.ch/TOASTING", "qoom", "fr-FR", ["https://qook.salt.ch/duf" => "YO BRO"]);
+	xapiHelper.setActivityObject("TESTING", ["en"=>"TESTING"],["en" => "blah blah"],"Activity",["https://qook.salt.ch/def" => "YO MAN"]);
+		xapiHelper.setContext(new Agent("tutor@salt.ch"),null,"qoof",MainApp.translator.locale,["https://qook.salt.ch/def" => "YO MAN"]);
 		xapiHelper.addStatementRef(new StatementRef("c0d0b6f6-7d10-4336-9ad7-515abaa15cbf"));
 		xapiHelper.send();
-	}
+	}*/
 }

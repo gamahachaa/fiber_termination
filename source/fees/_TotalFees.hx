@@ -56,6 +56,7 @@ class _TotalFees extends Action
 	static inline var Moveadministrationfees:String = "Move administration fees";
 	static inline var TOTALTOPAY:String = "TOTAL TO PAY";
 	var hasMobileDiscount:Bool;
+	var reducedETF:Bool;
 	override public function create():Void
 	{
 		valuesToStore = [];
@@ -193,7 +194,13 @@ class _TotalFees extends Action
 					valuesToStore.set(Terminationisstandard, false);
 					valuesToStore.set(ETF, finalETF);
 					finalDetailTxt += Replace.flags(nonStandard_txt, ["<DATE_ACTIVATION>", "<DATE_TERMINATION>"], ['${activationDate.getDate()}.${activationDate.getMonth()+1}.${activationDate.getFullYear()}', '${termDate.getDate()}.${termDate.getMonth()+1}.${termDate.getFullYear()}']);
-					finalDetailTxt += "\n" + Replace.flags(capETF_txt, ["<FINAL_ETF>", "<FULL_ETF>"], [Std.string(finalETF), Std.string(fullETF)]);
+					if ( reducedETF ){
+						finalDetailTxt += "\n" + Replace.flags(capETF_txt, ["<FINAL_ETF>", "<FULL_ETF>"], [Std.string(finalETF), Std.string(fullETF)]);
+					}
+					else{
+						finalDetailTxt += "\n" + Replace.flags(fullETF_txt, ["<FULL_ETF>", "<MONTH_LEFT>"], [Std.string(finalETF), Std.string(deltaDatesMonth)]);
+					}
+					
 				}
 
 			} 
@@ -272,7 +279,7 @@ class _TotalFees extends Action
 		moveAdminFees = (whyLeave == Intro.MOVE_CAN_KEEP) ? 49.95 : 0;
 		fullETF = Math.max(0, 198 - (deltaDatesMonth * 6));
 		finalETF = waiveETF ? 0 : (isTerminationStandard? fullETF : Math.min(99.95, fullETF));
-
+        reducedETF = fullETF != finalETF;
 		noticePeriodFees = (noticePeriodRespected )? 0 : (isTerminationStandard ? 2: 1) * (hasMobileDiscount? 39.95:49.95);
 		cancelationFees = isBoxNOTSent ? 199.95 : 0;
 		totalFees = moveAdminFees > 0 ? moveAdminFees: finalETF + noticePeriodFees + (MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)?cancelationFees:0);

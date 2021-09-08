@@ -1,15 +1,15 @@
 package tickets;
 
+using tstool.utils.DateToolsBB;
+
 import firetongue.Replace;
 import flow._AddMemoVti;
-import front.capture._TransferToWB;
-import haxe.Json;
 import lime.system.Clipboard;
-import tstool.layout.History;
+import tstool.layout.History.Interactions;
 import tstool.process.ActionTicket;
 import tstool.salt.SOTickets;
 import tstool.utils.Constants;
-import tstool.utils.DateToolsBB;
+//import tstool.utils.DateToolsBB;
 
 /**
  * ...
@@ -32,54 +32,35 @@ class _CreateTicketSixForOne_close extends ActionTicket
 		
 		super(ticket); 
 		#end
-		//var detailTextObj:Dynamic = Json.parse(_detailTxt);
-		//var titleTextObj:Dynamic = Json.parse(_titleTxt);
-		//var start =    Constants.FIBER_WINBACK_OPEN_UTC_FLOAT +1;
-		//var end = Constants.FIBER_WINBACK_CLOSE_UTC_FLOAT +1;
-		//canTranfer = DateToolsBB.isDayTimeFloatInRange(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, start, end );
-		
-		//var startString = prepareHourFromFloat(start);
-		//var endString = prepareHourFromFloat(end);
+
 				
 	}
 	override public function create():Void{
 
-		var start =    Constants.FIBER_WINBACK_OPEN_UTC_FLOAT +1;
-		var end = Constants.FIBER_WINBACK_CLOSE_UTC_FLOAT +1;
-		//canTranfer = DateToolsBB.isDayTimeFloatInRange(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, start, end );
+		var start =    Constants.FIBER_WINBACK_OPEN_UTC_FLOAT + DateToolsBB.getSeasonDelta();
+		var end = Constants.FIBER_WINBACK_CLOSE_UTC_FLOAT + DateToolsBB.getSeasonDelta();
 		
-		var startString = prepareHourFromFloat(start);
-		var endString = prepareHourFromFloat(end);
+		var startString = DateToolsBB.prepareHourFromFloat(start);
+		var endString = DateToolsBB.prepareHourFromFloat(end);
+		
 		
 		_detailTxt = Replace.flags(_detailTxt, ["<START>", "<END>", "<NEXT>"], [startString, endString, _buttonTxt]);
-		//_titleTxt = (canTranfer ? titleTextObj.can :  titleTextObj.cannot) +  titleTextObj.common;
+		
 		super.create();
 		this.details.text = _detailTxt;
-		//_detailTxt = Replace.flags(detailTextObj.common + (canTranfer? detailTextObj.can : detailTextObj.cannot) , ["<START>", "<END>", "<NEXT>"], [startString, endString, this.btn.text]);
-		//_titleTxt = (canTranfer ? titleTextObj.can :  titleTextObj.cannot) +  titleTextObj.common;
- 
-		//this.mail.
+		
 	}
 	override public function onClick():Void
 	{
         
 		this._nexts = [{step:  _AddMemoVti, params: []}];
-		//Clipboard.text = History.stripTags(this.text,["\t", "\n"]);
 		Clipboard.text = Main.HISTORY.prepareClipboard( "WINBACK-TRANSFER\n" + this.memoTxtArea.getInputedText() );
 		super.onClick();
 	}
-	inline function prepareHourFromFloat(f:Float)
+	
+	override public function pushToHistory(buttonTxt:String, interactionType:Interactions,?values:Map<String,Dynamic>=null):Void
 	{
-		var s = Std.string(f);
-		var o ="";
-		if (s.indexOf(".")>-1)
-		{
-			  o = s.split(".").join("h");
-		}
-		else{
-			o = s + "h0";
-		}
-		return o + "0";
+		super.pushToHistory(buttonTxt, interactionType, ["winback" =>"closed"]);
 	}
 	
 }

@@ -9,10 +9,15 @@ import tstool.process.Descision;
 class IsFiberStatusPlugInUse extends Descision 
 {
 
-	public function new() 
+	override public function onYesClick():Void
 	{
-		super();
-		
+		this._nexts = [{step: _SubmitMove, params: []}];
+		super.onYesClick();
+	}
+	override public function onNoClick():Void
+	{
+		this._nexts = [{step: _InformMailWillBeSent, params: []}];
+		super.onNoClick();
 	}
 	
 }

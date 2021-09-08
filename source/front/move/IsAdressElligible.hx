@@ -3,7 +3,10 @@ package front.move;
 import fees._InputDates;
 import front.capture.CheckContractorVTI;
 import front.capture._TransferToWB;
-import tickets._CreateTicketSixForOne;
+import tickets._CreateTicketSixForOne_close;
+import tickets._CreateTicketSixForOne_open;
+//import front.move.vti.DoesVTIYieldElligible;
+//import tickets._CreateTicketSixForOne;
 import tstool.process.Process;
 import tstool.process.Triplet;
 import tstool.process.TripletMultipleInput;
@@ -77,6 +80,12 @@ class IsAdressElligible extends TripletMultipleInput
 			]
 		);
 	}
+	/*override public function create():Void
+	{
+		super.create();
+		if (Main.HISTORY.isClassInteractionInHistory(DoesVTIYieldElligible, No))
+			this.btnYes.visible = false;
+	}*/
 	override public function onYesClick():Void
 	{
 		this._nexts = [{step: _InputMoveDate, params: []}];
@@ -97,8 +106,8 @@ class IsAdressElligible extends TripletMultipleInput
 	{
 		var isGigabox = Main.HISTORY.isClassInteractionInHistory(CheckContractorVTI, Mid);
 		var isWB = MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME);
-		var now = Date.now();
-		var canTranfer = DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
+		//var now = Date.now();
+		//var canTranfer = DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
 		return if (isGigabox)
 		{
 			_InputMoveDate;
@@ -107,12 +116,9 @@ class IsAdressElligible extends TripletMultipleInput
 		{
 			_InputDates;
 		}
-		else if (canTranfer)
-		{
-			_TransferToWB;
-		}
 		else{
-			_CreateTicketSixForOne;
+			var canTranfer = DateToolsBB.isUTCDayTimeFloatInRange(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Constants.FIBER_WINBACK_OPEN_UTC_FLOAT, Constants.FIBER_WINBACK_CLOSE_UTC_FLOAT);
+			canTranfer ? _CreateTicketSixForOne_open: _CreateTicketSixForOne_close;
 		}
 	}
 
