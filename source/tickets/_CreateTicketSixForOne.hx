@@ -42,24 +42,12 @@ class _CreateTicketSixForOne extends ActionTicket
 		var endString = prepareHourFromFloat(end);
 				
 	}
-	override public function create():Void{
-
-		_detailTxt = Replace.flags(detailTextObj.common + (canTranfer? detailTextObj.can : detailTextObj.cannot) , ["<START>", "<END>", "<NEXT>"], [startString, endString, _buttonTxt]);
-		_titleTxt = (canTranfer ? titleTextObj.can :  titleTextObj.cannot) +  titleTextObj.common;
-		super.create();
-		this.details.text = _detailTxt;
-		this.question.text = _titleTxt;
-		//_detailTxt = Replace.flags(detailTextObj.common + (canTranfer? detailTextObj.can : detailTextObj.cannot) , ["<START>", "<END>", "<NEXT>"], [startString, endString, this.btn.text]);
-		//_titleTxt = (canTranfer ? titleTextObj.can :  titleTextObj.cannot) +  titleTextObj.common;
- 
-		//this.mail.
-	}
 	override public function onClick():Void
 	{
 
 		this._nexts = [{step: canTranfer ? _TransferToWB: _AddMemoVti, params: []}];
 		//Clipboard.text = History.stripTags(this.text,["\t", "\n"]);
-		Clipboard.text = Main.HISTORY.prepareClipboard( "WINBACK-TRANSFER\n" + this.memoTxtArea.getInputedText() );
+		//Clipboard.text = Main.HISTORY.prepareClipboard( "WINBACK-TRANSFER\n" + this.memoTxtArea.getInputedText() );
 		super.onClick();
 	}
 	inline function prepareHourFromFloat(f:Float)

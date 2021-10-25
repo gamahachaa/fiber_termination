@@ -2,12 +2,14 @@ package front.move;
 using StringTools;
 
 //import flixel.util.FlxColor.TriadicHarmony;
+import fees._TotalFees;
 import flow.End;
 import front.move.vti.InputMoveDateandOTOinVTI;
-import tickets._CreateTwoOneThree;
+//import tickets._CreateTwoOneThree;
 import tstool.MainApp;
 import tstool.process.TripletMultipleInput;
 import tstool.salt.Agent;
+import tstool.utils.Constants;
 //import tstool.process.ActionMultipleInput;
 //import tstool.process.Descision;
 //import tstool.process.DescisionMultipleInput;
@@ -37,6 +39,7 @@ class _AskForOTO extends TripletMultipleInput
 				width:250,
 				prefix:OTO_ID,
 				position: [bottom, left],
+				debug:Constants.TEST_OTO,
 				mustValidate: [Yes]
 			}
 		}
@@ -46,6 +49,7 @@ class _AskForOTO extends TripletMultipleInput
 			input:{
 				width:100,
 				prefix:APT_ID,
+				debug:Constants.TEST_APT_ID,
 				buddy: OTO_ID,
 				position: [bottom, left],
 				mustValidate: [No]
@@ -56,6 +60,7 @@ class _AskForOTO extends TripletMultipleInput
 			input:{
 				width:600,
 				prefix:APT_FORMER_OCCUPANT,
+				debug:Constants.TEST_APT_FORMER,
 				buddy: APT_ID,
 				position: [bottom, left],
 				mustValidate: [No]
@@ -66,6 +71,7 @@ class _AskForOTO extends TripletMultipleInput
 			input:{
 				width:100,
 				prefix:APT_BUILDING_NB_FLOORS,
+				debug:Constants.TEST_APT_FLOOR_NB,
 				buddy: APT_FORMER_OCCUPANT,
 				position: [bottom, left],
 				mustValidate: [No]
@@ -76,6 +82,7 @@ class _AskForOTO extends TripletMultipleInput
 			input:{
 				width:100,
 				prefix:APT_FLOOR_NB,
+				debug:Constants.TEST_APT_FLOOR_NB,
 				buddy: APT_BUILDING_NB_FLOORS,
 				position: [top, right],
 				mustValidate: [No]
@@ -107,7 +114,7 @@ class _AskForOTO extends TripletMultipleInput
 	{
 		if (validateNo())
 		{
-			this._nexts = [ {step:_CreateTwoOneThree, params: []}];
+			this._nexts = [ {step:_TotalFees, params: []}];
 			super.onNoClick();
 		}
 	}
@@ -164,13 +171,16 @@ class _AskForOTO extends TripletMultipleInput
 	{
 		if (validateMid())
 		{
-			this._nexts = [ {step:_CreateTwoOneThree, params: []}];
+			this._nexts = [ {step:_TotalFees, params: []}];
 			super.onMidClick();
 		}
 	}
 	inline function getNext():Class<Process>
 	{
-		return MainApp.agent.isMember(Agent.CSR2_GROUP_NAME)?  InputMoveDateandOTOinVTI : _CreateTwoOneThree;
+		#if debug
+		trace("front.move._AskForOTO::getNext::MainApp.agent.isMember(Agent.CSR2_GROUP_NAME)", MainApp.agent.isMember(Agent.CSR2_GROUP_NAME) );
+		#end
+		return MainApp.agent.isMember(Agent.CSR2_GROUP_NAME)?  InputMoveDateandOTOinVTI : _TotalFees;
 	}
 	/****************************
 	* Needed only for validation

@@ -10,6 +10,10 @@ import flow.End;
 import Intro;
 import front.capture._TransferToWB;
 import front.move._AskForOTO;
+import front.move._InputNewHomeContractDetails;
+import haxe.Json;
+import haxe.PosInfos;
+import tstool.utils.DateToolsBB.Opennings;
 import xapi.Agent;
 import xapi.Verb;
 import xapi.types.StatementRef;
@@ -61,6 +65,7 @@ class Main extends MainApp
 	public static var VERSION_TRACKER:VersionTracker;
 	public static var LOCATION:Location;
 	public static var DEBUG:Bool;
+	public static var FIBER_WINBACK_UTC_RANGES:Array<Opennings>;
 	public static inline var DEBUG_LEVEL:Int = 0;
 	public static var LANGS:Array<String> = ["fr-FR","de-DE","en-GB","it-IT"];
 	public static inline var LAST_STEP:Class<FlxState> = End;
@@ -79,7 +84,14 @@ class Main extends MainApp
 				libFolder: LIB_FOLDER_LOGIN
 				
 		});
-		
+		var opennings = Json.parse(Assets.getText("assets/data/opennings.json"));
+		#if debug
+		trace("Main::Main::opennings", opennings );
+		FIBER_WINBACK_UTC_RANGES = opennings.test;
+		trace("Main::Main::opennings", opennings.test );
+		#else
+		FIBER_WINBACK_UTC_RANGES = opennings.prod;
+		#end
 		//tongue = MainApp.translator;
 		//COOKIE = MainApp.save;
 		HISTORY = MainApp.stack;
@@ -100,9 +112,11 @@ class Main extends MainApp
 	}
 
 	
-    static public function MOVE_ON(?old:Bool=false)
+    static public function MOVE_ON(?old:Bool=false, ?pos:PosInfos)
 	{
-		
+		 #if debug
+		trace('CALLED FROM ${pos.className} ${pos.methodName} ${pos.fileName} ${pos.lineNumber}');
+		#end
 		var next:Process = new Intro();
 		
 		var tuto:Process = new Tuto();
@@ -115,6 +129,7 @@ class Main extends MainApp
 			 * USe this  to debug a slide
 			 */
 			next = new Intro();
+			//next = new _InputNewHomeContractDetails();
 			//next = new _AskForOTO();
 			//next = new _TransferToWB();
 			

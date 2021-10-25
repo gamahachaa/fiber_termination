@@ -1,13 +1,18 @@
 package fees;
 
 import firetongue.Replace;
+import flow._AddMemoVti;
 import front.move.IsAdressElligible;
+import front.move.MoveHow;
 import front.move._AskForOTO;
+import front.move.vti._SubmitMove;
 import haxe.Json;
+import tickets._CreateTwoOneThree;
 import tickets._CreateTwoOneTwo;
 import tstool.MainApp;
 import tstool.layout.History.Interactions;
 import tstool.process.Action;
+import tstool.process.Process;
 import tstool.salt.Agent;
 import tstool.utils.Constants;
 import winback.OkForForFWA;
@@ -57,6 +62,8 @@ class _TotalFees extends Action
 	static inline var TOTALTOPAY:String = "TOTAL TO PAY";
 	var hasMobileDiscount:Bool;
 	var reducedETF:Bool;
+	var byebyeCH:Bool;
+	var moveToaHomeContractedHome:Bool;
 	override public function create():Void
 	{
 		valuesToStore = [];
@@ -73,8 +80,10 @@ class _TotalFees extends Action
 		#if debug
 		trace("create::notElligibleAtAdress", notElligibleAtAdress );
 		#end
-
-		isTerminationStandard =  !(whyLeave == Intro.MOVE_LEAVE_CH || notElligibleAtAdress || whyLeave == Intro.NOT_ELLIGIBLE);
+        //byebyeCH = whyLeave == Intro.MOVE_LEAVE_CH ;
+        byebyeCH = whyLeave == Intro.MOVE_CAN_KEEP && Main.HISTORY.isClassInteractionInHistory(MoveHow, Yes);
+		moveToaHomeContractedHome = whyLeave == Intro.MOVE_CAN_KEEP && Main.HISTORY.isClassInteractionInHistory(MoveHow, Mid);
+		isTerminationStandard =  !(byebyeCH || notElligibleAtAdress || whyLeave == Intro.NOT_ELLIGIBLE || moveToaHomeContractedHome);
 		#if debug
 		trace("create::isTerminationStandard", isTerminationStandard );
 		#end
@@ -103,8 +112,9 @@ class _TotalFees extends Action
 		#if debug
 		trace("create::isTelesales", isTelesales );
 		#end
-
-		parseDates( Main.HISTORY.findFirstStepsClassInHistory(_InputDates).values );
+        //var cancelationDates = Main.HISTORY.findFirstStepsClassInHistory(_InputDates);
+		if(Main.HISTORY.isClassInHistory(_InputDates))
+			parseDates( Main.HISTORY.findFirstStepsClassInHistory(_InputDates).values );
 		computeFees();
 		buildDetailReport();
 		super.create();
@@ -126,6 +136,8 @@ class _TotalFees extends Action
 		var standard_txt = jsonDetails.standard;
 		var nonStandard_txt = jsonDetails.nonStandard;
 		var capETF_txt = jsonDetails.capETF;
+		var leaveCHF_txt = jsonDetails.leaveCHF;
+		var moveToaHomeContractedHome_txt = jsonDetails.moveToaHomeContractedHome;
 		var fullETF_txt = jsonDetails.fullETF;
 		var noticeNotRepected_txt = jsonDetails.noticeNotRepected;
 		var cancellationFees_txt = jsonDetails.cancellationFees;
@@ -195,19 +207,23 @@ class _TotalFees extends Action
 					valuesToStore.set(ETF, finalETF);
 					finalDetailTxt += Replace.flags(nonStandard_txt, ["<DATE_ACTIVATION>", "<DATE_TERMINATION>"], ['${activationDate.getDate()}.${activationDate.getMonth()+1}.${activationDate.getFullYear()}', '${termDate.getDate()}.${termDate.getMonth()+1}.${termDate.getFullYear()}']);
 					if ( reducedETF ){
-						finalDetailTxt += "\n" + Replace.flags(capETF_txt, ["<FINAL_ETF>", "<FULL_ETF>"], [Std.string(finalETF), Std.string(fullETF)]);
+						finalDetailTxt += "\n\n" + Replace.flags(capETF_txt, ["<FINAL_ETF>", "<FULL_ETF>"], [Std.string(finalETF), Std.string(fullETF)]);
+						if(byebyeCH)
+							finalDetailTxt += "\n" + leaveCHF_txt;
+						else if(moveToaHomeContractedHome) finalDetailTxt += "\n" + moveToaHomeContractedHome_txt; 
+						
 					}
 					else{
-						finalDetailTxt += "\n" + Replace.flags(fullETF_txt, ["<FULL_ETF>", "<MONTH_LEFT>"], [Std.string(finalETF), Std.string(deltaDatesMonth)]);
+						finalDetailTxt += "\n\n" + Replace.flags(fullETF_txt, ["<FULL_ETF>", "<MONTH_LEFT>"], [Std.string(finalETF), Std.string(deltaDatesMonth)]);
 					}
 					
 				}
 
 			} 
-			if (!noticePeriodRespected)
+			if (!noticePeriodRespected && !moveToaHomeContractedHome)
 			{
 				var notice = Std.string(noticePeriodMinimalDate.getDate()) +"." + Std.string(noticePeriodMinimalDate.getMonth() + 1) + "." + Std.string(noticePeriodMinimalDate.getFullYear());
-				finalDetailTxt += "\n" + Replace.flags(noticeNotRepected_txt, ["<NOTICE_DAYS>", "<NOTICE_DATE>", "<NOTICE_FEES>"], ['$noticePeriodInDays', notice, '$noticePeriodFees']);
+				finalDetailTxt += "\n\n" + Replace.flags(noticeNotRepected_txt, ["<NOTICE_DAYS>", "<NOTICE_DATE>", "<NOTICE_FEES>"], ['$noticePeriodInDays', notice, '$noticePeriodFees']);
 				valuesToStore.set(Minimumnoticedate, notice);
 				valuesToStore.set(Noticeperiod, noticePeriodInDays);
 				valuesToStore.set(Noticenonrespectedfees, noticePeriodFees);
@@ -231,8 +247,18 @@ class _TotalFees extends Action
 	override public function onClick():Void
 	{
 		//this._nexts = [{step: Main.HISTORY.isClassInteractionInHistory(IsAdressElligible, Yes)? TestSendTemplate: _CreateTwoOneTwo , params: []}];
-		this._nexts = [{step: Main.HISTORY.isClassInteractionInHistory(IsAdressElligible, Yes)? _AskForOTO: _CreateTwoOneTwo, params: []}];
+		this._nexts = [{step: getNexts(), params: []}];
 		super.onClick();
+	}
+	inline function getNexts():Class<Process>
+	{
+		return if (Main.HISTORY.isClassInHistory(_AskForOTO))
+		{
+			 Main.HISTORY.isClassInHistory(_SubmitMove)? _AddMemoVti : _CreateTwoOneThree;
+		}
+		else{
+			_CreateTwoOneTwo;
+		}
 	}
 	function parseDates( values:Map<String,Dynamic> )
 	{
@@ -276,11 +302,24 @@ class _TotalFees extends Action
 	{
 		//parseDates();
 
-		moveAdminFees = (whyLeave == Intro.MOVE_CAN_KEEP) ? 49.95 : 0;
+		//moveAdminFees = (whyLeave == Intro.MOVE_CAN_KEEP && !notElligibleAtAdress) ? 49.95 : 0;
+		moveAdminFees = (whyLeave == Intro.MOVE_CAN_KEEP && isTerminationStandard) ? 49.95 : 0;
 		fullETF = Math.max(0, 198 - (deltaDatesMonth * 6));
-		finalETF = waiveETF ? 0 : (isTerminationStandard? fullETF : Math.min(99.95, fullETF));
+		//finalETF = waiveETF ? 0 : (isTerminationStandard? fullETF : Math.min(99.95, fullETF));
+		finalETF = if (waiveETF){
+			0;
+		}else if (isTerminationStandard){
+			fullETF;
+		} else if (moveToaHomeContractedHome)
+		{
+			fullETF / 2;
+		}
+		else {
+			Math.min(99.95, fullETF);
+		}
         reducedETF = fullETF != finalETF;
-		noticePeriodFees = (noticePeriodRespected )? 0 : (isTerminationStandard ? 2: 1) * (hasMobileDiscount? 39.95:49.95);
+		if (moveToaHomeContractedHome) noticePeriodFees = 0;
+		else noticePeriodFees = (noticePeriodRespected )? 0 : (isTerminationStandard ? 2: 1) * (hasMobileDiscount? 39.95:49.95);
 		cancelationFees = isBoxNOTSent ? 199.95 : 0;
 		totalFees = moveAdminFees > 0 ? moveAdminFees: finalETF + noticePeriodFees + (MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)?cancelationFees:0);
 		//totalFees = moveAdminFees > 0 ? moveAdminFees: finalETF + noticePeriodFees; //removed cancelation fees

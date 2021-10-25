@@ -1,5 +1,6 @@
 package front.move;
 
+import fees._TotalFees;
 import tstool.layout.History.Interactions;
 import tstool.process.ActionMultipleInput;
 import tstool.process.Process;
@@ -38,7 +39,7 @@ class _InputMoveDate extends ActionMultipleInput
 	}
 	inline function getNext():Class<Process>
 	{
-		return _AskForOTO;
+		return Main.HISTORY.isClassInHistory(_InputNewHomeContractDetails) ? _TotalFees: _AskForOTO;
 	}
 	override public function pushToHistory(buttonTxt:String, interactionType:Interactions,?values:Map<String,Dynamic>=null):Void
 	{

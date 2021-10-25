@@ -3,8 +3,10 @@ package front.move;
 import fees._InputDates;
 import front.capture.CheckContractorVTI;
 import front.capture._TransferToWB;
-import tickets._CreateTicketSixForOne_close;
-import tickets._CreateTicketSixForOne_open;
+import front.capture._WinbackIsClosed;
+import tickets._CreateTicketSixForOne;
+//import tickets._CreateTicketSixForOne_close;
+//import tickets._CreateTicketSixForOne_open;
 //import front.move.vti.DoesVTIYieldElligible;
 //import tickets._CreateTicketSixForOne;
 import tstool.process.Process;
@@ -117,8 +119,9 @@ class IsAdressElligible extends TripletMultipleInput
 			_InputDates;
 		}
 		else{
-			var canTranfer = DateToolsBB.isUTCDayTimeFloatInRange(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Constants.FIBER_WINBACK_OPEN_UTC_FLOAT, Constants.FIBER_WINBACK_CLOSE_UTC_FLOAT);
-			canTranfer ? _CreateTicketSixForOne_open: _CreateTicketSixForOne_close;
+			//var canTranfer = DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Constants.FIBER_WINBACK_UTC_RANGES);
+			//canTranfer ? _TransferToWB: _CreateTicketSixForOne;
+			DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES) ? _TransferToWB: _CreateTicketSixForOne;
 		}
 	}
 

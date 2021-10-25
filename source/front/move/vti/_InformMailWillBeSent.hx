@@ -12,7 +12,7 @@ class _InformMailWillBeSent extends Action
 
 	override public function onClick():Void
 	{
-		this._nexts = [{step: _AddMemoVti, params: []}];
+		this._nexts = [{step: _SubmitMove, params: []}];
 		super.onClick();
 	}
 	
