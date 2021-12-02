@@ -106,13 +106,13 @@ class _InputNewHomeContractDetails extends DescisionMultipleInput
 	{
 		if (validateYes())
 		{
-			this._nexts = [{step: _InputMoveDate, params: []}];
+			this._nexts = [{step: _InputDates, params: []}];
 			super.onYesClick();
 		}
 	}
 	override public function onNoClick():Void
 	{
-		this._nexts = [{step: _InputMoveDate, params: []}];
+		this._nexts = [{step: _InputDates, params: []}];
 		super.onNoClick();
 	}
     override public function validateYes()

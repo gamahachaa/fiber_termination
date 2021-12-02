@@ -46,7 +46,7 @@ class _TotalFees extends Action
 	var notElligibleAtAdress:Bool;
 	var isActivated:Bool;
 	var isTelesales:Bool;
-	var noticePeriodMinimalDate:Date;
+	var noticePeriodEndOfContractDate:Date;
 	var valuesToStore:Map<String, Dynamic>;
 	var finalTitleTxt:String;
 	var totalFees_txt:String;
@@ -113,8 +113,10 @@ class _TotalFees extends Action
 		trace("create::isTelesales", isTelesales );
 		#end
         //var cancelationDates = Main.HISTORY.findFirstStepsClassInHistory(_InputDates);
-		if(Main.HISTORY.isClassInHistory(_InputDates))
+		if (Main.HISTORY.isClassInHistory(_InputDates)){
+			
 			parseDates( Main.HISTORY.findFirstStepsClassInHistory(_InputDates).values );
+		}
 		computeFees();
 		buildDetailReport();
 		super.create();
@@ -222,7 +224,7 @@ class _TotalFees extends Action
 			} 
 			if (!noticePeriodRespected && !moveToaHomeContractedHome)
 			{
-				var notice = Std.string(noticePeriodMinimalDate.getDate()) +"." + Std.string(noticePeriodMinimalDate.getMonth() + 1) + "." + Std.string(noticePeriodMinimalDate.getFullYear());
+				var notice = Std.string(noticePeriodEndOfContractDate.getDate()) +"." + Std.string(noticePeriodEndOfContractDate.getMonth() + 1) + "." + Std.string(noticePeriodEndOfContractDate.getFullYear());
 				finalDetailTxt += "\n\n" + Replace.flags(noticeNotRepected_txt, ["<NOTICE_DAYS>", "<NOTICE_DATE>", "<NOTICE_FEES>"], ['$noticePeriodInDays', notice, '$noticePeriodFees']);
 				valuesToStore.set(Minimumnoticedate, notice);
 				valuesToStore.set(Noticeperiod, noticePeriodInDays);
@@ -262,6 +264,22 @@ class _TotalFees extends Action
 	}
 	function parseDates( values:Map<String,Dynamic> )
 	{
+		var now = Date.now();
+		#if debug
+		trace("fees._TotalFees::parseDates::now", now );
+		#end
+		var thisYear = now.getFullYear();
+		#if debug
+		trace("fees._TotalFees::parseDates::thisYear ", thisYear  );
+		#end
+		var isThisYerBi = (thisYear - 2000) % 4 == 0;
+		#if debug
+		trace("fees._TotalFees::parseDates::isThisYerBi ", isThisYerBi  );
+		#end
+		var monthEnd = isThisYerBi ? [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+		#if debug
+		trace("fees._TotalFees::parseDates::monthEnd ", monthEnd  );
+		#end
 		var activationDateInput = values.get(_InputDates.ACTIVATION_DATE);
 		var terminationDateInput = values.get(_InputDates.TERM_DATE);
 		//orderInputString = inputDateValues.get(_InputDates.ORDER_DATE);
@@ -279,7 +297,7 @@ class _TotalFees extends Action
 			#end
 		//var nowRoundMilli:Float = Date.now().getTime() - (Date.now().getTime() % Constants.ONE_DAY_MILLI);
         //var now = Date.now();
-		var endOfTheMonth = new Date(Date.now().getFullYear(), Date.now().getMonth() + 1, 0, 0, 0, 0);
+		
 		//trace(new Date(Date.now().getFullYear(), Date.now().getMonth() + 1, 0, 0, 0, 0));
 		deltaTerminationActivationMilli = termDate.getTime() - activationDate.getTime();
 		deltaDatesMonth = Math.floor(deltaTerminationActivationMilli / _InputDates.ONE_MONTH);
@@ -290,13 +308,20 @@ class _TotalFees extends Action
 			#if debug
 			trace("parseDates::noticePeriodInDays", noticePeriodInDays );
 			#end
+		var noticePeriodDate:Date =  Date.fromTime(now.getTime() + (noticePeriodInDays * ONE_DAY));
+		#if debug
+		trace("fees._TotalFees::parseDates::noticePeriodDate", noticePeriodDate );
+		#end
 		//var normalNoticePeriodMilli = nowRoundMilli + (noticePeriodInDays * ONE_DAY);
-		var normalNoticePeriodMilli = endOfTheMonth.getTime() + (noticePeriodInDays * ONE_DAY);
-		noticePeriodMinimalDate = Date.fromTime(normalNoticePeriodMilli);
-		noticePeriodRespected = termDate.getTime() > normalNoticePeriodMilli;
-			#if debug
-			trace("parseDates::noticePeriodRespected ", noticePeriodRespected  );
-			#end
+		noticePeriodEndOfContractDate = new Date(noticePeriodDate.getFullYear(), noticePeriodDate.getMonth(), monthEnd[noticePeriodDate.getMonth()], 0, 0, 0);
+		//var normalNoticePeriodMilli = endOfTheMonth.getTime() + (noticePeriodInDays * ONE_DAY);
+		#if debug
+		trace("fees._TotalFees::parseDates::noticePeriodEndOfContractDate", noticePeriodEndOfContractDate );
+		#end
+		noticePeriodRespected = termDate.getTime() > noticePeriodEndOfContractDate.getTime();
+		#if debug
+		trace("parseDates::noticePeriodRespected ", noticePeriodRespected  );
+		#end
 	}
 	function computeFees()
 	{

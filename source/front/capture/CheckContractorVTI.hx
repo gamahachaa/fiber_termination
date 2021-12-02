@@ -231,7 +231,12 @@ class CheckContractorVTI extends TripletMultipleInput
 			    _InputDates;
 			else if ( Main.HISTORY.isClassInteractionInHistory(MoveHow, Mid))    //and to already Home contracted place
 				_InputNewHomeContractDetails;
-			else MainApp.agent.isMember(Agent.CSR2_GROUP_NAME)? _AskForOTO : IsAdressElligible;
+			else IsAdressElligible;
+			//else MainApp.agent.isMember(Agent.CSR2_GROUP_NAME)? _AskForOTO : IsAdressElligible;
+		}
+		else if (status == Intro.PLUG_IN_USE)
+		{
+			WhyWantToKeepProvider;
 		}
 		else if (status == Intro.NOT_ELLIGIBLE)
 		{

@@ -26,10 +26,17 @@ class _TransferToWB extends ActionTicket
 							
 						){
 			SOTickets.FIX_641_TECH;
-		}else{
+		}
+		else if (issue == Intro.PROMO)
+		{
+			SOTickets.FIX_641_NONTECH_PROMO;
+		}
+		else{	
 			SOTickets.FIX_641_NONTECH;
 		}
-		
+		#if debug
+		trace("front.capture._TransferToWB::_TransferToWB");
+		#end
 		super(ticket,true);
 	}
 	override public function create():Void

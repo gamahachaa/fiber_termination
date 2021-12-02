@@ -90,7 +90,7 @@ class IsAdressElligible extends TripletMultipleInput
 	}*/
 	override public function onYesClick():Void
 	{
-		this._nexts = [{step: _InputMoveDate, params: []}];
+		this._nexts = [{step: MainApp.agent.isMember(Agent.CSR2_GROUP_NAME)? _AskForOTO : _InputMoveDate, params: []}];
 		super.onYesClick();
 	}
 	override public function onNoClick():Void
@@ -112,16 +112,17 @@ class IsAdressElligible extends TripletMultipleInput
 		//var canTranfer = DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
 		return if (isGigabox)
 		{
+			trace("giga");
 			_InputMoveDate;
 		}
 		else if (isWB)
 		{
+			trace("wb");
 			_InputDates;
 		}
 		else{
-			//var canTranfer = DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Constants.FIBER_WINBACK_UTC_RANGES);
-			//canTranfer ? _TransferToWB: _CreateTicketSixForOne;
-			DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES) ? _TransferToWB: _CreateTicketSixForOne;
+			trace("else", DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES));
+			DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES) ? _TransferToWB: _WinbackIsClosed;
 		}
 	}
 

@@ -29,7 +29,9 @@ class _CreateTicketSixForOne extends ActionTicket
 		}else{
 			SOTickets.FIX_641_NONTECH;
 		}
-		
+		#if debug
+		trace("tickets._CreateTicketSixForOne::_CreateTicketSixForOne");
+		#end
 		super(ticket); 
 		#end
 		var detailTextObj:Dynamic = Json.parse(_detailTxt);

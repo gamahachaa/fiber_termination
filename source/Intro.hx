@@ -61,6 +61,7 @@ class Intro extends TripletRadios
 	static public inline var MOVE_CANNOT_KEEP = "MOVE CANT KEEP";      // MOVE_CANNOT_KEEP | MOVECANTKEEP
 	static public inline var NOT_ELLIGIBLE = "leaving_location_not_eligible"; // NOTELLIGIBLEATNEWADRESS | leaving_location_not_eligible ; Move: not eligible
 	static public inline var MOVE_LEAVE_CH = "BYE BYE SWITZERLAND";
+	static public inline var PROMO = "PROMO";
 	
 	static var ACTIVITY_MAP:Map<String,String> = [
 			MOVE_LEAVE_CH  => "leaving_location_noteligible",
@@ -81,7 +82,8 @@ class Intro extends TripletRadios
 		PRODUCTVOIP, 
 		OTHER, 
 		PLUG_IN_USE, 
-		CANCEL_TO_REACTIVATE
+		CANCEL_TO_REACTIVATE,
+		PROMO
 		];
 	public function new() 
 	{
@@ -106,7 +108,8 @@ class Intro extends TripletRadios
 					/*MOVE_CANNOT_KEEP,*/
 					//MOVE_LEAVE_CH,
 					NOT_ELLIGIBLE,
-					CANCEL_TO_REACTIVATE
+					CANCEL_TO_REACTIVATE,
+					PROMO
 				],labels: [
 					 translate("Intro", TECH_ISSUES, "headers"),
 					 translate("Intro", BILLINGUNDERSTANDING, "headers"),
@@ -122,7 +125,8 @@ class Intro extends TripletRadios
 					/*translate("Intro", MOVE_CANNOT_KEEP, "headers"),*/
 					//translate("Intro", MOVE_LEAVE_CH, "headers"),
 					translate("Intro", NOT_ELLIGIBLE, "headers"),
-					translate("Intro", CANCEL_TO_REACTIVATE, "headers")
+					translate("Intro", CANCEL_TO_REACTIVATE, "headers"),
+					translate("Intro", PROMO, "headers")
 				],
 				titleTranslation: translate("Intro", WHY_LEAVE, "headers")
 			}
@@ -189,11 +193,13 @@ class Intro extends TripletRadios
 	}
 	inline function getNexts(isWB:Bool):Class<Process>
 	{
-		var ismove = status.get(WHY_LEAVE) == MOVE_CAN_KEEP;
+		var whyLeave = status.get(WHY_LEAVE);
+		var ismove = whyLeave == MOVE_CAN_KEEP;
 		return if (isWB)
 		{
 			ismove? MoveHow: CheckContractorVTI;
 		}
+		else if (whyLeave == PLUG_IN_USE) CheckContractorVTI;
 		else !canTranfer && isWBCall ? _WinbackIsClosed : ismove? MoveHow: CheckContractorVTI;
 	}
 	override public function create():Void
