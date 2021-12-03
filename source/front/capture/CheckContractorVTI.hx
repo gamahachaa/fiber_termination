@@ -11,6 +11,7 @@ import front.move.IsAdressElligible;
 import front.move.MoveHow;
 import front.move._AskForOTO;
 import front.move._InputNewHomeContractDetails;
+import tickets._CreateTwoOneTwo;
 import tstool.MainApp;
 import tstool.layout.History.Interactions;
 import tstool.process.MultipleInput.ValidatedInputs;
@@ -233,6 +234,10 @@ class CheckContractorVTI extends TripletMultipleInput
 				_InputNewHomeContractDetails;
 			else IsAdressElligible;
 			//else MainApp.agent.isMember(Agent.CSR2_GROUP_NAME)? _AskForOTO : IsAdressElligible;
+		}
+		else if (status == Intro.DOUBLE_ORDER)
+		{
+			 _CreateTwoOneTwo;
 		}
 		else if (status == Intro.PLUG_IN_USE)
 		{

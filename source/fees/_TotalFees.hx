@@ -142,6 +142,7 @@ class _TotalFees extends Action
 		var moveToaHomeContractedHome_txt = jsonDetails.moveToaHomeContractedHome;
 		var fullETF_txt = jsonDetails.fullETF;
 		var noticeNotRepected_txt = jsonDetails.noticeNotRepected;
+		var noticeRepected_txt = jsonDetails.noticeRepected;
 		var cancellationFees_txt = jsonDetails.cancellationFees;
 		var waiveETF_txt = jsonDetails.waiveETF;
 
@@ -221,14 +222,20 @@ class _TotalFees extends Action
 					
 				}
 
-			} 
+			}
+			var notice = Std.string(noticePeriodEndOfContractDate.getDate()) +"." + Std.string(noticePeriodEndOfContractDate.getMonth() + 1) + "." + Std.string(noticePeriodEndOfContractDate.getFullYear());
 			if (!noticePeriodRespected && !moveToaHomeContractedHome)
-			{
-				var notice = Std.string(noticePeriodEndOfContractDate.getDate()) +"." + Std.string(noticePeriodEndOfContractDate.getMonth() + 1) + "." + Std.string(noticePeriodEndOfContractDate.getFullYear());
+			{	
 				finalDetailTxt += "\n\n" + Replace.flags(noticeNotRepected_txt, ["<NOTICE_DAYS>", "<NOTICE_DATE>", "<NOTICE_FEES>"], ['$noticePeriodInDays', notice, '$noticePeriodFees']);
 				valuesToStore.set(Minimumnoticedate, notice);
 				valuesToStore.set(Noticeperiod, noticePeriodInDays);
 				valuesToStore.set(Noticenonrespectedfees, noticePeriodFees);
+			}
+			else if (noticePeriodRespected)
+			{
+				finalDetailTxt += "\n\n" + Replace.flags(noticeRepected_txt, ["<NOTICE_DAYS>", "<NOTICE_DATE>"], ['$noticePeriodInDays', notice]);
+				valuesToStore.set(Minimumnoticedate, notice);
+				valuesToStore.set(Noticeperiod, noticePeriodInDays);
 			}
 			finalDetailTxt += "\n\n" + return_gears_txt;
 			if (deltaDatesMonth < 13)
@@ -318,7 +325,7 @@ class _TotalFees extends Action
 		#if debug
 		trace("fees._TotalFees::parseDates::noticePeriodEndOfContractDate", noticePeriodEndOfContractDate );
 		#end
-		noticePeriodRespected = termDate.getTime() > noticePeriodEndOfContractDate.getTime();
+		noticePeriodRespected = termDate.getTime() <= noticePeriodEndOfContractDate.getTime();
 		#if debug
 		trace("parseDates::noticePeriodRespected ", noticePeriodRespected  );
 		#end
