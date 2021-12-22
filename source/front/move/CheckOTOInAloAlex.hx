@@ -1,6 +1,7 @@
 package front.move;
 
-import tickets._CreateTwoOneThree;
+import fees._TotalFees;
+//import tickets._CreateTwoOneThree;
 import tstool.process.Descision;
 
 /**
@@ -12,7 +13,7 @@ class CheckOTOInAloAlex extends Descision
 
 	override public function onYesClick():Void
 	{
-		this._nexts = [{step:_CreateTwoOneThree, params: []}];
+		this._nexts = [{step:_TotalFees, params: []}];
 		super.onYesClick();
 	}
 	override public function onNoClick():Void

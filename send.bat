@@ -210,7 +210,7 @@ rem robocopy export\html5\bin "C:\xampp\htdocs\localhost" * /E
   /command ^
     "open sftp://qook:uU155cy54IGQf0M4Jek6@10.192.14.13/ -hostkey=""ssh-rsa 2048 nqlUJZBRZk4+gCB8pRNrGcXJrx13iKLTftGfrXlqvk4=""" ^
     "lcd %BINDIR%\flixel" ^
-    "cd /home/qook/app/entry_point_qook/%serverFolderName%/flixel" ^
+    "cd /home/qook/app/qook/%serverFolderName%/flixel" ^
     "put -nopreservetime *" ^
     "exit"
 
@@ -219,7 +219,7 @@ rem robocopy export\html5\bin "C:\xampp\htdocs\localhost" * /E
   /command ^
     "open sftp://qook:uU155cy54IGQf0M4Jek6@10.192.14.13/ -hostkey=""ssh-rsa 2048 nqlUJZBRZk4+gCB8pRNrGcXJrx13iKLTftGfrXlqvk4=""" ^
     "lcd %BINDIR%\manifest" ^
-    "cd /home/qook/app/entry_point_qook/%serverFolderName%/manifest" ^
+    "cd /home/qook/app/qook/%serverFolderName%/manifest" ^
     "put -nopreservetime *" ^
     "exit"
 
@@ -228,7 +228,7 @@ rem robocopy export\html5\bin "C:\xampp\htdocs\localhost" * /E
   /command ^
     "open sftp://qook:uU155cy54IGQf0M4Jek6@10.192.14.13/ -hostkey=""ssh-rsa 2048 nqlUJZBRZk4+gCB8pRNrGcXJrx13iKLTftGfrXlqvk4=""" ^
     "lcd %BINDIR%\lib" ^
-    "cd /home/qook/app/entry_point_qook/%serverFolderName%/lib" ^
+    "cd /home/qook/app/qook/%serverFolderName%/lib" ^
     "put -nopreservetime *" ^
     "exit"
 rem delete old JS
@@ -236,7 +236,7 @@ rem delete old JS
   /log="%cd%\WinSCP.log" /ini=nul ^
   /command ^
     "open sftp://qook:uU155cy54IGQf0M4Jek6@10.192.14.13/ -hostkey=""ssh-rsa 2048 nqlUJZBRZk4+gCB8pRNrGcXJrx13iKLTftGfrXlqvk4=""" ^
-    "cd /home/qook/app/entry_point_qook/%serverFolderName%/" ^
+    "cd /home/qook/app/qook/%serverFolderName%/" ^
     "rm *.js" ^
     "exit"
 rem add new JS	
@@ -245,7 +245,7 @@ rem add new JS
   /command ^
     "open sftp://qook:uU155cy54IGQf0M4Jek6@10.192.14.13/ -hostkey=""ssh-rsa 2048 nqlUJZBRZk4+gCB8pRNrGcXJrx13iKLTftGfrXlqvk4=""" ^
     "lcd %BINDIR%\" ^
-    "cd /home/qook/app/entry_point_qook/%serverFolderName%/" ^
+    "cd /home/qook/app/qook/%serverFolderName%/" ^
     "put -nopreservetime *.js" ^
     "exit"
 	
@@ -254,7 +254,7 @@ rem delete old JS MAP
   /log="%cd%\WinSCP.log" /ini=nul ^
   /command ^
     "open sftp://qook:uU155cy54IGQf0M4Jek6@10.192.14.13/ -hostkey=""ssh-rsa 2048 nqlUJZBRZk4+gCB8pRNrGcXJrx13iKLTftGfrXlqvk4=""" ^
-    "cd /home/qook/app/entry_point_qook/%serverFolderName%" ^
+    "cd /home/qook/app/qook/%serverFolderName%" ^
     "rm *.js.map" ^
     "exit"
 	
@@ -264,7 +264,7 @@ rem add new JS MAP
   /command ^
     "open sftp://qook:uU155cy54IGQf0M4Jek6@10.192.14.13/ -hostkey=""ssh-rsa 2048 nqlUJZBRZk4+gCB8pRNrGcXJrx13iKLTftGfrXlqvk4=""" ^
     "lcd %BINDIR%" ^
-    "cd /home/qook/app/entry_point_qook/%serverFolderName%" ^
+    "cd /home/qook/app/qook/%serverFolderName%" ^
     "put -nopreservetime *.js.map" ^
     "exit"
 rem ADD FONTS
@@ -275,7 +275,7 @@ rem index
   /command ^
     "open sftp://qook:uU155cy54IGQf0M4Jek6@10.192.14.13/ -hostkey=""ssh-rsa 2048 nqlUJZBRZk4+gCB8pRNrGcXJrx13iKLTftGfrXlqvk4=""" ^
     "lcd %BINDIR%\" ^
-    "cd /home/qook/app/entry_point_qook/%serverFolderName%" ^
+    "cd /home/qook/app/qook/%serverFolderName%" ^
     "put -nopreservetime index.html" ^
     "exit"
 goto :completed

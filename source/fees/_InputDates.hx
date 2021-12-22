@@ -35,7 +35,7 @@ class _InputDates extends DescisionMultipleInput
 			input:{
 				width: 250,
 				prefix: ORDER_DATE,
-				debug: "01.12.2020",
+				debug: "06.08.2020",
 				position: [bottom, left]
 			}
 		},
@@ -45,7 +45,7 @@ class _InputDates extends DescisionMultipleInput
 				width: 250,
 				prefix: ACTIVATION_DATE,
 				buddy: ORDER_DATE,
-				debug: "01.01.2021",
+				debug: "12.08.2020",
 				position: [bottom, left],
 				mustValidate: [Yes]
 			}
@@ -56,7 +56,7 @@ class _InputDates extends DescisionMultipleInput
 				width: 250,
 				prefix: TERM_DATE,
 				buddy: ACTIVATION_DATE,
-				debug: "10.04.2021",
+				debug: "22.01.2022",
 				position: [bottom, left]
 			}
 		}
@@ -85,6 +85,9 @@ class _InputDates extends DescisionMultipleInput
 	override public function create()
 	{
 		super.create();
+		#if debug
+		trace("fees._InputDates::create");
+		#end
 		if (Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE ).value == Intro.PLUG_IN_USE)
 		this.btnYes.visible = false;
 	}

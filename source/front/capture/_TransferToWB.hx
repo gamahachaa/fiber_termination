@@ -1,35 +1,53 @@
 package front.capture;
 
-import firetongue.Replace;
-import flixel.FlxSubState;
 import flow.End;
-import tickets._CreateTicketSixForOne;
-import tstool.process.Descision;
-import tstool.utils.Constants;
-import tstool.utils.DateToolsBB;
-//import tstool.process.Action;
-//import tstool.process.ActionMemo;
+import tstool.process.ActionTicket;
+import tstool.salt.SOTickets;
+
 
 /**
  * ...
  * @author bb
  */
-class _TransferToWB extends Descision 
+class _TransferToWB extends ActionTicket 
 {
-	override public function create():Void{
+	
+	//var canTranfer:Bool;
+	public function new() 
+	{
 		
-		
-		this._detailTxt = Replace.flags(_detailTxt, ["<START>", "<END>"], [Std.string(Constants.FIBER_WINBACK_OPEN_UTC + 1), Std.string(Constants.FIBER_WINBACK_OPEN_UTC + 1)]);
+		var issue = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
+		var ticket = if (
+							issue == Intro.PRODUCTTECHSPECS || 
+							issue == Intro.NOT_ELLIGIBLE || 
+							issue == Intro.TECH_ISSUES ||
+							issue == Intro.PRODUCTAPPLETV ||
+							issue == Intro.PRODUCTVOIP 
+							
+						){
+			SOTickets.FIX_641_TECH;
+		}
+		else if (issue == Intro.PROMO)
+		{
+			SOTickets.FIX_641_NONTECH_PROMO;
+		}
+		else{	
+			SOTickets.FIX_641_NONTECH;
+		}
+		#if debug
+		trace("front.capture._TransferToWB::_TransferToWB");
+		#end
+		super(ticket,true);
+	}
+	override public function create():Void
+	{
 		super.create();
+		ui.script.visible = false;
 	}
-	override public function onYesClick():Void
+	override public function onClick():Void
 	{
-		this._nexts = [{step: End}];
-		super.onYesClick();
+		this._nexts = [{step: End, params: []}];
+		super.onClick();
 	}
-	override public function onNoClick():Void
-	{
-		this._nexts = [{step: _CreateTicketSixForOne}];
-		super.onNoClick();
-	}
+	
 }

@@ -1,5 +1,7 @@
 package front.move;
 
+import fees._TotalFees;
+import tstool.layout.History.Interactions;
 import tstool.process.ActionMultipleInput;
 import tstool.process.Process;
 import tstool.utils.ExpReg;
@@ -37,7 +39,27 @@ class _InputMoveDate extends ActionMultipleInput
 	}
 	inline function getNext():Class<Process>
 	{
-		return _AskForOTO;
+		return Main.HISTORY.isClassInHistory(_InputNewHomeContractDetails) ? _TotalFees: _AskForOTO;
+	}
+	override public function pushToHistory(buttonTxt:String, interactionType:Interactions,?values:Map<String,Dynamic>=null):Void
+	{
+		var date = multipleInputs.getText(MOVE_DATE);
+		var reverseDate = "";
+		var t = [];
+		if (date.indexOf(".") == -1)
+		{
+			t = date.split("/");
+		}
+		else{
+			t = date.split(".");
+		}
+		t.reverse();
+		reverseDate = t.join("-");
+		date = '$date ( $reverseDate in VTI move )';
+		#if debug
+		trace("front.move._InputMoveDate::pushToHistory::date", date );
+		#end
+		super.pushToHistory(buttonTxt, interactionType, [ MOVE_DATE => date]);
 	}
 	/****************************
 	* Needed only for validation

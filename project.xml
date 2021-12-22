@@ -32,7 +32,8 @@
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	<assets path="assets" />
-	
+	<!--<linkedLibraries name="./howl.js"/>-->
+	<!--<template path="C:/_mesDocs/_git/_openFLTemplates/html5" />-->
 	<!-- _______________________________ Libraries ______________________________ -->
 	<haxelib name="csv" />
 	<haxelib name="lime" />
@@ -49,6 +50,9 @@
 	<haxelib name="thx.core" />
 	<haxelib name="signals" />
 	<haxelib name="uglifyjs" unless="debug" />
+	<!-- SHARED LIB -->
+	
+	<!--<include path="./howl.js" />-->
 	<!--<haxelib name="msignal" />-->
 	<!--<haxelib name="thx.core" />-->
 
