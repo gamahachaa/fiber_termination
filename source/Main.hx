@@ -8,6 +8,8 @@ import flixel.FlxState;
 import flixel.input.keyboard.FlxKey;
 import flow.End;
 import Intro;
+import tstool.utils.Constants;
+import tstool.utils.DateToolsBB;
 import xapi.Agent;
 import xapi.Verb;
 import xapi.types.StatementRef;
@@ -46,6 +48,7 @@ import tstool.utils.XapiHelper;
 class Main extends MainApp
 {
 	var xapiHelper:XapiHelper;
+	public static var trackH:XapiHelper;
 	//public static var LIB_FOLDER:String;
 	public static inline var LIB_FOLDER_LOGIN:String = "/commonlibs/";
 	//public static var MAIL_WRAPPER_URL:String = LIB_FOLDER + "php/mail/index.php";
@@ -77,13 +80,22 @@ class Main extends MainApp
 				libFolder: LIB_FOLDER_LOGIN
 				
 		});
-		
+		var d1 =  Date.fromString("2021-12-24");
+		var d2 = new Date(2021, 11, 31,0,0,0);
+		trace(DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS));
+		trace(DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS, d1) );
+		trace(DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS, d2) ) ;
+		 
 		//tongue = MainApp.translator;
 		//COOKIE = MainApp.save;
 		HISTORY = MainApp.stack;
 		//LOCATION = MainApp.location;
+		#if debug
+		trackH =  MainApp.xapiHelper;
+		#else
 		track =  MainApp.xapiTracker;
-		xapiHelper = new XapiHelper( Browser.location.origin + LIB_FOLDER_LOGIN );
+		#end
+		//xapiHelper = new XapiHelper( Browser.location.origin + LIB_FOLDER_LOGIN );
 		DEBUG = MainApp.debug;
 		VERSION_TRACKER = MainApp.versionTracker;
 		customer = MainApp.cust;
@@ -91,7 +103,7 @@ class Main extends MainApp
 		//var now = Date.now();
 		//trace(new Date(now.getFullYear(), now.getMonth() + 1, 0, 0, 0, 0));
 		#if debug
-		testXAPI();
+		//testXAPI();
 		#end
 		initScreen();
 	}
@@ -118,6 +130,7 @@ class Main extends MainApp
 		#end
 		MainApp.translator.initialize(MainApp.agent.mainLanguage, ()->(FlxG.switchState( old ? next : tuto)) );
 	}
+	/*
 	function testXAPI()
 	{
 		xapiHelper.setActor(new Agent("bruno.baudry@salt.ch", "bbaudry"));
@@ -127,5 +140,5 @@ class Main extends MainApp
 		//xapiHelper.setContext(new Agent("tutor@salt.ch"), "https://qook.salt.ch/TOASTING", "qoom", "fr-FR", ["https://qook.salt.ch/duf" => "YO BRO"]);
 		xapiHelper.addStatementRef(new StatementRef("c0d0b6f6-7d10-4336-9ad7-515abaa15cbf"));
 		xapiHelper.send();
-	}
+	} */
 }

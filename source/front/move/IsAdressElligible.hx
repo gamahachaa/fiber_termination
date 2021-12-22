@@ -98,7 +98,7 @@ class IsAdressElligible extends TripletMultipleInput
 		var isGigabox = Main.HISTORY.isClassInteractionInHistory(CheckContractorVTI, Mid);
 		var isWB = MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME);
 		var now = Date.now();
-		var canTranfer = DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
+		var canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS) && DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
 		return if (isGigabox)
 		{
 			_InputMoveDate;

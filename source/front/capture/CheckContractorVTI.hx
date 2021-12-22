@@ -159,7 +159,11 @@ class CheckContractorVTI extends TripletMultipleInput
 		Main.customer.reset();
 		status = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
 		//prepareXAPIMainActivity();
+		#if debug
+		//Main.track.setActivity(status.removeWhite());
+		#else
 		Main.track.setActivity(status.removeWhite());
+		#end
 		
 		super.create();
 		parser = new VTIdataParser(account);
@@ -203,7 +207,7 @@ class CheckContractorVTI extends TripletMultipleInput
 	inline function getNext():Class<Process>
 	{
 		var now = Date.now();
-		var canTranfer = DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
+		var canTranfer =!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS) && DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
 		#if debug
 		trace("front.capture.CheckContractorVTI::getNext::status", status );
 		trace("front.capture.CheckContractorVTI::getNext::Agent.WINBACK_GROUP_NAME", Agent.WINBACK_GROUP_NAME );
@@ -255,11 +259,16 @@ class CheckContractorVTI extends TripletMultipleInput
 	{
 		if (go)
 		{
+			#if debug
+			
+			#else
+			
 			Main.track.setVerb("initialized");
 			Main.track.setStatementRef(null);
 			Main.track.setCustomer();
 			Main.track.send();
 			Main.track.setVerb("resolved");// will be overridden by ticket creation
+			#end
 		}
 
 	}
