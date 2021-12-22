@@ -17,7 +17,7 @@ class WhyWantToKeepProvider extends Descision
 	}
 	override public function onNoClick():Void
 	{
-		var canTranfer = DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES);
+		var canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)&& DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES);
 		this._nexts = [{step: canTranfer? _TransferToWB : _WinbackIsClosed, params: []}];
 		super.onNoClick();
 	}
