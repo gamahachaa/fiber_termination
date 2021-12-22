@@ -1,8 +1,10 @@
 package front.move;
 
 import fees._TotalFees;
+import front.capture._TransferToWB;
 import tstool.layout.History.Interactions;
-import tstool.process.ActionMultipleInput;
+//import tstool.process.ActionMultipleInput;
+import tstool.process.DescisionMultipleInput;
 import tstool.process.Process;
 import tstool.utils.ExpReg;
 
@@ -10,7 +12,7 @@ import tstool.utils.ExpReg;
  * ...
  * @author bb
  */
-class _InputMoveDate extends ActionMultipleInput
+class _InputMoveDate extends DescisionMultipleInput
 {
 	static inline var MOVE_DATE:String = "MoveDate";
 
@@ -29,13 +31,22 @@ class _InputMoveDate extends ActionMultipleInput
 		);
 	}
 
-	override public function onClick():Void
+	override public function onYesClick():Void
 	{
-		if (validate())
+		if (validateYes())
 		{
 			this._nexts = [ {step: getNext(), params: []}];
-			super.onClick();
+			super.onYesClick();
 		}
+	}
+	override public function onNoClick():Void
+	{
+		if (validateNo())
+		{
+		this._nexts = [ {step: _TransferToWB, params: []}];
+		super.onNoClick();
+		}
+		
 	}
 	inline function getNext():Class<Process>
 	{

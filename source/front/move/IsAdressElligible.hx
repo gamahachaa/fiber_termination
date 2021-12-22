@@ -112,17 +112,17 @@ class IsAdressElligible extends TripletMultipleInput
 		//var canTranfer = DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
 		return if (isGigabox)
 		{
-			trace("giga");
+			//trace("giga");
 			_InputMoveDate;
 		}
 		else if (isWB)
 		{
-			trace("wb");
+			//trace("wb");
 			_InputDates;
 		}
 		else{
-			trace("else", DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES));
-			DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES) ? _TransferToWB: _WinbackIsClosed;
+			//trace("else", DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES));
+			!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)&& DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES) ? _TransferToWB: _WinbackIsClosed;
 		}
 	}
 

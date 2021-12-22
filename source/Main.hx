@@ -51,7 +51,8 @@ import tstool.utils.XapiHelper;
 
 class Main extends MainApp
 {
-	var xapiHelper:XapiHelper;
+	//var xapiHelper:XapiHelper;
+	
 	//public static var LIB_FOLDER:String;
 	public static inline var LIB_FOLDER_LOGIN:String = "/commonlibs/";
 	//public static var MAIL_WRAPPER_URL:String = LIB_FOLDER + "php/mail/index.php";
@@ -60,7 +61,11 @@ class Main extends MainApp
 	public static var adminFile:tstool.utils.Csv;
 	public static var tongue:Translator;
 	public static var customer:Customer;
+	#if debug
+	public static var trackH:tstool.utils.XapiHelper;
+	#else
 	public static var track:XapiTracker;
+	#end
 	public static var VERSION:String;
 	public static var VERSION_TRACKER:VersionTracker;
 	public static var LOCATION:Location;
@@ -96,9 +101,13 @@ class Main extends MainApp
 		//COOKIE = MainApp.save;
 		HISTORY = MainApp.stack;
 		//LOCATION = MainApp.location;
+		#if debug
+		trackH =  MainApp.xapiHelper;
+		#else
 		track =  MainApp.xapiTracker;
+		#end
 		//xapiHelper = new XapiHelper( Browser.location.origin + LIB_FOLDER_LOGIN );
-		xapiHelper = new XapiHelper( "https://qook.test.salt.ch/commonlibs/" );
+		//xapiHelper = new XapiHelper( "https://qook.test.salt.ch/commonlibs/" );
 		DEBUG = MainApp.debug;
 		VERSION_TRACKER = MainApp.versionTracker;
 		customer = MainApp.cust;

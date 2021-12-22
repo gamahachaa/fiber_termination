@@ -280,6 +280,9 @@ class CheckContractorVTI extends TripletMultipleInput
 	{
 		if (go)
 		{
+			#if debug
+			#else
+			
 			Main.track.initKeepActor();
 			Main.track.setActivity(Intro.GET_VTI_ACTIVITY(status));
 			Main.track.setVerb("initialized");
@@ -287,6 +290,7 @@ class CheckContractorVTI extends TripletMultipleInput
 			Main.track.setCustomer();
 			Main.track.setResolution();
 			Main.track.send();
+			#end
 			//Main.track.setVerb("resolved");// will be overridden by ticket creation
 		}
 
