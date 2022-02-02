@@ -13,9 +13,9 @@ import tstool.MainApp;
 import tstool.layout.History.Interactions;
 import tstool.process.Action;
 import tstool.process.Process;
-import tstool.salt.Agent;
+import tstool.salt.Agent as SaltAgent;
 import tstool.utils.Constants;
-import winback.OkForForFWA;
+//import winback.OkForForFWA;
 
 /**
  * ...
@@ -170,7 +170,7 @@ class _TotalFees extends Action
 					finalDetailTxt += waiveETF_txt+ "\n";
 					finalDetailTxt += refundActivationFees? refundActivation_txt:"";
 				}
-				else if (MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME) && cancelationFees > 0)
+				else if (MainApp.agent.isMember(SaltAgent.WINBACK_GROUP_NAME) && cancelationFees > 0)
 				{
 					finalDetailTxt += waiveETF_txt+ "\n";
 					finalDetailTxt += Replace.flags(cancellationFees_txt, ["<CANCELATION_FEES>"], [Std.string(cancelationFees)]);
@@ -325,7 +325,7 @@ class _TotalFees extends Action
 		#if debug
 		trace("fees._TotalFees::parseDates::noticePeriodEndOfContractDate", noticePeriodEndOfContractDate );
 		#end
-		noticePeriodRespected = termDate.getTime() <= noticePeriodEndOfContractDate.getTime();
+		noticePeriodRespected = noticePeriodEndOfContractDate.getTime() <= termDate.getTime() ;
 		#if debug
 		trace("parseDates::noticePeriodRespected ", noticePeriodRespected  );
 		#end
@@ -353,7 +353,7 @@ class _TotalFees extends Action
 		if (moveToaHomeContractedHome) noticePeriodFees = 0;
 		else noticePeriodFees = (noticePeriodRespected )? 0 : (isTerminationStandard ? 2: 1) * (hasMobileDiscount? 39.95:49.95);
 		cancelationFees = isBoxNOTSent ? 199.95 : 0;
-		totalFees = moveAdminFees > 0 ? moveAdminFees: finalETF + noticePeriodFees + (MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)?cancelationFees:0);
+		totalFees = moveAdminFees > 0 ? moveAdminFees: finalETF + noticePeriodFees + (MainApp.agent.isMember(SaltAgent.WINBACK_GROUP_NAME)?cancelationFees:0);
 		//totalFees = moveAdminFees > 0 ? moveAdminFees: finalETF + noticePeriodFees; //removed cancelation fees
 		totalFees = Math.fround(totalFees * 100) / 100;
 			#if debug

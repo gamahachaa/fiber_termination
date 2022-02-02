@@ -42,6 +42,7 @@
 	<haxelib name="flixel-addons" />
 	<haxelib name="flixel-ui" />
 
+	<haxelib name="markdown" />
 	<haxelib name="firetongue" />
 	<haxelib name="hscript" />
 	<haxelib name="tstool" />
@@ -110,4 +111,6 @@
 	<!-- _________________________________ Custom _______________________________ -->
 	
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
+	
+	<haxeflag name = "--macro" value="tstool.macros.TranslationVerificator.test()"/>
 </project>

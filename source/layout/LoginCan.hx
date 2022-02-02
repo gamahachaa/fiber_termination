@@ -7,7 +7,7 @@ import flixel.ui.FlxButton;
 import haxe.Exception;
 import tstool.MainApp;
 import tstool.layout.Login;
-import tstool.salt.Agent;
+import tstool.salt.Agent as SaltAgent;
 
 /**
  * ...
@@ -57,7 +57,7 @@ class LoginCan extends Login
 	override function createAgent(jsonAgent:Dynamic)
 	{
 		try{
-			MainApp.agent = new Agent(jsonAgent);
+			MainApp.agent = new SaltAgent(jsonAgent);
 			if (isWinBack)
 			{
 				if (!MainApp.agent.isMember(WINBACK_GROUP_NAME))
