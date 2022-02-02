@@ -13,6 +13,8 @@ import front.move._AskForOTO;
 import front.move._InputNewHomeContractDetails;
 import haxe.Json;
 import haxe.PosInfos;
+import tstool.utils.Constants;
+import tstool.utils.DateToolsBB;
 import tstool.utils.DateToolsBB.Opennings;
 import xapi.Agent;
 import xapi.Verb;
@@ -61,11 +63,11 @@ class Main extends MainApp
 	public static var adminFile:tstool.utils.Csv;
 	public static var tongue:Translator;
 	public static var customer:Customer;
-	#if debug
+	//#if debug
 	public static var trackH:tstool.utils.XapiHelper;
-	#else
-	public static var track:XapiTracker;
-	#end
+	//#else
+	//public static var track:XapiTracker;
+	//#end
 	public static var VERSION:String;
 	public static var VERSION_TRACKER:VersionTracker;
 	public static var LOCATION:Location;
@@ -97,15 +99,19 @@ class Main extends MainApp
 		#else
 		FIBER_WINBACK_UTC_RANGES = opennings.prod;
 		#end
+		#if debug
+		trace("Main::Main::!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)", !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS) );
+		trace("Main::Main::!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)", !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS, Date.fromString("2021-12-24")) );
+		#end
 		//tongue = MainApp.translator;
 		//COOKIE = MainApp.save;
 		HISTORY = MainApp.stack;
 		//LOCATION = MainApp.location;
-		#if debug
+		//#if debug
 		trackH =  MainApp.xapiHelper;
-		#else
-		track =  MainApp.xapiTracker;
-		#end
+		//#else
+		//track =  MainApp.xapiTracker;
+		//#end
 		//xapiHelper = new XapiHelper( Browser.location.origin + LIB_FOLDER_LOGIN );
 		//xapiHelper = new XapiHelper( "https://qook.test.salt.ch/commonlibs/" );
 		DEBUG = MainApp.debug;

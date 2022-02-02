@@ -8,7 +8,7 @@ import front.move.vti.InputMoveDateandOTOinVTI;
 //import tickets._CreateTwoOneThree;
 import tstool.MainApp;
 import tstool.process.TripletMultipleInput;
-import tstool.salt.Agent;
+import tstool.salt.Agent as SaltAgent;
 import tstool.utils.Constants;
 //import tstool.process.ActionMultipleInput;
 //import tstool.process.Descision;
@@ -178,9 +178,9 @@ class _AskForOTO extends TripletMultipleInput
 	inline function getNext():Class<Process>
 	{
 		#if debug
-		trace("front.move._AskForOTO::getNext::MainApp.agent.isMember(Agent.CSR2_GROUP_NAME)", MainApp.agent.isMember(Agent.CSR2_GROUP_NAME) );
+		trace("front.move._AskForOTO::getNext::MainApp.agent.isMember(SaltAgent.CSR2_GROUP_NAME)", MainApp.agent.isMember(SaltAgent.CSR2_GROUP_NAME) );
 		#end
-		return MainApp.agent.isMember(Agent.CSR2_GROUP_NAME)?  InputMoveDateandOTOinVTI : _TotalFees;
+		return MainApp.agent.isMember(SaltAgent.CSR2_GROUP_NAME)?  InputMoveDateandOTOinVTI : _TotalFees;
 	}
 	/****************************
 	* Needed only for validation

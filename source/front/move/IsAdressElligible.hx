@@ -5,14 +5,10 @@ import front.capture.CheckContractorVTI;
 import front.capture._TransferToWB;
 import front.capture._WinbackIsClosed;
 import tickets._CreateTicketSixForOne;
-//import tickets._CreateTicketSixForOne_close;
-//import tickets._CreateTicketSixForOne_open;
-//import front.move.vti.DoesVTIYieldElligible;
-//import tickets._CreateTicketSixForOne;
 import tstool.process.Process;
 import tstool.process.Triplet;
 import tstool.process.TripletMultipleInput;
-import tstool.salt.Agent;
+import tstool.salt.Agent as SaltAgent;
 import tstool.utils.Constants;
 import tstool.utils.DateToolsBB;
 import tstool.utils.ExpReg;
@@ -82,15 +78,9 @@ class IsAdressElligible extends TripletMultipleInput
 			]
 		);
 	}
-	/*override public function create():Void
-	{
-		super.create();
-		if (Main.HISTORY.isClassInteractionInHistory(DoesVTIYieldElligible, No))
-			this.btnYes.visible = false;
-	}*/
 	override public function onYesClick():Void
 	{
-		this._nexts = [{step: MainApp.agent.isMember(Agent.CSR2_GROUP_NAME)? _AskForOTO : _InputMoveDate, params: []}];
+		this._nexts = [{step: _InputMoveDate, params: []}];
 		super.onYesClick();
 	}
 	override public function onNoClick():Void
@@ -107,9 +97,9 @@ class IsAdressElligible extends TripletMultipleInput
 	inline function getNext():Class<Process>
 	{
 		var isGigabox = Main.HISTORY.isClassInteractionInHistory(CheckContractorVTI, Mid);
-		var isWB = MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME);
-		//var now = Date.now();
-		//var canTranfer = DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
+		var isWB = MainApp.agent.isMember(SaltAgent.WINBACK_GROUP_NAME);
+		var now = Date.now();
+		var canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS) && DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
 		return if (isGigabox)
 		{
 			//trace("giga");
@@ -119,6 +109,10 @@ class IsAdressElligible extends TripletMultipleInput
 		{
 			//trace("wb");
 			_InputDates;
+		}
+		else if (canTranfer)
+		{
+			_TransferToWB;
 		}
 		else{
 			//trace("else", DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES));

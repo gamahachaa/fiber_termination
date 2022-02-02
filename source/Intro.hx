@@ -1,34 +1,22 @@
 package;
 
-//using tstool.utils.StringUtils;
 
 import front.capture.CheckContractorVTI;
 import front.capture._WinbackIsClosed;
 import front.move.MoveHow;
-import haxe.Json;
-import haxe.ds.StringMap;
-import tstool.layout.UI;
+//import haxe.Json;
+//import haxe.ds.StringMap;
+//import tstool.layout.UI;
 import tstool.process.TripletRadios;
-import tstool.salt.Agent;
+import tstool.salt.Agent as SaltAgent;
 import tstool.utils.Constants;
 import tstool.utils.DateToolsBB;
-//import layout.LoginCan;
-import lime.system.Clipboard;
-import tstool.process.ActionRadios;
-import tstool.process.CheckUpdateSub;
-//import tstool.process.Descision;
-//import tstool.process.DescisionRadios;
-//import tstool.process.DescisionRadios;
+//import lime.system.Clipboard;
+//import tstool.process.ActionRadios;
+//import tstool.process.CheckUpdateSub;
 import tstool.process.Process;
-//import front.capture._CompareWishAndTermDates;
-//import front.capture._DeathWording;
-//import front.capture._TransferToWB;
-//import front.fees._InputDates;
 import js.Browser;
 import tstool.MainApp;
-//import tstool.process.ActionRadios;
-//import tstool.process.Process;
-//import tstool.process.Triplet;
 
 /**
  * ...
@@ -42,7 +30,7 @@ class Intro extends TripletRadios
 	*/
 	static public inline var WHY_LEAVE:String = "WHY LEAVE";
 	//////////////// WINBACKS ////////////////////////////
-	static public inline var TECH_ISSUES = "technical_modem_connection";// TECHISSUES |technical_modem_connection ; Technical: modem connection
+	static public inline var TECH_ISSUES = "technical_modem_connection";// TECHISSUES 
 	static public inline var BILLINGUNDERSTANDING = "billing_bill_understanding";// BILLINGUNDERSTANDING | billing_bill_understanding ; Billing: understanding the bill
 	static public inline var BILLINGFEES = "billing_reminder";// BILLINGFEES | billing_reminder ; Billing: reminder or suspension fees
 	
@@ -106,8 +94,6 @@ class Intro extends TripletRadios
 					DEATH,
 					PLUG_IN_USE,
 					MOVE_CAN_KEEP,
-					/*MOVE_CANNOT_KEEP,*/
-					//MOVE_LEAVE_CH,
 					NOT_ELLIGIBLE,
 					CANCEL_TO_REACTIVATE,
 					PROMO,
@@ -124,8 +110,6 @@ class Intro extends TripletRadios
 					translate("Intro", DEATH, "headers"),
 					translate("Intro", PLUG_IN_USE, "headers"),
 					translate("Intro", MOVE_CAN_KEEP, "headers"),
-					/*translate("Intro", MOVE_CANNOT_KEEP, "headers"),*/
-					//translate("Intro", MOVE_LEAVE_CH, "headers"),
 					translate("Intro", NOT_ELLIGIBLE, "headers"),
 					translate("Intro", CANCEL_TO_REACTIVATE, "headers"),
 					translate("Intro", PROMO, "headers"),
@@ -140,10 +124,6 @@ class Intro extends TripletRadios
 	
 	override function changeListener(radioID:String, value:String)
 	{
-		#if debug
-		//trace("Intro::changeListener::radioID", radioID );
-		//trace("Intro::changeListener::value", value );
-		#end
 		super.changeListener(radioID, value);
 		this.btnNo.visible = true;
 		this.btnYes.visible = true;
@@ -165,8 +145,7 @@ class Intro extends TripletRadios
 			}
 			else{
 				Process.STORAGE.set("agent", "CSR1");
-				MainApp.agent.addGroupAsMemberOf(Agent.CSR1_GROUP_NAME);
-				//this._nexts = [{step:  !canTranfer && isWBCall ? _WinbackIsClosed :CheckContractorVTI, params: []}];
+				MainApp.agent.addGroupAsMemberOf(SaltAgent.CSR1_GROUP_NAME);
 				this._nexts = [{step:  getNexts(false), params: []}];
 				super.onYesClick();
 			}
@@ -177,8 +156,8 @@ class Intro extends TripletRadios
 		//WINBACK
 		if(validate()){
 			Process.STORAGE.set("agent","WINBACK");
-			MainApp.agent.addGroupAsMemberOf(Agent.WINBACK_GROUP_NAME);
-			//this._nexts = [{step: CheckContractorVTI, params: []}];
+			MainApp.agent.addGroupAsMemberOf(SaltAgent.WINBACK_GROUP_NAME);
+			
 			this._nexts = [{step: getNexts(true), params: []}];
 			super.onNoClick();
 		}
@@ -188,8 +167,8 @@ class Intro extends TripletRadios
 		//CSR2
 		if(validate()){
 			Process.STORAGE.set("agent","CSR2");
-			MainApp.agent.addGroupAsMemberOf(Agent.CSR2_GROUP_NAME);
-			//this._nexts = [{step:  !canTranfer && isWBCall ? _WinbackIsClosed : CheckContractorVTI , params: []}];
+			MainApp.agent.addGroupAsMemberOf(SaltAgent.CSR2_GROUP_NAME);
+			
 			this._nexts = [{step:  getNexts(false) , params: []}];
 			super.onMidClick();
 		}
@@ -211,35 +190,13 @@ class Intro extends TripletRadios
 		Process.INIT();
 		MainApp.agent.removeAllTSToolGroups();
 		
-		#if debug
-		var date:Date = Date.now();
-		var hoursMinUTC:Float = date.getUTCHours() + (date.getUTCMinutes() / 100);
-		var hoursMin:Float = date.getHours() + (date.getMinutes() / 100);
-		
-		//this._titleTxt += "\n\nUTC = " + hoursMinUTC;
-		//this._titleTxt += "\n\nDELTA = " + DateToolsBB.getSeasonDelta();
-		#end
-		
 		super.create();
-		//var canTranfer = DateToolsBB.isUTCDayTimeFloatInRange(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Constants.FIBER_WINBACK_OPEN_UTC_FLOAT , Constants.FIBER_WINBACK_CLOSE_UTC_FLOAT );
+		
 		canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS) && DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES);
-		#if debug
-		trace("Intro::create::canTranfer", canTranfer );
-		#end
-		//#if !debug
+		
 		Main.VERSION_TRACKER.scriptChangedSignal.add(onNewVersion);
 		Main.VERSION_TRACKER.request();
-		#if debug
-		if (Main.DEBUG){
-			trace("Main.DEBUG OPEN ROBOT");
-			//openSubState(new CheckUpdateSub(UI.THEME.bg));
-		}
-		else{
-			trace("LOCAL.DEBUG does not OPEN ROBOT");
-		}
-		
-		#else
-		//trace("PROD does OPEN ROBOT");
+		#if !debug
 		openSubState(new CheckUpdateSub(UI.THEME.bg));
 		#end
 			
@@ -247,9 +204,6 @@ class Intro extends TripletRadios
 	
 	function onNewVersion(needsUpdate:Bool):Void 
 	{
-		#if debug
-		trace("Intro::onNewVersion::needsUpdate", needsUpdate );
-		#end
 		if (needsUpdate)
 		{
 			Browser.location.reload(true);
@@ -257,10 +211,6 @@ class Intro extends TripletRadios
 		else{
 			closeSubState();
 		}
-		//closeSubState();
-		#if debug
-		trace("Intro::onNewVersion::SHOULD HAVE CLOSED");
-		#end
 	}
 	public static function GET_VTI_ACTIVITY(s:String)
 	{

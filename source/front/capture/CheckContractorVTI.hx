@@ -9,7 +9,7 @@ import front.capture._DeathWording;
 import front.capture._TransferToWB;
 import front.move.IsAdressElligible;
 import front.move.MoveHow;
-import front.move._AskForOTO;
+//import front.move._AskForOTO;
 import front.move._InputNewHomeContractDetails;
 import tickets._CreateTwoOneTwo;
 import tstool.MainApp;
@@ -17,15 +17,17 @@ import tstool.layout.History.Interactions;
 import tstool.process.MultipleInput.ValidatedInputs;
 import tstool.process.Process;
 import tstool.process.TripletMultipleInput;
-import tstool.salt.Agent;
 import tstool.salt.Balance;
 import tstool.salt.Contractor;
 import tstool.salt.Role;
 import tstool.utils.Constants;
+import tstool.utils.DateToolsBB;
 import tstool.utils.ExpReg;
 import tstool.utils.VTIdataParser;
 import winback.OkForForFWA;
 import winback.RetainWithSalesSpeech;
+import xapi.Verb;
+import tstool.salt.Agent as SaltAgent;
 
 /**
  * ...
@@ -166,6 +168,11 @@ class CheckContractorVTI extends TripletMultipleInput
 		Main.customer.reset();
 		
 		//prepareXAPIMainActivity();
+		#if debug
+		//Main.track.setActivity(status.removeWhite());
+		#else
+		//Main.track.setActivity(status.removeWhite());
+		#end
 		
 		
 		super.create();
@@ -209,9 +216,8 @@ class CheckContractorVTI extends TripletMultipleInput
 	
 	inline function getNext():Class<Process>
 	{
-
-		//var canTranfer = DateToolsBB.isUTCDayTimeFloatInRange(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Constants.FIBER_WINBACK_OPEN_UTC_FLOAT, Constants.FIBER_WINBACK_CLOSE_UTC_FLOAT);
-		//var canTranfer = DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Constants.FIBER_WINBACK_UTC_RANGES);
+		var now = Date.now();
+		var canTranfer =!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS) && DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
 		#if debug
 		//trace("front.capture.CheckContractorVTI::getNext::status", status );
 		//trace("front.capture.CheckContractorVTI::getNext::Agent.WINBACK_GROUP_NAME", Agent.WINBACK_GROUP_NAME );
@@ -245,7 +251,7 @@ class CheckContractorVTI extends TripletMultipleInput
 		}
 		else if (status == Intro.NOT_ELLIGIBLE)
 		{
-			MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? OkForForFWA: _InputDates;
+			MainApp.agent.isMember(SaltAgent.WINBACK_GROUP_NAME)? OkForForFWA: _InputDates;
 		}
 		else if (status == Intro.DEATH)
 		{
@@ -253,7 +259,7 @@ class CheckContractorVTI extends TripletMultipleInput
 		}
 		else if (isForWinBack)
 		{
-			MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: _TransferToWB;
+			MainApp.agent.isMember(SaltAgent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: _TransferToWB;
 		}
 		else{
 			_InputDates;
@@ -281,17 +287,24 @@ class CheckContractorVTI extends TripletMultipleInput
 		if (go)
 		{
 			#if debug
-			#else
 			
-			Main.track.initKeepActor();
-			Main.track.setActivity(Intro.GET_VTI_ACTIVITY(status));
-			Main.track.setVerb("initialized");
+			#else
+			Main.trackH.reset(false);
+			Main.trackH.setActor(new xapi.Agent( MainApp.agent.iri, MainApp.agent.sAMAccountName));
+			Main.trackH.setVerb(Verb.initialized);
+			//Main.trackH.setActivity(status.removeWhite());
 			//Main.track.setStatementRef(null);
-			Main.track.setCustomer();
-			Main.track.setResolution();
-			Main.track.send();
-			#end
+			var extensions:Map<String,Dynamic> = [];
+				extensions.set("https://vti.salt.ch/contractor/", Main.customer.contract.contractorID); 
+				extensions.set("https://vti.salt.ch/voip/", Main.customer.voIP);
+				
+				Main.trackH.setActivityObject(status.removeWhite(),null,null,"http://activitystrea.ms/schema/1.0/process",extensions);
+				//Main.trackH.setCustomer();
+				Main.trackH.send();
+				Main.trackH.setVerb(Verb.resolved);
+			//Main.track.send();
 			//Main.track.setVerb("resolved");// will be overridden by ticket creation
+			#end
 		}
 
 	}
