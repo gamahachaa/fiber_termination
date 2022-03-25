@@ -3,7 +3,7 @@ package front.move;
 import fees._InputDates;
 import tstool.process.ActionMultipleInput;
 import tstool.process.DescisionMultipleInput;
-import tstool.utils.ExpReg;
+import regex.ExpReg;
 
 /**
  * ...

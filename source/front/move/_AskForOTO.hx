@@ -14,7 +14,7 @@ import tstool.utils.Constants;
 //import tstool.process.Descision;
 //import tstool.process.DescisionMultipleInput;
 import tstool.process.Process;
-import tstool.utils.ExpReg;
+import regex.ExpReg;
 
 /**
  * ...

@@ -9,7 +9,7 @@ import tstool.layout.History.Interactions;
 import tstool.process.DescisionMultipleInput;
 import tstool.process.Process;
 import tstool.utils.Constants;
-import tstool.utils.ExpReg;
+import regex.ExpReg;
 
 /**
  * ...

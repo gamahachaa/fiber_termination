@@ -31,6 +31,7 @@
 	
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
+	<classpath name="../_myPackages/utils" />
 	<assets path="assets" />
 	<!--<linkedLibraries name="./howl.js"/>-->
 	<!--<template path="C:/_mesDocs/_git/_openFLTemplates/html5" />-->
@@ -112,5 +113,5 @@
 	
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	
-	<haxeflag name = "--macro" value="tstool.macros.TranslationVerificator.test()"/>
+	<haxeflag name = "--macro" value="tstool.macros.TranslationVerificator.test(['Main'])"/>
 </project>

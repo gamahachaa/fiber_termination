@@ -4,6 +4,8 @@ package;
 import front.capture.CheckContractorVTI;
 import front.capture._WinbackIsClosed;
 import front.move.MoveHow;
+import tstool.layout.UI;
+import tstool.process.CheckUpdateSub;
 //import haxe.Json;
 //import haxe.ds.StringMap;
 //import tstool.layout.UI;
@@ -99,23 +101,23 @@ class Intro extends TripletRadios
 					PROMO,
 					DOUBLE_ORDER
 				],labels: [
-					 translate("Intro", TECH_ISSUES, "headers"),
-					 translate("Intro", BILLINGUNDERSTANDING, "headers"),
-					 translate("Intro", BILLINGFEES, "headers"),
-					 translate("Intro", BETTER_OFFER, "headers"),
-					 translate("Intro", PRODUCTAPPLETV, "headers"),
-					 translate("Intro", PRODUCTSALTTV, "headers"),
-					 translate("Intro", PRODUCTTECHSPECS, "headers"),
-					 translate("Intro", PRODUCTVOIP, "headers"),
-					translate("Intro", DEATH, "headers"),
-					translate("Intro", PLUG_IN_USE, "headers"),
-					translate("Intro", MOVE_CAN_KEEP, "headers"),
-					translate("Intro", NOT_ELLIGIBLE, "headers"),
-					translate("Intro", CANCEL_TO_REACTIVATE, "headers"),
-					translate("Intro", PROMO, "headers"),
-					translate("Intro", DOUBLE_ORDER, "headers")
+					 MainApp.translator.translate("",this._name, TECH_ISSUES, "headers"),
+					 MainApp.translator.translate("",this._name, BILLINGUNDERSTANDING, "headers"),
+					 MainApp.translator.translate("",this._name, BILLINGFEES, "headers"),
+					 MainApp.translator.translate("",this._name, BETTER_OFFER, "headers"),
+					 MainApp.translator.translate("",this._name, PRODUCTAPPLETV, "headers"),
+					 MainApp.translator.translate("",this._name, PRODUCTSALTTV, "headers"),
+					 MainApp.translator.translate("",this._name, PRODUCTTECHSPECS, "headers"),
+					 MainApp.translator.translate("",this._name, PRODUCTVOIP, "headers"),
+					MainApp.translator.translate("",this._name, DEATH, "headers"),
+					MainApp.translator.translate("",this._name, PLUG_IN_USE, "headers"),
+					MainApp.translator.translate("",this._name, MOVE_CAN_KEEP, "headers"),
+					MainApp.translator.translate("",this._name, NOT_ELLIGIBLE, "headers"),
+					MainApp.translator.translate("",this._name, CANCEL_TO_REACTIVATE, "headers"),
+					MainApp.translator.translate("",this._name, PROMO, "headers"),
+					MainApp.translator.translate("",this._name, DOUBLE_ORDER, "headers")
 				],
-				titleTranslation: translate("Intro", WHY_LEAVE, "headers")
+				titleTranslation: MainApp.translator.translate("",this._name, WHY_LEAVE, "headers")
 			}
 		]
 		);

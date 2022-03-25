@@ -1,6 +1,6 @@
 package front.capture;
 
-using tstool.utils.StringUtils;
+using string.StringUtils;
 
 import Intro;
 import Main;
@@ -9,6 +9,7 @@ import front.capture._DeathWording;
 import front.capture._TransferToWB;
 import front.move.IsAdressElligible;
 import front.move.MoveHow;
+import js.Browser;
 //import front.move._AskForOTO;
 import front.move._InputNewHomeContractDetails;
 import tickets._CreateTwoOneTwo;
@@ -22,7 +23,7 @@ import tstool.salt.Contractor;
 import tstool.salt.Role;
 import tstool.utils.Constants;
 import tstool.utils.DateToolsBB;
-import tstool.utils.ExpReg;
+import regex.ExpReg;
 import tstool.utils.VTIdataParser;
 import winback.OkForForFWA;
 import winback.RetainWithSalesSpeech;
@@ -218,19 +219,7 @@ class CheckContractorVTI extends TripletMultipleInput
 	{
 		var now = Date.now();
 		var canTranfer =!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS) && DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
-		#if debug
-		//trace("front.capture.CheckContractorVTI::getNext::status", status );
-		//trace("front.capture.CheckContractorVTI::getNext::Agent.WINBACK_GROUP_NAME", Agent.WINBACK_GROUP_NAME );
-		//trace("front.capture.CheckContractorVTI::getNext:: MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME)", MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME) );
-		//trace("front.capture.CheckContractorVTI::getNext:: AGENT", MainApp.agent );
-		#end
-		
-		/*return switch (status)
-		{	
 
-			case Intro.DEATH: _DeathWording; 
-			case _:_InputDates;
-		}*/
 		return 
 		if (status == Intro.MOVE_CAN_KEEP)
 		{
@@ -239,7 +228,6 @@ class CheckContractorVTI extends TripletMultipleInput
 			else if ( Main.HISTORY.isClassInteractionInHistory(MoveHow, Mid))    //and to already Home contracted place
 				_InputNewHomeContractDetails;
 			else IsAdressElligible;
-			//else MainApp.agent.isMember(Agent.CSR2_GROUP_NAME)? _AskForOTO : IsAdressElligible;
 		}
 		else if (status == Intro.DOUBLE_ORDER)
 		{
@@ -297,7 +285,7 @@ class CheckContractorVTI extends TripletMultipleInput
 			var extensions:Map<String,Dynamic> = [];
 				extensions.set("https://vti.salt.ch/contractor/", Main.customer.contract.contractorID); 
 				extensions.set("https://vti.salt.ch/voip/", Main.customer.voIP);
-				
+				extensions.set(Browser.location.origin +"/troubleshooting/script_version/", Main.VERSION);
 				Main.trackH.setActivityObject(status.removeWhite(),null,null,"http://activitystrea.ms/schema/1.0/process",extensions);
 				//Main.trackH.setCustomer();
 				Main.trackH.send();
