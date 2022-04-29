@@ -212,6 +212,7 @@ class Intro extends TripletRadios
 		}
 		else{
 			closeSubState();
+			MainApp.VERSION_TIMER_value = MainApp.VERSION_TIMER_DURATION;
 		}
 	}
 	public static function GET_VTI_ACTIVITY(s:String)
