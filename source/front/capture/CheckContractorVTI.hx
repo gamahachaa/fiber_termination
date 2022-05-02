@@ -9,7 +9,7 @@ import front.capture._DeathWording;
 import front.capture._TransferToWB;
 import front.move.IsAdressElligible;
 import front.move.MoveHow;
-import js.Browser;
+//import js.Browser;
 //import front.move._AskForOTO;
 import front.move._InputNewHomeContractDetails;
 import tickets._CreateTwoOneTwo;

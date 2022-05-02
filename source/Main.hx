@@ -43,7 +43,7 @@ import tstool.utils.Csv;
 import tstool.utils.Translator;
 import tstool.utils.VersionTracker;
 import tstool.utils.XapiTracker;
-import tstool.utils.XapiHelper;
+import tstool.utils.XapiTracker;
 
 /**
  * ...
@@ -64,7 +64,7 @@ class Main extends MainApp
 	public static var tongue:Translator;
 	public static var customer:Customer;
 	//#if debug
-	public static var trackH:tstool.utils.XapiHelper;
+	public static var trackH:tstool.utils.XapiTracker;
 	//#else
 	//public static var track:XapiTracker;
 	//#end
@@ -72,6 +72,7 @@ class Main extends MainApp
 	public static var VERSION_TRACKER:VersionTracker;
 	public static var LOCATION:Location;
 	public static var DEBUG:Bool;
+	public static var _mainDebug:Bool;
 	public static var FIBER_WINBACK_UTC_RANGES:Array<Opennings>;
 	public static inline var DEBUG_LEVEL:Int = 0;
 	public static var LANGS:Array<String> = ["fr-FR","de-DE","en-GB","it-IT"];
@@ -115,6 +116,7 @@ class Main extends MainApp
 		//xapiHelper = new XapiHelper( Browser.location.origin + LIB_FOLDER_LOGIN );
 		//xapiHelper = new XapiHelper( "https://qook.test.salt.ch/commonlibs/" );
 		DEBUG = MainApp.debug;
+		_mainDebug = MainApp.debug;
 		VERSION_TRACKER = MainApp.versionTracker;
 		customer = MainApp.cust;
 		//addChild(new FlxGame(1400, 880, Login, 1, 30, 30, true, true));
