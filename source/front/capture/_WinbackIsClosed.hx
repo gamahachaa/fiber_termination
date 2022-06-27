@@ -3,6 +3,7 @@ package front.capture;
 import firetongue.Replace;
 import flow.End;
 import haxe.Json;
+import string.StringUtils;
 import tstool.process.Action;
 import tstool.utils.DateToolsBB;
 
@@ -36,8 +37,8 @@ class _WinbackIsClosed extends Action
 		var delta = DateToolsBB.getSeasonDelta();
 		for (i in Main.FIBER_WINBACK_UTC_RANGES) 
 		{
-			var o = Std.string(i.open + delta);
-			var c = Std.string(i.close + delta);
+			var o = StringUtils.roundedFloat(i.open + delta);
+			var c = StringUtils.roundedFloat(i.close + delta);
 			t1.push(Replace.flags(r1, ["<START>", "<END>"], [o, c]));
 			t2.push(Replace.flags(r2, ["<START>", "<END>"], [o, c]));
 		}

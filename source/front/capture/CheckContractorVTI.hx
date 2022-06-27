@@ -9,6 +9,7 @@ import front.capture._DeathWording;
 import front.capture._TransferToWB;
 import front.move.IsAdressElligible;
 import front.move.MoveHow;
+import js.Browser;
 //import js.Browser;
 //import front.move._AskForOTO;
 import front.move._InputNewHomeContractDetails;
@@ -168,14 +169,6 @@ class CheckContractorVTI extends TripletMultipleInput
 	{
 		Main.customer.reset();
 		
-		//prepareXAPIMainActivity();
-		#if debug
-		//Main.track.setActivity(status.removeWhite());
-		#else
-		//Main.track.setActivity(status.removeWhite());
-		#end
-		
-		
 		super.create();
 		parser = new VTIdataParser(account);
 		parser.signal.add( onVtiAccountParsed );
@@ -272,12 +265,15 @@ class CheckContractorVTI extends TripletMultipleInput
 
 	function canITrack(go:Bool)
 	{
+		
+		//#end
 		if (go)
 		{
-			#if debug
+			//#if debug
 			
-			#else
-			Main.trackH.reset(false);
+			//#else
+			//Main.trackH.reset(true);
+
 			Main.trackH.setActor(new xapi.Agent( MainApp.agent.iri, MainApp.agent.sAMAccountName));
 			Main.trackH.setVerb(Verb.initialized);
 			//Main.trackH.setActivity(status.removeWhite());
@@ -292,35 +288,10 @@ class CheckContractorVTI extends TripletMultipleInput
 				Main.trackH.setVerb(Verb.resolved);
 			//Main.track.send();
 			//Main.track.setVerb("resolved");// will be overridden by ticket creation
-			#end
+			//#end
 		}
 
 	}
-	/*function isWinBackCall()
-	{
-		return switch (status)
-		{	
-			case Intro.TECH_ISSUES: true;
-			case Intro.BILLINGUNDERSTANDING: true;
-			case Intro.BILLINGFEES: true;
-			case Intro.PRODUCTTECHSPECS: true;
-			case Intro.BETTER_OFFER: true;
-			case Intro.OTHER: true;
-			case Intro.PLUG_IN_USE: true;
-			case Intro.CANCEL_TO_REACTIVATE: true;
-			case _: false;
-		}
-	}*/
-	/*
-	function prepareXAPIMainActivity()
-	{
-		Main.track.setActivity("TRANSFER_WB");
-		if (status == Intro.NO_MORE){ Main.track.setActivity("TRANSFER_WB");} 
-		else if (status == Intro.DEATH){ Main.track.setActivity("DEATH"); }
-		else if (status == Intro.PLUG_IN_USE){Main.track.setActivity("PLUG_IN_USE");}
-		else if (status == Intro.MOVE_CAN_KEEP){Main.track.setActivity("MOVE_CAN_KEEP");}
-		else if (status == Intro.MOVE_CANNOT_KEEP){Main.track.setActivity("MOVE_CANNOT_KEEP");}
-		else {Main.track.setActivity("TRANSFER_WB"); };
-	} */
+	
 	
 }

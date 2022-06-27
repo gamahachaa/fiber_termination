@@ -198,6 +198,8 @@ class Intro extends TripletRadios
 		
 		Main.VERSION_TRACKER.scriptChangedSignal.add(onNewVersion);
 		Main.VERSION_TRACKER.request();
+		Main.trackH.reset(false);
+		Main.trackH.setDefaultContext(MainApp.translator.locale, "fiber.tech.qtool@salt.ch");
 		#if !debug
 		openSubState(new CheckUpdateSub(UI.THEME.bg));
 		#end
