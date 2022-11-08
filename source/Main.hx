@@ -10,12 +10,12 @@ import flow.End;
 import Intro;
 import front.capture._TransferToWB;
 import front.move._AskForOTO;
-import front.move._InputNewHomeContractDetails;
+//import front.move._InputNewHomeContractDetails;
 import haxe.Json;
 import haxe.PosInfos;
 import tstool.utils.Constants;
-import tstool.utils.DateToolsBB;
-import tstool.utils.DateToolsBB.Opennings;
+import date.DateToolsBB;
+import date.DateToolsBB.Opennings;
 import xapi.Agent;
 import xapi.Verb;
 import xapi.types.StatementRef;
@@ -56,6 +56,7 @@ class Main extends MainApp
 	
 	//public static var LIB_FOLDER:String;
 	public static inline var LIB_FOLDER_LOGIN:String = "/commonlibs/";
+	public static inline var TMP_FILTER_ASSET_PATH:String = "assets/data/tmp/";
 	//public static var MAIL_WRAPPER_URL:String = LIB_FOLDER + "php/mail/index.php";
 	
 	public static var HISTORY:History;
@@ -68,6 +69,7 @@ class Main extends MainApp
 	//public static var track:XapiTracker;
 	//#end
 	public static var VERSION:String;
+	
 	public static var VERSION_TRACKER:VersionTracker;
 	public static var LOCATION:Location;
 	public static var DEBUG:Bool;
@@ -96,6 +98,12 @@ class Main extends MainApp
 		trace("Main::Main::opennings", opennings );
 		FIBER_WINBACK_UTC_RANGES = opennings.test;
 		trace("Main::Main::opennings", opennings.test );
+		var canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)
+						&& DateToolsBB.isUTCDayTimeFloatInRanges(
+								Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, 
+								Main.FIBER_WINBACK_UTC_RANGES
+							);
+		trace(canTranfer);
 		#else
 		FIBER_WINBACK_UTC_RANGES = opennings.prod;
 		#end

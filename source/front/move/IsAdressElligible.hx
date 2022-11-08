@@ -1,16 +1,19 @@
 package front.move;
 
+import date.WorldTimeAPI;
 import fees._InputDates;
 import front.capture.CheckContractorVTI;
 import front.capture._TransferToWB;
 import front.capture._WinbackIsClosed;
+import haxe.Json;
+import thx.DateTimeUtc;
 //import tickets._CreateTicketSixForOne;
 import tstool.process.Process;
 //import tstool.process.Triplet;
 import tstool.process.TripletMultipleInput;
 import tstool.salt.Agent as SaltAgent;
 import tstool.utils.Constants;
-import tstool.utils.DateToolsBB;
+import date.DateToolsBB;
 import regex.ExpReg;
 //import layout.LoginCan;
 import tstool.MainApp;
@@ -98,8 +101,13 @@ class IsAdressElligible extends TripletMultipleInput
 	{
 		var isGigabox = Main.HISTORY.isClassInteractionInHistory(CheckContractorVTI, Mid);
 		var isWB = MainApp.agent.isMember(SaltAgent.WINBACK_GROUP_NAME);
-		var now = Date.now();
-		var canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS) && DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
+		//var now = Date.now();
+		var canTranfer = DateToolsBB.isServiceOpened(
+			Constants.FIBER_WINBACK_BANK_HOLIDAYS,
+			Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, 
+			Main.FIBER_WINBACK_UTC_RANGES,
+			DateToolsBB.SWISS_TIME
+		);
 		return if (isGigabox)
 		{
 			//trace("giga");
@@ -115,9 +123,23 @@ class IsAdressElligible extends TripletMultipleInput
 			_TransferToWB;
 		}
 		else{
-			//trace("else", DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES));
-			!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)&& DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES) ? _TransferToWB: _WinbackIsClosed;
+			_WinbackIsClosed;
 		}
 	}
+    override public function create():Void 
+	{
+		var timeApi = new WorldTimeAPI();
+		timeApi.onTimeZone = init;
 
+		timeApi.getTimeZone();
+		super.create();
+	}
+	
+	function init(data:String)
+	{
+		var z:TimeZone = Json.parse(data);
+		DateToolsBB.SWISS_TIME = DateTimeUtc.fromString(z.datetime).toDate();
+		super.create();
+		
+	}
 }

@@ -1,9 +1,13 @@
 package;
 
-
+import date.WorldTimeAPI;
+import date.WorldTimeAPI.TimeZone;
 import front.capture.CheckContractorVTI;
 import front.capture._WinbackIsClosed;
 import front.move.MoveHow;
+import haxe.Json;
+import thx.DateTimeUtc;
+import tstool.layout.History.Interactions;
 import tstool.layout.UI;
 import tstool.process.CheckUpdateSub;
 //import haxe.Json;
@@ -12,7 +16,7 @@ import tstool.process.CheckUpdateSub;
 import tstool.process.TripletRadios;
 import tstool.salt.Agent as SaltAgent;
 import tstool.utils.Constants;
-import tstool.utils.DateToolsBB;
+import date.DateToolsBB;
 //import lime.system.Clipboard;
 //import tstool.process.ActionRadios;
 //import tstool.process.CheckUpdateSub;
@@ -27,25 +31,25 @@ import tstool.MainApp;
 class Intro extends TripletRadios
 {
 	/**
-	 * @todo implement update radio to fetch Tongue 
+	 * @todo implement update radio to fetch Tongue
 	 *
 	*/
 	static public inline var WHY_LEAVE:String = "WHY LEAVE";
 	//////////////// WINBACKS ////////////////////////////
-	static public inline var TECH_ISSUES = "technical_modem_connection";// TECHISSUES 
+	static public inline var TECH_ISSUES = "technical_modem_connection";// TECHISSUES
 	static public inline var BILLINGUNDERSTANDING = "billing_bill_understanding";// BILLINGUNDERSTANDING | billing_bill_understanding ; Billing: understanding the bill
 	static public inline var BILLINGFEES = "billing_reminder";// BILLINGFEES | billing_reminder ; Billing: reminder or suspension fees
-	
+
 	static public inline var BETTER_OFFER = "offre_betterelsewhere";//BETTER_OFFER |offre_betterelsewhere ; Better offer
-	
+
 	static public inline var PRODUCTAPPLETV = "product_appletv";// PRODUCTAPPLETV | product_appletv ; Product: apple tv
 	static public inline var PRODUCTSALTTV = "product_salttv";// PRODUCTSALTTV | product_salttv ; Product: salt tv
-	static public inline var PRODUCTTECHSPECS = "product_tech_specs";// PRODUCTTECHSPECS | product_tech_specs ; Product: technical characteristics 
+	static public inline var PRODUCTTECHSPECS = "product_tech_specs";// PRODUCTTECHSPECS | product_tech_specs ; Product: technical characteristics
 	static public inline var PRODUCTVOIP = "product_voip";// PRODUCTVOIP | product_voip ; Product: voip
 	static public inline var OTHER = "user_terminate";//user_terminate ; Other: personal/unknown
 	static public inline var PLUG_IN_USE = "WANTS TO STAY WITH CURRENT PROVIDER"; //PLUG_IN_USE | WANTSTOSTAYWITHCURRENTPROVIDER
 	static public inline var CANCEL_TO_REACTIVATE = "CANCEL_TO_REACTIVATE";
-	
+
 	static public inline var DEATH = "DEATH";
 	static public inline var MOVE_CAN_KEEP = "leaving_location";//MOVE_CAN_KEEP | MOVEHOUSEKEEPFIBER | leaving_location ; Move: terminated by the customer
 	static public inline var MOVE_CANNOT_KEEP = "MOVE CANT KEEP";      // MOVE_CANNOT_KEEP | MOVECANTKEEP
@@ -53,84 +57,86 @@ class Intro extends TripletRadios
 	static public inline var MOVE_LEAVE_CH = "BYE BYE SWITZERLAND";
 	static public inline var PROMO = "PROMO";
 	static public inline var DOUBLE_ORDER = "DOUBLE_ORDER";
-	
+
 	static var ACTIVITY_MAP:Map<String,String> = [
-			MOVE_LEAVE_CH  => "leaving_location_noteligible",
-			DEATH  => "death",
-			MOVE_CANNOT_KEEP  => "leaving_location_noteligible",
-			PLUG_IN_USE => "cancel_offre_betterelsewhere"
-		];
-		var canTranfer:Bool;
-		var isWBCall:Bool;
+				MOVE_LEAVE_CH  => "leaving_location_noteligible",
+				DEATH  => "death",
+				MOVE_CANNOT_KEEP  => "leaving_location_noteligible",
+				PLUG_IN_USE => "cancel_offre_betterelsewhere"
+			];
+	var canTranfer:Bool;
+	var isWBCall:Bool;
+	var swissTime:Date;
+	public static inline var SWISS_TIME:String = "SWISS_TIME";
 	public static var WINBACKS:Array<String> = [
-		TECH_ISSUES, 
-		BILLINGUNDERSTANDING, 
-		BILLINGFEES, 
-		BETTER_OFFER, 
-		PRODUCTAPPLETV, 
-		PRODUCTSALTTV, 
-		PRODUCTTECHSPECS, 
-		PRODUCTVOIP, 
-		OTHER, 
-		PLUG_IN_USE, 
-		CANCEL_TO_REACTIVATE,
-		PROMO
-		];
-	public function new() 
+				TECH_ISSUES,
+				BILLINGUNDERSTANDING,
+				BILLINGFEES,
+				BETTER_OFFER,
+				PRODUCTAPPLETV,
+				PRODUCTSALTTV,
+				PRODUCTTECHSPECS,
+				PRODUCTVOIP,
+				OTHER,
+				PLUG_IN_USE,
+				CANCEL_TO_REACTIVATE,
+				PROMO
+			];
+	public function new()
 	{
 		super(
-		[
-			{
-				title: WHY_LEAVE,
-				hasTranslation:true,
-				widthMultiplier:1,
-				values: [
-					TECH_ISSUES,
-					BILLINGUNDERSTANDING,
-					BILLINGFEES,
-					BETTER_OFFER,
-					PRODUCTAPPLETV,
-					PRODUCTSALTTV,
-					PRODUCTTECHSPECS,
-					PRODUCTVOIP,
-					DEATH,
-					PLUG_IN_USE,
-					MOVE_CAN_KEEP,
-					NOT_ELLIGIBLE,
-					CANCEL_TO_REACTIVATE,
-					PROMO,
-					DOUBLE_ORDER
-				],labels: [
-					 MainApp.translator.translate("",this._name, TECH_ISSUES, "headers"),
-					 MainApp.translator.translate("",this._name, BILLINGUNDERSTANDING, "headers"),
-					 MainApp.translator.translate("",this._name, BILLINGFEES, "headers"),
-					 MainApp.translator.translate("",this._name, BETTER_OFFER, "headers"),
-					 MainApp.translator.translate("",this._name, PRODUCTAPPLETV, "headers"),
-					 MainApp.translator.translate("",this._name, PRODUCTSALTTV, "headers"),
-					 MainApp.translator.translate("",this._name, PRODUCTTECHSPECS, "headers"),
-					 MainApp.translator.translate("",this._name, PRODUCTVOIP, "headers"),
-					MainApp.translator.translate("",this._name, DEATH, "headers"),
-					MainApp.translator.translate("",this._name, PLUG_IN_USE, "headers"),
-					MainApp.translator.translate("",this._name, MOVE_CAN_KEEP, "headers"),
-					MainApp.translator.translate("",this._name, NOT_ELLIGIBLE, "headers"),
-					MainApp.translator.translate("",this._name, CANCEL_TO_REACTIVATE, "headers"),
-					MainApp.translator.translate("",this._name, PROMO, "headers"),
-					MainApp.translator.translate("",this._name, DOUBLE_ORDER, "headers")
-				],
-				titleTranslation: MainApp.translator.translate("",this._name, WHY_LEAVE, "headers")
-			}
-		]
+			[
+		{
+			title: WHY_LEAVE,
+			hasTranslation:true,
+			widthMultiplier:1,
+			values: [
+				TECH_ISSUES,
+				BILLINGUNDERSTANDING,
+				BILLINGFEES,
+				BETTER_OFFER,
+				PRODUCTAPPLETV,
+				PRODUCTSALTTV,
+				PRODUCTTECHSPECS,
+				PRODUCTVOIP,
+				DEATH,
+				PLUG_IN_USE,
+				MOVE_CAN_KEEP,
+				NOT_ELLIGIBLE,
+				CANCEL_TO_REACTIVATE,
+				PROMO,
+				DOUBLE_ORDER
+			],labels: [
+				MainApp.translator.translate("",this._name, TECH_ISSUES, "headers"),
+				MainApp.translator.translate("",this._name, BILLINGUNDERSTANDING, "headers"),
+				MainApp.translator.translate("",this._name, BILLINGFEES, "headers"),
+				MainApp.translator.translate("",this._name, BETTER_OFFER, "headers"),
+				MainApp.translator.translate("",this._name, PRODUCTAPPLETV, "headers"),
+				MainApp.translator.translate("",this._name, PRODUCTSALTTV, "headers"),
+				MainApp.translator.translate("",this._name, PRODUCTTECHSPECS, "headers"),
+				MainApp.translator.translate("",this._name, PRODUCTVOIP, "headers"),
+				MainApp.translator.translate("",this._name, DEATH, "headers"),
+				MainApp.translator.translate("",this._name, PLUG_IN_USE, "headers"),
+				MainApp.translator.translate("",this._name, MOVE_CAN_KEEP, "headers"),
+				MainApp.translator.translate("",this._name, NOT_ELLIGIBLE, "headers"),
+				MainApp.translator.translate("",this._name, CANCEL_TO_REACTIVATE, "headers"),
+				MainApp.translator.translate("",this._name, PROMO, "headers"),
+				MainApp.translator.translate("",this._name, DOUBLE_ORDER, "headers")
+			],
+			titleTranslation: MainApp.translator.translate("",this._name, WHY_LEAVE, "headers")
+		}
+			]
 		);
-		
+
 	}
-	
+
 	override function changeListener(radioID:String, value:String)
 	{
 		super.changeListener(radioID, value);
 		this.btnNo.visible = true;
 		this.btnYes.visible = true;
 		this.btnMid.visible = true;
-		switch(value)
+		switch (value)
 		{
 			case NOT_ELLIGIBLE : this.btnYes.visible = this.btnMid.visible = false;
 			case _ : this.btnYes.visible = true;
@@ -140,15 +146,17 @@ class Intro extends TripletRadios
 	override public function onYesClick():Void
 	{
 		// FRONT
-		if(validate()){
+		if (validate())
+		{
 			if (status.get(WHY_LEAVE) == NOT_ELLIGIBLE)
 			{
 				this.rds[0].blink(true);
 			}
-			else{
+			else
+			{
 				Process.STORAGE.set("agent", "CSR1");
 				MainApp.agent.addGroupAsMemberOf(SaltAgent.CSR1_GROUP_NAME);
-				this._nexts = [{step:  getNexts(false), params: []}];
+				this._nexts = [ {step:  getNexts(false), params: []}];
 				super.onYesClick();
 			}
 		}
@@ -156,22 +164,24 @@ class Intro extends TripletRadios
 	override public function onNoClick():Void
 	{
 		//WINBACK
-		if(validate()){
+		if (validate())
+		{
 			Process.STORAGE.set("agent","WINBACK");
 			MainApp.agent.addGroupAsMemberOf(SaltAgent.WINBACK_GROUP_NAME);
-			
-			this._nexts = [{step: getNexts(true), params: []}];
+
+			this._nexts = [ {step: getNexts(true), params: []}];
 			super.onNoClick();
 		}
 	}
 	override public function onMidClick():Void
 	{
 		//CSR2
-		if(validate()){
+		if (validate())
+		{
 			Process.STORAGE.set("agent","CSR2");
 			MainApp.agent.addGroupAsMemberOf(SaltAgent.CSR2_GROUP_NAME);
-			
-			this._nexts = [{step:  getNexts(false) , params: []}];
+
+			this._nexts = [ {step:  getNexts(false), params: []}];
 			super.onMidClick();
 		}
 	}
@@ -188,14 +198,26 @@ class Intro extends TripletRadios
 	}
 	override public function create():Void
 	{
-		
+
 		Process.INIT();
 		MainApp.agent.removeAllTSToolGroups();
-		
+		var timeApi = new WorldTimeAPI();
+		timeApi.onTimeZone = init;
+
+		timeApi.getTimeZone();
+	}
+	function init(data:String)
+	{
 		super.create();
-		
-		canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS) && DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES);
-		
+		var z:TimeZone = Json.parse(data);
+		DateToolsBB.SWISS_TIME = DateTimeUtc.fromString(z.datetime).toDate();
+		canTranfer = DateToolsBB.isServiceOpened(
+			Constants.FIBER_WINBACK_BANK_HOLIDAYS,
+			Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, 
+			Main.FIBER_WINBACK_UTC_RANGES,
+			DateToolsBB.SWISS_TIME
+		);
+
 		Main.VERSION_TRACKER.scriptChangedSignal.add(onNewVersion);
 		Main.VERSION_TRACKER.request();
 		Main.trackH.reset(false);
@@ -203,10 +225,8 @@ class Intro extends TripletRadios
 		#if !debug
 		openSubState(new CheckUpdateSub(UI.THEME.bg));
 		#end
-			
 	}
-	
-	function onNewVersion(needsUpdate:Bool):Void 
+	function onNewVersion(needsUpdate:Bool):Void
 	{
 		if (needsUpdate)
 		{
@@ -221,5 +241,11 @@ class Intro extends TripletRadios
 	{
 		if (ACTIVITY_MAP.exists(s)) return ACTIVITY_MAP.get(s);
 		else return s;
+	}
+	override function pushToHistory(buttonTxt:String, interactionType:Interactions, ?values:Map<String, Dynamic> = null) 
+	{
+		var v = this.status;
+		v.set(SWISS_TIME, DateToolsBB.SWISS_TIME.toString());
+		super.pushToHistory(buttonTxt, interactionType, v);
 	}
 }
