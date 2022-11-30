@@ -4,12 +4,18 @@ using string.StringUtils;
 
 import Intro;
 import Main;
+import date.WorldTimeAPI.TimeZone;
 import fees._InputDates;
 import front.capture._DeathWording;
 import front.capture._TransferToWB;
 import front.move.IsAdressElligible;
 import front.move.MoveHow;
+import haxe.Json;
 import js.Browser;
+import thx.DateTimeUtc;
+import tstool.layout.PageLoader;
+import tstool.layout.UI;
+import tstool.process.CheckUpdateSub;
 //import js.Browser;
 //import front.move._AskForOTO;
 import front.move._InputNewHomeContractDetails;
@@ -45,52 +51,52 @@ class CheckContractorVTI extends TripletMultipleInput
 	var status:String;
 	var is_sagem:Bool;
 	var isForWinBack:Bool;
-
+	var what:Interactions;
 
 	public function new()
 	{
 		status = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
 		isForWinBack = Intro.WINBACKS.indexOf(status) >-1;
-		
+
 		var fileds:Array<ValidatedInputs> = [
-				{
-					ereg:new EReg(ExpReg.CONTRACTOR_EREG,"i"),
-					input:{
-						width:200,
-						debug: Constants.TEST_CONTRACTOR,
-						prefix:CONTRACTOR_ID,
-						position: [bottom, left]
-					}
-				},
-				{
-					ereg: new EReg(ExpReg.MISIDN_INTL,"i"),
-					input:{
-						buddy: CONTRACTOR_ID,
-						width:200,
-						debug: Constants.TEST_VOIP,
-						prefix:VOIP_NUM,
-						mustValidate: [Yes,No],
-						position:[top, right]
-					}
-				}
-			];
+		{
+			ereg:new EReg(ExpReg.CONTRACTOR_EREG,"i"),
+			input:{
+				width:200,
+				debug: Constants.TEST_CONTRACTOR,
+				prefix:CONTRACTOR_ID,
+				position: [bottom, left]
+			}
+		},
+		{
+			ereg: new EReg(ExpReg.MISIDN_INTL,"i"),
+			input:{
+				buddy: CONTRACTOR_ID,
+				width:200,
+				debug: Constants.TEST_VOIP,
+				prefix:VOIP_NUM,
+				mustValidate: [Yes,No],
+				position:[top, right]
+			}
+		}
+		];
 		if (!isForWinBack)
 		{
 			fileds.push(
-				{
-					ereg: new EReg(ExpReg.MISIDN_INTL,"i"),
-					input:{
-						buddy: CONTRACTOR_ID,
-						width:200,
-						debug: Constants.TEST_MSISDN,
-						prefix:CONTACT_NUM,
-						position:[bottom, left]
-					}
-				});
+			{
+				ereg: new EReg(ExpReg.MISIDN_INTL,"i"),
+				input:{
+					buddy: CONTRACTOR_ID,
+					width:200,
+					debug: Constants.TEST_MSISDN,
+					prefix:CONTACT_NUM,
+					position:[bottom, left]
+				}
+			});
 		}
 		super(fileds);
 		//sagem = Assets.getText("assets/data/sagem_fut.txt");
-		
+
 		this.yesValidatedSignal.add(canITrack);
 		this.noValidatedSignal.add(canITrack);
 		this.midValidatedSignal.add(canITrack);
@@ -98,68 +104,76 @@ class CheckContractorVTI extends TripletMultipleInput
 	function setReminder()
 	{
 
-			var displayVoip = Main.customer.voIP.phonSpaces();
-			var owner = Main.customer.getOwner();
-			var mobile = Main.customer.contract.mobile == "" ? "": "(" + Main.customer.contract.mobile + ")";
-			var iri  = Main.customer.iri == "" ? "" : "(" + Main.customer.iri + ")";
-			Process.STORAGE.set(Constants.STORAGE_CONTRACTOR, Main.customer.contract.contractorID );
-			if (Main.customer.contract.service != Gigabox) 
-			{
-				Process.STORAGE.set(Constants.STORAGE_VOIP, displayVoip );
-			}
-			Process.STORAGE.set(Constants.STORAGE_OWNER, owner );
-			if (isForWinBack)
-			{
-				Process.STORAGE.set(Constants.STORAGE_CONTACT, mobile );
-			}
-			
-			Process.STORAGE.set(Constants.CUST_DATA_PRODUCT_BOX, is_sagem? Constants.CUST_DATA_PRODUCT_BOX_SAGEM:  (Main.customer.contract.service == Gigabox ? Std.string(Gigabox) : Constants.CUST_DATA_PRODUCT_BOX_ARCADYAN) );
-			
-          
-			/**
-			 * @TODO keep clipboard trick to fill clipboard with data
-			 */
-			//Browser.document.addEventListener("copy", function(e){e.clipboardData.setData('text/plain', Main.customer.voIP);e.preventDefault();});
+		var displayVoip = Main.customer.voIP.phonSpaces();
+		var owner = Main.customer.getOwner();
+		var mobile = Main.customer.contract.mobile == "" ? "": "(" + Main.customer.contract.mobile + ")";
+		var iri  = Main.customer.iri == "" ? "" : "(" + Main.customer.iri + ")";
+		Main.STORAGE_DISPLAY.push(Constants.STORAGE_CONTRACTOR);
+		Main.STORAGE_DISPLAY.push(Constants.STORAGE_VOIP);
+		Main.STORAGE_DISPLAY.push(Constants.STORAGE_OWNER);
+		Main.STORAGE_DISPLAY.push(Constants.STORAGE_CONTACT);
+		Main.STORAGE_DISPLAY.push(Constants.CUST_DATA_PRODUCT_BOX);
+
+		Process.STORE(Constants.STORAGE_CONTRACTOR, Main.customer.contract.contractorID );
+		if (Main.customer.contract.service != Gigabox)
+		{
+			Process.STORE(Constants.STORAGE_VOIP, displayVoip );
+		}
+		Process.STORE(Constants.STORAGE_OWNER, owner );
+		if (isForWinBack)
+		{
+			Process.STORE(Constants.STORAGE_CONTACT, mobile );
+		}
+
+		Process.STORE(Constants.CUST_DATA_PRODUCT_BOX, is_sagem? Constants.CUST_DATA_PRODUCT_BOX_SAGEM:  (Main.customer.contract.service == Gigabox ? Std.string(Gigabox) : Constants.CUST_DATA_PRODUCT_BOX_ARCADYAN) );
+
+		/**
+		 * @TODO keep clipboard trick to fill clipboard with data
+		 */
+		//Browser.document.addEventListener("copy", function(e){e.clipboardData.setData('text/plain', Main.customer.voIP);e.preventDefault();});
 	}
-	function onVtiAccountParsed(profile:Map<String, Map<String, String>>):Void 
+	function onVtiAccountParsed(profile:Map<String, Map<String, String>>):Void
 	{
 		#if debug
-			//trace("onVtiAccountParsed");
-			//trace(profile);
+		trace("onVtiAccountParsed");
+		trace(profile);
 		#end
-		if (!profile.exists("meta") || !profile.exists("plan")) return;
-		else{
-			var voip = profile.get("plan").exists("vtiVoip")? profile.get("plan").get("vtiVoip"): ""; 
-		is_sagem = voip.indexOf("-") > -1;
-			Main.customer.contract = new Contractor(
-			profile.get("meta").exists("vtiContractor")? profile.get("meta").get("vtiContractor"):"",
-			is_sagem ? StringTools.replace(voip, "- ",""):voip,
-			profile.get("plan").exists("vtiFix")? profile.get("plan").get("vtiFix"):"",
-			profile.get("plan").exists("vtiMobile")? profile.get("plan").get("vtiMobile"):"",
-			profile.get("plan").exists("vtiAdress")? profile.get("plan").get("vtiAdress"):"",
-			profile.exists("owner")? new Role(owner,profile.get("owner").get("vtiOwner"),profile.get("owner").get("vtiOwnerEmail")):null,
-			profile.exists("payer")? new Role(payer,profile.get("payer").get("vtiPayer"),profile.get("payer").get("vtiPayerEmail")):null,
-			new Role(user, profile.get("plan").get("vtiUser"), profile.get("plan").get("vtiUserEmail")),
-			profile.exists("owner")? StringTools.trim(profile.get("owner").get("vtiOwnerEmailValidated").toLowerCase()) == "ok":false,
-			profile.exists("balance")?new Balance( profile.get("balance").get("vtiBalance"), profile.get("balance").get("vtiOverdue"), profile.get("balance").get("vtiOverdueDate")):null,
-			(profile.get("plan").exists("plan") ? (profile.get("plan").get("plan").indexOf("Giga")>-1?Gigabox:Fiber):Fiber)
-		);
+		if (!profile.exists("meta") || !profile.exists("plan")) {
+			trace('missing META ${!profile.exists("meta")} or plan ${!profile.exists("plan")}"');
+			return;
 		}
-		
+		else{
+			var voip = profile.get("plan").exists("vtiVoip")? profile.get("plan").get("vtiVoip"): "";
+			is_sagem = voip.indexOf("-") > -1;
+			Main.customer.contract = new Contractor(
+				profile.get("meta").exists("vtiContractor")? profile.get("meta").get("vtiContractor"):"",
+				is_sagem ? StringTools.replace(voip, "- ",""):voip,
+				profile.get("plan").exists("vtiFix")? profile.get("plan").get("vtiFix"):"",
+				profile.get("plan").exists("vtiMobile")? profile.get("plan").get("vtiMobile"):"",
+				profile.get("plan").exists("vtiAdress")? profile.get("plan").get("vtiAdress"):"",
+				profile.exists("owner")? new Role(owner,profile.get("owner").get("vtiOwner"),profile.get("owner").get("vtiOwnerEmail")):null,
+				profile.exists("payer")? new Role(payer,profile.get("payer").get("vtiPayer"),profile.get("payer").get("vtiPayerEmail")):null,
+				new Role(user, profile.get("plan").get("vtiUser"), profile.get("plan").get("vtiUserEmail")),
+				profile.exists("owner")? StringTools.trim(profile.get("owner").get("vtiOwnerEmailValidated").toLowerCase()) == "ok":false,
+				profile.exists("balance")?new Balance( profile.get("balance").get("vtiBalance"), profile.get("balance").get("vtiOverdue"), profile.get("balance").get("vtiOverdueDate")):null,
+				(profile.get("plan").exists("plan") ? (profile.get("plan").get("plan").indexOf("Giga")>-1?Gigabox:Fiber):Fiber)
+			);
+		}
+
 		#if debug
-			trace(Main.customer);
+		trace(Main.customer);
 		#end
 		//question.text = question.text + " <em>" + Main.customer.contract.owner.name + "<em>";
 		//question.applyMarkup(question.text, [UI.THEME.basicEmphasis]);
 		//question.drawFrame();
-		positionThis();
-		multipleInputs.setInputDefault(CONTRACTOR_ID , Main.customer.contract.contractorID);
+		//positionThis();
+		multipleInputs.setInputDefault(CONTRACTOR_ID, Main.customer.contract.contractorID);
 		multipleInputs.setInputDefault(VOIP_NUM, Main.customer.contract.voip);
-		if(!isForWinBack) multipleInputs.setInputDefault(CONTACT_NUM,Main.customer.contract.mobile);
+		if (!isForWinBack) multipleInputs.setInputDefault(CONTACT_NUM,Main.customer.contract.mobile);
 		var p = multipleInputs.positionThis();
 		positionButtons(p);
 		positionBottom(p);
-		
+
 	}
 	override public function update(elapsed)
 	{
@@ -168,63 +182,109 @@ class CheckContractorVTI extends TripletMultipleInput
 	override public function create():Void
 	{
 		Main.customer.reset();
-		
+
 		super.create();
 		parser = new VTIdataParser(account);
 		parser.signal.add( onVtiAccountParsed );
+		DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
+		//MainApp.WORD_TIME.onTimeZone = onTimeChecked;
+		//MainApp.WORD_TIME.onError = this.onError;
+		//timeApi.onStatus = this.onStatus;
+		
 	}
 	
+	function onTimeChecked(data:String)
+	{
+		var z:TimeZone = Json.parse(data);
+		//trace(z);
+		try{
+		 DateToolsBB.SWISS_TIME = DateTimeUtc.fromString(z.datetime).toDate();
+		}
+		catch (e){
+			trace(e);
+			onError(e.message);
+		}
+        //DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( 0, DateTimeUtc.fromString(z.datetime) );
+		closeSubState();
+		moveOn();
+		
+	}
+    function onError(e:String)
+	{
+		DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
+		#if debug
+		trace('Intro::onError::DateToolsBB.SWISS_TIME ${DateToolsBB.SWISS_TIME}');
+		#end
+
+		closeSubState();
+		moveOn();
+	}
+	function moveOn()
+	{
+		this._nexts = [ {step: getNext()}];
+		switch (what)
+		{
+			case Yes: super.onYesClick();
+			case No: super.onNoClick();
+			case Mid: super.onMidClick();
+			case _ : trace("front.capture.CheckContractorVTI");
+		}
+	}
 	override public function onYesClick():Void
 	{
 		//var contractorID = vtiContractorUI.getInputedText();
 		if (validate(Next))
 		{
-			this._nexts = [{step: getNext()}];
+			//this._nexts = [ {step: getNext()}];
 			setUpData(Yes);
-			super.onYesClick();
+			moveOn();
+			//super.onYesClick();
 		}
-		
+
 	}
 	override public function onNoClick():Void
 	{
 		//var contractorID = vtiContractorUI.getInputedText();
 		if (validate(Next))
 		{
-			this._nexts = [{step: getNext()}];
+			//this._nexts = [ {step: getNext()}];
 			setUpData(No);
-			super.onNoClick();
+			moveOn();
+			//super.onNoClick();
 		}
-		
+
 	}
 	override public function onMidClick():Void
 	{
 		//var contractorID = vtiContractorUI.getInputedText();
 		if (validate(Next))
 		{
-			this._nexts = [{step: getNext()}];
+			//this._nexts = [ {step: getNext()}];
 			setUpData(Mid);
-			super.onMidClick();
+			moveOn();
+			//super.onMidClick();
 		}
-		
+
 	}
-	
 	inline function getNext():Class<Process>
 	{
-		var now = Date.now();
-		var canTranfer =!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS) && DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
+		var now = DateToolsBB.SWISS_TIME;
+		var canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)
+		&& DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now)
+		&& DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
 
-		return 
+		return
 		if (status == Intro.MOVE_CAN_KEEP)
 		{
-			if ( Main.HISTORY.isClassInteractionInHistory(MoveHow, Yes) ) // abroad 
-			    _InputDates;
+			if ( Main.HISTORY.isClassInteractionInHistory(MoveHow, Yes) ) // abroad
+				_InputDates;
 			else if ( Main.HISTORY.isClassInteractionInHistory(MoveHow, Mid))    //and to already Home contracted place
 				_InputNewHomeContractDetails;
 			else IsAdressElligible;
 		}
 		else if (status == Intro.DOUBLE_ORDER)
 		{
-			 _CreateTwoOneTwo;
+			_CreateTwoOneTwo;
 		}
 		else if (status == Intro.PLUG_IN_USE)
 		{
@@ -236,7 +296,7 @@ class CheckContractorVTI extends TripletMultipleInput
 		}
 		else if (status == Intro.DEATH)
 		{
-			_DeathWording; 
+			_DeathWording;
 		}
 		else if (isForWinBack)
 		{
@@ -246,31 +306,33 @@ class CheckContractorVTI extends TripletMultipleInput
 			_InputDates;
 		}
 	}
-	
+
 	function setUpData(what:Interactions)
 	{
+		this.what = what;
 		this.parser.destroy();
 
 		Main.customer.contract.contractorID = multipleInputs.getText(CONTRACTOR_ID);
-		Main.customer.contract.fix =  multipleInputs.getText(VOIP_NUM);		
+		Main.customer.contract.fix =  multipleInputs.getText(VOIP_NUM);
 		//Main.customer.contract.voip = "0" + Main.customer.contract.fix.substr(2);
 		Main.customer.contract.voip = Main.customer.contract.fix.intlToLocalMSISDN();
 		Main.customer.iri = (what == No || what == Mid) ? Main.customer.contract.contractorID : Main.customer.contract.voip;
-		if(!isForWinBack) Main.customer.contract.mobile = multipleInputs.getText(CONTACT_NUM);
-		
-		Main.customer.dataSet.set(Constants.CUST_DATA_PRODUCT, [Constants.CUST_DATA_PRODUCT_BOX => switch(what){case Yes: Constants.CUST_DATA_PRODUCT_BOX_ARCADYAN; case No:Constants.CUST_DATA_PRODUCT_BOX_SAGEM; case Mid:Constants.CUST_DATA_PRODUCT_BOX_FWA; case _:Constants.CUST_DATA_PRODUCT_BOX_ARCADYAN; }]);
+		if (!isForWinBack) Main.customer.contract.mobile = multipleInputs.getText(CONTACT_NUM);
+
+	Main.customer.dataSet.set(Constants.CUST_DATA_PRODUCT, [Constants.CUST_DATA_PRODUCT_BOX => switch(what) {case Yes: Constants.CUST_DATA_PRODUCT_BOX_ARCADYAN; case No:Constants.CUST_DATA_PRODUCT_BOX_SAGEM; case Mid:Constants.CUST_DATA_PRODUCT_BOX_FWA; case _:Constants.CUST_DATA_PRODUCT_BOX_ARCADYAN; }]);
 		setReminder();
-		
+        //openSubState(new PageLoader(UI.THEME.bg));
+		//MainApp.WORD_TIME.getTimeZone();
 	}
 
 	function canITrack(go:Bool)
 	{
-		
+
 		//#end
 		if (go)
 		{
 			//#if debug
-			
+
 			//#else
 			//Main.trackH.reset(true);
 
@@ -279,19 +341,18 @@ class CheckContractorVTI extends TripletMultipleInput
 			//Main.trackH.setActivity(status.removeWhite());
 			//Main.track.setStatementRef(null);
 			var extensions:Map<String,Dynamic> = [];
-				extensions.set("https://vti.salt.ch/contractor/", Main.customer.contract.contractorID); 
-				extensions.set("https://vti.salt.ch/voip/", Main.customer.voIP);
-				extensions.set(Browser.location.origin +"/troubleshooting/script_version/", Main.VERSION);
-				Main.trackH.setActivityObject(status.removeWhite(),null,null,"http://activitystrea.ms/schema/1.0/process",extensions);
-				//Main.trackH.setCustomer();
-				Main.trackH.send();
-				Main.trackH.setVerb(Verb.resolved);
+			extensions.set("https://vti.salt.ch/contractor/", Main.customer.contract.contractorID);
+			extensions.set("https://vti.salt.ch/voip/", Main.customer.voIP);
+			extensions.set(Browser.location.origin +"/troubleshooting/script_version/", Main.VERSION);
+			Main.trackH.setActivityObject(status.removeWhite(),null,null,"http://activitystrea.ms/schema/1.0/process",extensions);
+			//Main.trackH.setCustomer();
+			Main.trackH.send();
+			Main.trackH.setVerb(Verb.resolved);
 			//Main.track.send();
 			//Main.track.setVerb("resolved");// will be overridden by ticket creation
 			//#end
 		}
 
 	}
-	
-	
+
 }

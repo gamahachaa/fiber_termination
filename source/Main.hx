@@ -69,12 +69,14 @@ class Main extends MainApp
 	//public static var track:XapiTracker;
 	//#end
 	public static var VERSION:String;
+	public static var STORAGE_DISPLAY:Array<String> = [];
 	
 	public static var VERSION_TRACKER:VersionTracker;
 	public static var LOCATION:Location;
 	public static var DEBUG:Bool;
 	public static var _mainDebug:Bool;
 	public static var FIBER_WINBACK_UTC_RANGES:Array<Opennings>;
+	public static var GREENWICH:Int;
 	public static inline var DEBUG_LEVEL:Int = 0;
 	public static var LANGS:Array<String> = ["fr-FR","de-DE","en-GB","it-IT"];
 	public static inline var LAST_STEP:Class<FlxState> = End;
@@ -94,22 +96,24 @@ class Main extends MainApp
 				
 		});
 		var opennings = Json.parse(Assets.getText("assets/data/opennings.json"));
+		GREENWICH = DateToolsBB.isSummerTime(Date.now()) ?2:1;	
 		#if debug
-		trace("Main::Main::opennings", opennings );
+		//trace("Main::Main::opennings", opennings );
 		FIBER_WINBACK_UTC_RANGES = opennings.test;
-		trace("Main::Main::opennings", opennings.test );
-		var canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)
-						&& DateToolsBB.isUTCDayTimeFloatInRanges(
-								Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, 
-								Main.FIBER_WINBACK_UTC_RANGES
-							);
-		trace(canTranfer);
+		
+		//trace("Main::Main::opennings", opennings.test );
+		//var canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)
+						//&& DateToolsBB.isUTCDayTimeFloatInRanges(
+								//Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, 
+								//Main.FIBER_WINBACK_UTC_RANGES
+							//);
+		//trace(canTranfer);
 		#else
 		FIBER_WINBACK_UTC_RANGES = opennings.prod;
 		#end
 		#if debug
-		trace("Main::Main::!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)", !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS) );
-		trace("Main::Main::!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)", !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS, Date.fromString("2021-12-24")) );
+		//trace("Main::Main::!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)", !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS) );
+		//trace("Main::Main::!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)", !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS, Date.fromString("2021-12-24")) );
 		#end
 		//tongue = MainApp.translator;
 		//COOKIE = MainApp.save;
@@ -133,6 +137,11 @@ class Main extends MainApp
 		//testXAPI();
 		#end
 		initScreen();
+		//trace(GREENWICH);
+		//trace(DateToolsBB.isSummerTime(Date.now()));
+		//trace(DateToolsBB.isSummerTime(new Date(2023, 4, 10, 0, 0, 0) ));
+		//trace(DateToolsBB.isSummerTime(new Date(2023, 9, 31, 0, 0, 0) ));
+		//trace(DateToolsBB.isSummerTime(new Date(2024, 4, 10, 0, 0, 0) ));
 	}
 
 	

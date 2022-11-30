@@ -71,7 +71,7 @@ class _WinbackIsClosed extends Action
 		#if debug
 		trace("front.capture._WinbackIsClosed::create::DateToolsBB.SWISS_TIME", DateToolsBB.SWISS_TIME );
 		#end
-		this._detailTxt = DateToolsBB.weekDaysMap.get(MainApp.translator.locale)[DateToolsBB.SWISS_TIME.getDay()]  + DateTools.format(DateToolsBB.SWISS_TIME, " %Hh%M @ Biel/Bienne") ;
+		this._detailTxt = DateToolsBB.weekDaysMap.get(MainApp.translator.locale)[DateToolsBB.SWISS_TIME.getDay()]  + DateTools.format(DateToolsBB.SWISS_TIME, " %e.%m @ %Hh%M (Biel/Bienne)") ;
 		super.create();
 		
 	}

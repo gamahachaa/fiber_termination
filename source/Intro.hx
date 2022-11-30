@@ -1,13 +1,15 @@
 package;
 
-import date.WorldTimeAPI;
+//import date.WorldTimeAPI;
 import date.WorldTimeAPI.TimeZone;
 import front.capture.CheckContractorVTI;
 import front.capture._WinbackIsClosed;
 import front.move.MoveHow;
 import haxe.Json;
+import thx.DateTime;
 import thx.DateTimeUtc;
 import tstool.layout.History.Interactions;
+import tstool.layout.PageLoader;
 import tstool.layout.UI;
 import tstool.process.CheckUpdateSub;
 //import haxe.Json;
@@ -64,9 +66,13 @@ class Intro extends TripletRadios
 				MOVE_CANNOT_KEEP  => "leaving_location_noteligible",
 				PLUG_IN_USE => "cancel_offre_betterelsewhere"
 			];
-	var canTranfer:Bool;
+
 	var isWBCall:Bool;
 	var swissTime:Date;
+	public static inline var CSR2:String = "CSR2";
+	public static inline var WINBACK:String = "WINBACK";
+	public static inline var AGENT:String = "agent";
+	public static inline var CSR1:String = "CSR1";
 	public static inline var SWISS_TIME:String = "SWISS_TIME";
 	public static var WINBACKS:Array<String> = [
 				TECH_ISSUES,
@@ -154,7 +160,7 @@ class Intro extends TripletRadios
 			}
 			else
 			{
-				Process.STORAGE.set("agent", "CSR1");
+				Process.STORE(AGENT, CSR1);
 				MainApp.agent.addGroupAsMemberOf(SaltAgent.CSR1_GROUP_NAME);
 				this._nexts = [ {step:  getNexts(false), params: []}];
 				super.onYesClick();
@@ -166,7 +172,7 @@ class Intro extends TripletRadios
 		//WINBACK
 		if (validate())
 		{
-			Process.STORAGE.set("agent","WINBACK");
+			Process.STORE(AGENT,WINBACK);
 			MainApp.agent.addGroupAsMemberOf(SaltAgent.WINBACK_GROUP_NAME);
 
 			this._nexts = [ {step: getNexts(true), params: []}];
@@ -178,7 +184,8 @@ class Intro extends TripletRadios
 		//CSR2
 		if (validate())
 		{
-			Process.STORAGE.set("agent","CSR2");
+
+			Process.STORE(AGENT,CSR2);
 			MainApp.agent.addGroupAsMemberOf(SaltAgent.CSR2_GROUP_NAME);
 
 			this._nexts = [ {step:  getNexts(false), params: []}];
@@ -189,6 +196,12 @@ class Intro extends TripletRadios
 	{
 		var whyLeave = status.get(WHY_LEAVE);
 		var ismove = whyLeave == MOVE_CAN_KEEP;
+		var canTranfer = DateToolsBB.isServiceOpened(
+			Constants.FIBER_WINBACK_BANK_HOLIDAYS,
+			Constants.FIBER_WINBACK_DAYS_OPENED_RANGE,
+			Main.FIBER_WINBACK_UTC_RANGES,
+			DateToolsBB.SWISS_TIME
+		);
 		return if (isWB)
 		{
 			ismove? MoveHow: CheckContractorVTI;
@@ -198,36 +211,41 @@ class Intro extends TripletRadios
 	}
 	override public function create():Void
 	{
-
+		super.create();
+		Main.STORAGE_DISPLAY.push(AGENT);
 		Process.INIT();
 		MainApp.agent.removeAllTSToolGroups();
-		var timeApi = new WorldTimeAPI();
-		timeApi.onTimeZone = init;
-
-		timeApi.getTimeZone();
+		init();
+		//openSubState(new PageLoader(UI.THEME.bg));
+		//var timeApi = new WorldTimeAPI();
+		//timeApi.onTimeZone = init;
+		//timeApi.getTimeZone();
 	}
-	function init(data:String)
+	function init()
 	{
-		super.create();
-		var z:TimeZone = Json.parse(data);
-		DateToolsBB.SWISS_TIME = DateTimeUtc.fromString(z.datetime).toDate();
-		canTranfer = DateToolsBB.isServiceOpened(
-			Constants.FIBER_WINBACK_BANK_HOLIDAYS,
-			Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, 
-			Main.FIBER_WINBACK_UTC_RANGES,
-			DateToolsBB.SWISS_TIME
-		);
-
 		Main.VERSION_TRACKER.scriptChangedSignal.add(onNewVersion);
 		Main.VERSION_TRACKER.request();
 		Main.trackH.reset(false);
 		Main.trackH.setDefaultContext(MainApp.translator.locale, "fiber.tech.qtool@salt.ch");
+
 		#if !debug
 		openSubState(new CheckUpdateSub(UI.THEME.bg));
+		#else
+		if (Main.DEBUG)
+		{
+			openSubState(new CheckUpdateSub(UI.THEME.bg));
+		}
+		else
+		{
+			onNewVersion(false);
+		}
 		#end
 	}
 	function onNewVersion(needsUpdate:Bool):Void
 	{
+		#if debug
+		trace("Intro::onNewVersion");
+		#end
 		if (needsUpdate)
 		{
 			Browser.location.reload(true);
@@ -235,14 +253,64 @@ class Intro extends TripletRadios
 		else{
 			closeSubState();
 			MainApp.VERSION_TIMER_value = MainApp.VERSION_TIMER_DURATION;
+
+			#if debug
+
+			//openSubState(new PageLoader(UI.THEME.bg));
+            DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
+			//MainApp.WORD_TIME.onTimeZone = onTimeChecked;
+			//MainApp.WORD_TIME.onError = this.onError;
+			//MainApp.WORD_TIME.getTimeZone();
+			#else
+				DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
+			#end
 		}
+	}
+
+	function onStatus(status:Int)
+	{
+
+		if (status != 200)
+		{
+			trace(status);
+		}
+	}
+	function onTimeChecked(data:String)
+	{
+		var z:TimeZone = Json.parse(data);
+		//trace(z);
+		//trace(z);
+		try
+		{
+			DateToolsBB.SWISS_TIME = DateTimeUtc.fromString(z.datetime).toDate();
+		}
+		catch (e)
+		{
+			trace(e);
+			onError(e.message);
+		}
+		//DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( 0, DateTimeUtc.fromString(z.datetime) );
+		#if debug
+		trace("Intro::onTimeChecked::DateToolsBB.SWISS_TIME", DateToolsBB.SWISS_TIME );
+		#end
+		closeSubState();
+	}
+	function onError(e:String)
+	{
+		//DateToolsBB.SWISS_TIME = Main.GREENWICH == 1 ? DateToolsBB.CLONE_DateTimeUtc( DateTimeUtc.now().nextHour()) : DateToolsBB.CLONE_DateTimeUtc( DateTimeUtc.now().nextHour().nextHour());
+		DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
+		#if debug
+		trace("Intro::onError::DateToolsBB.SWISS_TIME ", DateToolsBB.SWISS_TIME  );
+		#end
+
+		closeSubState();
 	}
 	public static function GET_VTI_ACTIVITY(s:String)
 	{
 		if (ACTIVITY_MAP.exists(s)) return ACTIVITY_MAP.get(s);
 		else return s;
 	}
-	override function pushToHistory(buttonTxt:String, interactionType:Interactions, ?values:Map<String, Dynamic> = null) 
+	override function pushToHistory(buttonTxt:String, interactionType:Interactions, ?values:Map<String, Dynamic> = null)
 	{
 		var v = this.status;
 		v.set(SWISS_TIME, DateToolsBB.SWISS_TIME.toString());

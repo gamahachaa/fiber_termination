@@ -7,6 +7,8 @@ import front.capture._TransferToWB;
 import front.capture._WinbackIsClosed;
 import haxe.Json;
 import thx.DateTimeUtc;
+import tstool.layout.PageLoader;
+import tstool.layout.UI;
 //import tickets._CreateTicketSixForOne;
 import tstool.process.Process;
 //import tstool.process.Triplet;
@@ -104,7 +106,7 @@ class IsAdressElligible extends TripletMultipleInput
 		//var now = Date.now();
 		var canTranfer = DateToolsBB.isServiceOpened(
 			Constants.FIBER_WINBACK_BANK_HOLIDAYS,
-			Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, 
+			Constants.FIBER_WINBACK_DAYS_OPENED_RANGE,
 			Main.FIBER_WINBACK_UTC_RANGES,
 			DateToolsBB.SWISS_TIME
 		);
@@ -126,20 +128,34 @@ class IsAdressElligible extends TripletMultipleInput
 			_WinbackIsClosed;
 		}
 	}
-    override public function create():Void 
+	override public function create():Void
 	{
-		var timeApi = new WorldTimeAPI();
-		timeApi.onTimeZone = init;
-
-		timeApi.getTimeZone();
+		DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
 		super.create();
+		//openSubState(new PageLoader(UI.THEME.bg));
+		
+		//MainApp.WORD_TIME.onTimeZone = init;
+        //MainApp.WORD_TIME.onError = this.onError;
+		//MainApp.WORD_TIME.getTimeZone();
+
 	}
-	
+
 	function init(data:String)
 	{
 		var z:TimeZone = Json.parse(data);
-		DateToolsBB.SWISS_TIME = DateTimeUtc.fromString(z.datetime).toDate();
-		super.create();
-		
+		//trace(z);
+		try{
+		 DateToolsBB.SWISS_TIME = DateTimeUtc.fromString(z.datetime).toDate();
+		}
+		catch (e){
+			trace(e);
+			onError(e.message);
+		}
+		closeSubState();
+	}
+	function onError(e:String)
+	{
+		DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
+		closeSubState();
 	}
 }
