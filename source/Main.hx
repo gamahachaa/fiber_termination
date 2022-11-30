@@ -10,12 +10,12 @@ import flow.End;
 import Intro;
 import front.capture._TransferToWB;
 import front.move._AskForOTO;
-import front.move._InputNewHomeContractDetails;
+//import front.move._InputNewHomeContractDetails;
 import haxe.Json;
 import haxe.PosInfos;
 import tstool.utils.Constants;
-import tstool.utils.DateToolsBB;
-import tstool.utils.DateToolsBB.Opennings;
+import date.DateToolsBB;
+import date.DateToolsBB.Opennings;
 import xapi.Agent;
 import xapi.Verb;
 import xapi.types.StatementRef;
@@ -43,7 +43,6 @@ import tstool.utils.Csv;
 import tstool.utils.Translator;
 import tstool.utils.VersionTracker;
 import tstool.utils.XapiTracker;
-import tstool.utils.XapiHelper;
 
 /**
  * ...
@@ -57,6 +56,7 @@ class Main extends MainApp
 	
 	//public static var LIB_FOLDER:String;
 	public static inline var LIB_FOLDER_LOGIN:String = "/commonlibs/";
+	public static inline var TMP_FILTER_ASSET_PATH:String = "assets/data/tmp/";
 	//public static var MAIL_WRAPPER_URL:String = LIB_FOLDER + "php/mail/index.php";
 	
 	public static var HISTORY:History;
@@ -64,15 +64,19 @@ class Main extends MainApp
 	public static var tongue:Translator;
 	public static var customer:Customer;
 	//#if debug
-	public static var trackH:tstool.utils.XapiHelper;
+	public static var trackH:tstool.utils.XapiTracker;
 	//#else
 	//public static var track:XapiTracker;
 	//#end
 	public static var VERSION:String;
+	public static var STORAGE_DISPLAY:Array<String> = [];
+	
 	public static var VERSION_TRACKER:VersionTracker;
 	public static var LOCATION:Location;
 	public static var DEBUG:Bool;
+	public static var _mainDebug:Bool;
 	public static var FIBER_WINBACK_UTC_RANGES:Array<Opennings>;
+	public static var GREENWICH:Int;
 	public static inline var DEBUG_LEVEL:Int = 0;
 	public static var LANGS:Array<String> = ["fr-FR","de-DE","en-GB","it-IT"];
 	public static inline var LAST_STEP:Class<FlxState> = End;
@@ -92,16 +96,24 @@ class Main extends MainApp
 				
 		});
 		var opennings = Json.parse(Assets.getText("assets/data/opennings.json"));
+		GREENWICH = DateToolsBB.isSummerTime(Date.now()) ?2:1;	
 		#if debug
-		trace("Main::Main::opennings", opennings );
+		//trace("Main::Main::opennings", opennings );
 		FIBER_WINBACK_UTC_RANGES = opennings.test;
-		trace("Main::Main::opennings", opennings.test );
+		
+		//trace("Main::Main::opennings", opennings.test );
+		//var canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)
+						//&& DateToolsBB.isUTCDayTimeFloatInRanges(
+								//Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, 
+								//Main.FIBER_WINBACK_UTC_RANGES
+							//);
+		//trace(canTranfer);
 		#else
 		FIBER_WINBACK_UTC_RANGES = opennings.prod;
 		#end
 		#if debug
-		trace("Main::Main::!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)", !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS) );
-		trace("Main::Main::!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)", !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS, Date.fromString("2021-12-24")) );
+		//trace("Main::Main::!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)", !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS) );
+		//trace("Main::Main::!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)", !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS, Date.fromString("2021-12-24")) );
 		#end
 		//tongue = MainApp.translator;
 		//COOKIE = MainApp.save;
@@ -115,6 +127,7 @@ class Main extends MainApp
 		//xapiHelper = new XapiHelper( Browser.location.origin + LIB_FOLDER_LOGIN );
 		//xapiHelper = new XapiHelper( "https://qook.test.salt.ch/commonlibs/" );
 		DEBUG = MainApp.debug;
+		_mainDebug = MainApp.debug;
 		VERSION_TRACKER = MainApp.versionTracker;
 		customer = MainApp.cust;
 		//addChild(new FlxGame(1400, 880, Login, 1, 30, 30, true, true));
@@ -124,6 +137,11 @@ class Main extends MainApp
 		//testXAPI();
 		#end
 		initScreen();
+		//trace(GREENWICH);
+		//trace(DateToolsBB.isSummerTime(Date.now()));
+		//trace(DateToolsBB.isSummerTime(new Date(2023, 4, 10, 0, 0, 0) ));
+		//trace(DateToolsBB.isSummerTime(new Date(2023, 9, 31, 0, 0, 0) ));
+		//trace(DateToolsBB.isSummerTime(new Date(2024, 4, 10, 0, 0, 0) ));
 	}
 
 	

@@ -31,10 +31,14 @@
 	
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
+	<!--<classpath name="../_myPackages/utils" />-->
 	<assets path="assets" />
+	
+	
+	<!-- _______________________________ Libraries ______________________________ -->
+	<haxelib name="utils" />
 	<!--<linkedLibraries name="./howl.js"/>-->
 	<!--<template path="C:/_mesDocs/_git/_openFLTemplates/html5" />-->
-	<!-- _______________________________ Libraries ______________________________ -->
 	<haxelib name="csv" />
 	<haxelib name="lime" />
 	<!--<set name="next"/>-->
@@ -43,6 +47,7 @@
 	<haxelib name="flixel-ui" />
 
 	<haxelib name="markdown" />
+	
 	<haxelib name="firetongue" />
 	<haxelib name="hscript" />
 	<haxelib name="tstool" />
@@ -50,6 +55,10 @@
 	<haxelib name="lrs" />
 	<haxelib name="thx.core" />
 	<haxelib name="signals" />
+	<haxelib name="quality" />
+	
+
+	
 	<haxelib name="uglifyjs" unless="debug" />
 	<!-- SHARED LIB -->
 	
@@ -112,5 +121,5 @@
 	
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 	
-	<haxeflag name = "--macro" value="tstool.macros.TranslationVerificator.test()"/>
+	<haxeflag name = "--macro" value="tstool.macros.TranslationVerificator.test(['Main'])"/>
 </project>

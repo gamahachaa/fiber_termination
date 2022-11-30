@@ -1,9 +1,10 @@
 package front.move;
 
 import fees._InputDates;
-import tstool.process.ActionMultipleInput;
+import tstool.utils.VTIdataParser;
+//import tstool.process.ActionMultipleInput;
 import tstool.process.DescisionMultipleInput;
-import tstool.utils.ExpReg;
+import regex.ExpReg;
 
 /**
  * ...
@@ -102,17 +103,31 @@ class _InputNewHomeContractDetails extends DescisionMultipleInput
 		);
 
 	}
+	override public function create():Void 
+	{
+		super.create();
+		//parser = new VTIdataParser(account);
+		//parser.signal.add( onVtiAccountParsed );
+	}
+	
+	function onVtiAccountParsed(profile:Map<String, Map<String, String>>):Void 
+	{
+		
+	}
+	
 	override public function onYesClick():Void
 	{
 		if (validateYes())
 		{
 			this._nexts = [{step: _InputDates, params: []}];
+			//this.parser.destroy();
 			super.onYesClick();
 		}
 	}
 	override public function onNoClick():Void
 	{
 		this._nexts = [{step: _InputDates, params: []}];
+		//this.parser.destroy();
 		super.onNoClick();
 	}
     override public function validateYes()

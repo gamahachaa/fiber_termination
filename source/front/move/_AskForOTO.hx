@@ -14,7 +14,7 @@ import tstool.utils.Constants;
 //import tstool.process.Descision;
 //import tstool.process.DescisionMultipleInput;
 import tstool.process.Process;
-import tstool.utils.ExpReg;
+import regex.ExpReg;
 
 /**
  * ...
@@ -26,7 +26,7 @@ class _AskForOTO extends TripletMultipleInput
 	static public inline var OTO_ID:String = "OTO_ID";
 	static inline var APT_ID:String = "APT_ID";
 	static inline var APT_FORMER_OCCUPANT:String = "APT_FORMER_OCCUPANT";
-	static inline var APT_BUILDING_NB_FLOORS:String = "APT_BUILDING_NB_FLOORS";
+	static inline var APT_BUILDING_NB_FLOORS:String = "NB_FLAT_AT_THIS_FLOOR";
 	static inline var APT_FLOOR_NB:String = "APT_FLOOR_NB";
 
 	public function new ()

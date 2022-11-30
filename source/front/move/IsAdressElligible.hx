@@ -1,20 +1,25 @@
 package front.move;
 
+import date.WorldTimeAPI;
 import fees._InputDates;
 import front.capture.CheckContractorVTI;
 import front.capture._TransferToWB;
 import front.capture._WinbackIsClosed;
-import tickets._CreateTicketSixForOne;
+import haxe.Json;
+import thx.DateTimeUtc;
+import tstool.layout.PageLoader;
+import tstool.layout.UI;
+//import tickets._CreateTicketSixForOne;
 import tstool.process.Process;
-import tstool.process.Triplet;
+//import tstool.process.Triplet;
 import tstool.process.TripletMultipleInput;
 import tstool.salt.Agent as SaltAgent;
 import tstool.utils.Constants;
-import tstool.utils.DateToolsBB;
-import tstool.utils.ExpReg;
+import date.DateToolsBB;
+import regex.ExpReg;
 //import layout.LoginCan;
 import tstool.MainApp;
-import tstool.process.Triplet;
+//import tstool.process.Triplet;
 
 /**
  * ...
@@ -98,8 +103,13 @@ class IsAdressElligible extends TripletMultipleInput
 	{
 		var isGigabox = Main.HISTORY.isClassInteractionInHistory(CheckContractorVTI, Mid);
 		var isWB = MainApp.agent.isMember(SaltAgent.WINBACK_GROUP_NAME);
-		var now = Date.now();
-		var canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS) && DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now) && DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
+		//var now = Date.now();
+		var canTranfer = DateToolsBB.isServiceOpened(
+			Constants.FIBER_WINBACK_BANK_HOLIDAYS,
+			Constants.FIBER_WINBACK_DAYS_OPENED_RANGE,
+			Main.FIBER_WINBACK_UTC_RANGES,
+			DateToolsBB.SWISS_TIME
+		);
 		return if (isGigabox)
 		{
 			//trace("giga");
@@ -115,9 +125,37 @@ class IsAdressElligible extends TripletMultipleInput
 			_TransferToWB;
 		}
 		else{
-			//trace("else", DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES));
-			!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)&& DateToolsBB.isUTCDayTimeFloatInRanges(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, Main.FIBER_WINBACK_UTC_RANGES) ? _TransferToWB: _WinbackIsClosed;
+			_WinbackIsClosed;
 		}
 	}
+	override public function create():Void
+	{
+		DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
+		super.create();
+		//openSubState(new PageLoader(UI.THEME.bg));
+		
+		//MainApp.WORD_TIME.onTimeZone = init;
+        //MainApp.WORD_TIME.onError = this.onError;
+		//MainApp.WORD_TIME.getTimeZone();
 
+	}
+
+	function init(data:String)
+	{
+		var z:TimeZone = Json.parse(data);
+		//trace(z);
+		try{
+		 DateToolsBB.SWISS_TIME = DateTimeUtc.fromString(z.datetime).toDate();
+		}
+		catch (e){
+			trace(e);
+			onError(e.message);
+		}
+		closeSubState();
+	}
+	function onError(e:String)
+	{
+		DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
+		closeSubState();
+	}
 }

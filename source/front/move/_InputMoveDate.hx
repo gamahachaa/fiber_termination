@@ -6,7 +6,7 @@ import tstool.layout.History.Interactions;
 //import tstool.process.ActionMultipleInput;
 import tstool.process.DescisionMultipleInput;
 import tstool.process.Process;
-import tstool.utils.ExpReg;
+import regex.ExpReg;
 
 /**
  * ...

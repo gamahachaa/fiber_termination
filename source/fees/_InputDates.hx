@@ -9,7 +9,7 @@ import tstool.layout.History.Interactions;
 import tstool.process.DescisionMultipleInput;
 import tstool.process.Process;
 import tstool.utils.Constants;
-import tstool.utils.ExpReg;
+import regex.ExpReg;
 
 /**
  * ...
@@ -88,8 +88,9 @@ class _InputDates extends DescisionMultipleInput
 		#if debug
 		trace("fees._InputDates::create");
 		#end
-		if (Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE ).value == Intro.PLUG_IN_USE)
-		this.btnYes.visible = false;
+		var isGigabox : Bool = Main.customer.dataSet.get(Constants.CUST_DATA_PRODUCT).get(Constants.CUST_DATA_PRODUCT_BOX) == Constants.CUST_DATA_PRODUCT_BOX_FWA;
+		if (!isGigabox && Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE ).value == Intro.PLUG_IN_USE)
+			this.btnYes.visible = false;
 	}
 	
 	inline function getNext():Class<Process>

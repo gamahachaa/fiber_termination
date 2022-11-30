@@ -2,7 +2,7 @@
 
 @echo off
 
-set DEV=1
+set DEV=0
 echo "START"
 if %DEV%==1 (
 	if "%1"=="" goto :dead
