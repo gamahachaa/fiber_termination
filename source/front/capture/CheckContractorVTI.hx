@@ -187,10 +187,18 @@ class CheckContractorVTI extends TripletMultipleInput
 		parser = new VTIdataParser(account);
 		parser.signal.add( onVtiAccountParsed );
 		DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
-		//MainApp.WORD_TIME.onTimeZone = onTimeChecked;
-		//MainApp.WORD_TIME.onError = this.onError;
-		//timeApi.onStatus = this.onStatus;
-		
+		if (status == Intro.GIGA_BOX_DEFEKT)
+		{
+			this.btnMid.visible = true;
+			this.btnNo.visible = false;
+			this.btnYes.visible = false;
+			
+		}
+		else{
+			this.btnMid.visible = true;
+			this.btnNo.visible = true;
+			this.btnYes.visible = true;
+		}
 	}
 	
 	function onTimeChecked(data:String)
@@ -268,10 +276,10 @@ class CheckContractorVTI extends TripletMultipleInput
 	}
 	inline function getNext():Class<Process>
 	{
-		var now = DateToolsBB.SWISS_TIME;
-		var canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)
-		&& DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now)
-		&& DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
+		//var now = DateToolsBB.SWISS_TIME;
+		//var canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)
+		//&& DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now)
+		//&& DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
 
 		return
 		if (status == Intro.MOVE_CAN_KEEP)
@@ -282,7 +290,7 @@ class CheckContractorVTI extends TripletMultipleInput
 				_InputNewHomeContractDetails;
 			else IsAdressElligible;
 		}
-		else if (status == Intro.DOUBLE_ORDER)
+		else if (status == Intro.DOUBLE_ORDER || status == Intro.GIGA_BOX_DEFEKT)
 		{
 			_CreateTwoOneTwo;
 		}

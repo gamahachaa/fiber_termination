@@ -80,8 +80,10 @@ class Main extends MainApp
 	public static inline var DEBUG_LEVEL:Int = 0;
 	public static var LANGS:Array<String> = ["fr-FR","de-DE","en-GB","it-IT"];
 	public static inline var LAST_STEP:Class<FlxState> = End;
-	public static inline var START_STEP:Class<Process> = Intro;
+	public static inline var START_STEP:Class<Process> = MainIntro;
 	public static inline var INTRO_PIC:String = "intro/favicon.png";
+	static public var FIBER_WINBACK_BANK_HOLIDAYS:Array<String>;
+	static public inline var FIBER_WINBACK_DAYS_OPENED_RANGE:String = "1,2,3,4,5";
 	
 	/**
 	 * FORMAT COLOR
@@ -95,91 +97,45 @@ class Main extends MainApp
 				libFolder: LIB_FOLDER_LOGIN
 				
 		});
-		var opennings = Json.parse(Assets.getText("assets/data/opennings.json"));
-		GREENWICH = DateToolsBB.isSummerTime(Date.now()) ?2:1;	
-		#if debug
-		//trace("Main::Main::opennings", opennings );
-		FIBER_WINBACK_UTC_RANGES = opennings.test;
-		
-		//trace("Main::Main::opennings", opennings.test );
-		//var canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)
-						//&& DateToolsBB.isUTCDayTimeFloatInRanges(
-								//Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, 
-								//Main.FIBER_WINBACK_UTC_RANGES
-							//);
-		//trace(canTranfer);
-		#else
-		FIBER_WINBACK_UTC_RANGES = opennings.prod;
-		#end
-		#if debug
-		//trace("Main::Main::!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)", !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS) );
-		//trace("Main::Main::!DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)", !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS, Date.fromString("2021-12-24")) );
-		#end
-		//tongue = MainApp.translator;
-		//COOKIE = MainApp.save;
-		HISTORY = MainApp.stack;
-		//LOCATION = MainApp.location;
+		//var opennings = Json.parse(Assets.getText("assets/data/opennings.json"));
+		//GREENWICH = DateToolsBB.isSummerTime(Date.now()) ?2:1;
+		//FIBER_WINBACK_BANK_HOLIDAYS = opennings.wbBankHolidays;
 		//#if debug
-		trackH =  MainApp.xapiHelper;
+		//FIBER_WINBACK_UTC_RANGES = opennings.test;
 		//#else
-		//track =  MainApp.xapiTracker;
+		//FIBER_WINBACK_UTC_RANGES = opennings.prod;
 		//#end
-		//xapiHelper = new XapiHelper( Browser.location.origin + LIB_FOLDER_LOGIN );
-		//xapiHelper = new XapiHelper( "https://qook.test.salt.ch/commonlibs/" );
+
+		HISTORY = MainApp.stack;
+		trackH =  MainApp.xapiHelper;
+
 		DEBUG = MainApp.debug;
 		_mainDebug = MainApp.debug;
 		VERSION_TRACKER = MainApp.versionTracker;
 		customer = MainApp.cust;
-		//addChild(new FlxGame(1400, 880, Login, 1, 30, 30, true, true));
-		//var now = Date.now();
-		//trace(new Date(now.getFullYear(), now.getMonth() + 1, 0, 0, 0, 0));
-		#if debug
-		//testXAPI();
-		#end
+
 		initScreen();
-		//trace(GREENWICH);
-		//trace(DateToolsBB.isSummerTime(Date.now()));
-		//trace(DateToolsBB.isSummerTime(new Date(2023, 4, 10, 0, 0, 0) ));
-		//trace(DateToolsBB.isSummerTime(new Date(2023, 9, 31, 0, 0, 0) ));
-		//trace(DateToolsBB.isSummerTime(new Date(2024, 4, 10, 0, 0, 0) ));
 	}
 
 	
     static public function MOVE_ON(?old:Bool=false, ?pos:PosInfos)
 	{
-		 #if debug
-		trace('CALLED FROM ${pos.className} ${pos.methodName} ${pos.fileName} ${pos.lineNumber}');
-		#end
-		var next:Process = new Intro();
-		
+
+		//var next:Process = new Intro();
+		var next:Process;
 		var tuto:Process = new Tuto();
 		MainApp.setUpSystemDefault(true);
-		#if !debug
-		//Main.track.setActor();
-		#end
 		#if debug
 			/**
 			 * USe this  to debug a slide
 			 */
-			next = new Intro();
-			//next = new _InputNewHomeContractDetails();
-			//next = new _AskForOTO();
-			//next = new _TransferToWB();
-			
-			//next = new _InputDates();
+			next = new MainIntro();
+        #else
+			next = Type.createInstance(START_STEP,[]);
 		#end
-		#if debug
-		trace("Main::MOVE_ON::MOVE_ON", MOVE_ON );
-		#end
+		
+
 		MainApp.translator.initialize(MainApp.agent.mainLanguage, ()->(FlxG.switchState( old ? next : tuto)) );
 	}
-	/*function testXAPI()
-	{
-		xapiHelper.setActor(new Agent("bruno.baudry@salt.ch", "bbaudry"));
-		xapiHelper.setVerb(Verb.asked);
-	xapiHelper.setActivityObject("TESTING", ["en"=>"TESTING"],["en" => "blah blah"],"Activity",["https://qook.salt.ch/def" => "YO MAN"]);
-		xapiHelper.setContext(new Agent("tutor@salt.ch"),null,"qoof",MainApp.translator.locale,["https://qook.salt.ch/def" => "YO MAN"]);
-		xapiHelper.addStatementRef(new StatementRef("c0d0b6f6-7d10-4336-9ad7-515abaa15cbf"));
-		xapiHelper.send();
-	}*/
+	
 }

@@ -23,56 +23,77 @@ class _WinbackIsClosed extends Action
 		super.onClick();
 	}
 	override public function create():Void{
-		//var swissTime:Date = DateTimeUtc.fromString( Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.SWISS_TIME).value).toDate();
-		
-		#if debug
-		trace("front.capture._WinbackIsClosed::create::this._titleTxt", this._titleTxt );
-		#end
 		var jsonTitle = Json.parse(this._titleTxt);
-		var title = jsonTitle.title;
-		var r1 = jsonTitle.r1;
-		var r2 = jsonTitle.r2;
-		var join1 = jsonTitle.join1;
-		var join2 = jsonTitle.join2;
-		var r1Tx = "";
-		var r2Tx = "";
+		var jsonDetail = Json.parse(this._detailTxt);
+		//title
+		var title_main = jsonTitle.title_main;
+		var title_today_opened = jsonTitle.title_today_opened;
+		var title_call_back = jsonTitle.title_call_back;
+		var langRangeNow = jsonTitle.r1;
+		var langRangeCallUsBack = jsonTitle.r2;
+		var joinRangeNow = jsonTitle.join1;
+		var joinRangeCallUsBack = jsonTitle.join2;		
+		// details
+		var details_today = jsonDetail.details_today;
+		var details_bankholiday = jsonDetail.details_bankholiday;
+		var details_nextclosing_days = jsonDetail.details_nextclosing_days;
+		
+
+		var todaysRanges = "";
+		var regularOpeningRange = "";
 		var t1 = [];
 		var t2 = [];
+		var regularRanges = DateToolsBB.filterRegularRanges(Main.FIBER_WINBACK_UTC_RANGES);
 		//var delta = DateToolsBB.getSeasonDelta();
 		for (i in Main.FIBER_WINBACK_UTC_RANGES) 
 		{
-			//var o = StringUtils.roundedFloat(i.open + delta);
-			var o = StringUtils.roundedFloat(i.open);
-			//var c = StringUtils.roundedFloat(i.close + delta);
-			var c = StringUtils.roundedFloat(i.close);
-			t1.push(Replace.flags(r1, ["<START>", "<END>"], [o, c]));
-			t2.push(Replace.flags(r2, ["<START>", "<END>"], [o, c]));
+			if (DateToolsBB.isRangeExcluded(i)) continue;
+			t1.push(Replace.flags(langRangeNow, ["<START>", "<END>"], [StringUtils.roundedFloat(i.open), StringUtils.roundedFloat(i.close)]));
 		}
-		r1Tx = t1.join(join1);
-		r2Tx = t2.join(join2);
+		for (i in regularRanges)
+		{
+			t2.push(Replace.flags(langRangeCallUsBack, ["<START>", "<END>"], [StringUtils.roundedFloat(i.open), StringUtils.roundedFloat(i.close)]));
+		}
+		todaysRanges = t1.join(joinRangeNow);
+		regularOpeningRange = t2.join(joinRangeCallUsBack);
 		
-		#if debug
-		trace("front.capture._WinbackIsClosed::create::MainApp.translator.locale", MainApp.translator.locale );
-		#end
+		
 		var wkDays = DateToolsBB.weekDaysMap.get(MainApp.translator.locale);
+		
+		var wbOpRng = Main.FIBER_WINBACK_DAYS_OPENED_RANGE.split(",");
+		
+		title_today_opened = Replace.flags(title_today_opened, ["<R1>"], [todaysRanges]);
+		
+		title_call_back = Replace.flags(title_call_back, ["<R2>", "<FROM>", "<TO>"], 
+			[regularOpeningRange, 
+			wkDays[Std.parseInt(wbOpRng[0])],
+			wkDays[Std.parseInt(wbOpRng[wbOpRng.length-1])]]);
+		_titleTxt = title_main;
 		#if debug
-		trace("front.capture._WinbackIsClosed::create::wkDays", wkDays );
+		trace("front.capture._WinbackIsClosed::create::details_nextclosing_days", details_nextclosing_days );
 		#end
-		var wbOpRng = Constants.FIBER_WINBACK_DAYS_OPENED_RANGE.split(",");
-		_titleTxt = Replace.flags(title, ["<R1>", "<R2>", "<FROM>", "<TO>"], 
-			[r1Tx, r2Tx, 
-			wkDays[Std.parseInt(wbOpRng[0])-1],
-			wkDays[Std.parseInt(wbOpRng[wbOpRng.length-1])-1]]);
-		#if debug
-		trace("front.capture._WinbackIsClosed::create::_titleTxt", _titleTxt );
-		#end
-		//this.question.text = _titleTxt;
-		//this._detailTxt = DateTools.format(swissTime, "Biel/Bienne = %Hh%M %d.%m.%Y") ;
-		#if debug
-		trace("front.capture._WinbackIsClosed::create::DateToolsBB.SWISS_TIME", DateToolsBB.SWISS_TIME );
-		#end
-		this._detailTxt = DateToolsBB.weekDaysMap.get(MainApp.translator.locale)[DateToolsBB.SWISS_TIME.getDay()]  + DateTools.format(DateToolsBB.SWISS_TIME, " %e.%m @ %Hh%M (Biel/Bienne)") ;
+		var closingDays = DateToolsBB.getNextClosedDays(Main.FIBER_WINBACK_BANK_HOLIDAYS).join("\n");
+
+		var todayIsBankHoliday = DateToolsBB.isBankHolidayString(Main.FIBER_WINBACK_BANK_HOLIDAYS, DateToolsBB.SWISS_TIME);
+		
+		
+		if(!todayIsBankHoliday){
+			_titleTxt += "\n" + title_today_opened;
+		}
+		this._titleTxt += "\n" + title_call_back;
+		
+		this._detailTxt = "";
+		if(closingDays !="")
+			this._detailTxt += Replace.flags(details_nextclosing_days, ["<CLOSED>"], [closingDays]);
+		this._detailTxt += (this._detailTxt==""?"":"\n") + formatStringDate(wkDays[DateToolsBB.SWISS_TIME.getDay()] , details_today);
+		if (todayIsBankHoliday){
+			this._detailTxt += details_bankholiday;
+		}
 		super.create();
 		
+	}
+	inline function formatStringDate(weekDay:String, ?init:String="")
+	{
+		return init + weekDay + DateTools.format(DateToolsBB.SWISS_TIME, " %e.%m @ %Hh%M (Biel/Bienne).");
 	}
 }

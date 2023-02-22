@@ -20,7 +20,7 @@ class _CreateTwoOneTwo extends ActionTicket
 		//var isForWinBack = Intro.WINBACKS.indexOf(Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value) >-1;
 		if (MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME) && Intro.WINBACKS.indexOf(Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value) >-1)
 		{
-			t.queue = "FIBER_WINBACK_SO";
+			t.queue = SOTickets.FIBER_WINBACK_SO;
 		}
 		super(t);
 		

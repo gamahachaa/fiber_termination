@@ -28,11 +28,12 @@ class WhyWantToKeepProvider extends Descision
 	override public function onNoClick():Void
 	{
 		var canTranfer = DateToolsBB.isServiceOpened(
-			Constants.FIBER_WINBACK_BANK_HOLIDAYS,
-			Constants.FIBER_WINBACK_DAYS_OPENED_RANGE,
+			Main.FIBER_WINBACK_BANK_HOLIDAYS,
+			Main.FIBER_WINBACK_DAYS_OPENED_RANGE,
 			Main.FIBER_WINBACK_UTC_RANGES,
 			DateToolsBB.SWISS_TIME
 		);
+		//canTranfer = true;
 		this._nexts = [{step: Process.STORAGE.get(Intro.AGENT) == Intro.WINBACK || canTranfer? _TransferToWB : _WinbackIsClosed, params: []}];
 		super.onNoClick();
 	}

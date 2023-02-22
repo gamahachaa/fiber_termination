@@ -6,6 +6,7 @@ import front.capture.CheckContractorVTI;
 import front.capture._WinbackIsClosed;
 import front.move.MoveHow;
 import haxe.Json;
+import lime.utils.Assets;
 import thx.DateTime;
 import thx.DateTimeUtc;
 import tstool.layout.History.Interactions;
@@ -59,6 +60,7 @@ class Intro extends TripletRadios
 	static public inline var MOVE_LEAVE_CH = "BYE BYE SWITZERLAND";
 	static public inline var PROMO = "PROMO";
 	static public inline var DOUBLE_ORDER = "DOUBLE_ORDER";
+	static public inline var GIGA_BOX_DEFEKT = "GIGA_BOX_DEFEKT";
 
 	static var ACTIVITY_MAP:Map<String,String> = [
 				MOVE_LEAVE_CH  => "leaving_location_noteligible",
@@ -73,6 +75,9 @@ class Intro extends TripletRadios
 	public static inline var WINBACK:String = "WINBACK";
 	public static inline var AGENT:String = "agent";
 	public static inline var CSR1:String = "CSR1";
+	//public static inline var FIX_LINE_GROUP:String = "CO Fixline Expert";
+	//public static inline var FIX_LINE_GROUP:String = "CO Customer Operations Management";
+	public static inline var FIX_LINE_GROUP:String = "Microsoft - Teams Members - Standard";
 	public static inline var SWISS_TIME:String = "SWISS_TIME";
 	public static var WINBACKS:Array<String> = [
 				TECH_ISSUES,
@@ -111,7 +116,8 @@ class Intro extends TripletRadios
 				NOT_ELLIGIBLE,
 				CANCEL_TO_REACTIVATE,
 				PROMO,
-				DOUBLE_ORDER
+				DOUBLE_ORDER,
+				GIGA_BOX_DEFEKT
 			],labels: [
 				MainApp.translator.translate("",this._name, TECH_ISSUES, "headers"),
 				MainApp.translator.translate("",this._name, BILLINGUNDERSTANDING, "headers"),
@@ -127,13 +133,25 @@ class Intro extends TripletRadios
 				MainApp.translator.translate("",this._name, NOT_ELLIGIBLE, "headers"),
 				MainApp.translator.translate("",this._name, CANCEL_TO_REACTIVATE, "headers"),
 				MainApp.translator.translate("",this._name, PROMO, "headers"),
-				MainApp.translator.translate("",this._name, DOUBLE_ORDER, "headers")
+				MainApp.translator.translate("",this._name, DOUBLE_ORDER, "headers"),
+				MainApp.translator.translate("",this._name, GIGA_BOX_DEFEKT, "headers")
 			],
 			titleTranslation: MainApp.translator.translate("",this._name, WHY_LEAVE, "headers")
 		}
 			]
 		);
-
+		/**
+		 * FETCH OPENNING HOURS on each update
+		 */
+        var opennings = Json.parse(Assets.getText("assets/data/opennings.json"));
+		Main.GREENWICH = DateToolsBB.isSummerTime(Date.now()) ?2:1;
+		Main.FIBER_WINBACK_BANK_HOLIDAYS = opennings.wbBankHolidays;
+		#if debug
+		Main.FIBER_WINBACK_UTC_RANGES = opennings.test;
+		trace(Main.FIBER_WINBACK_UTC_RANGES);
+		#else
+		Main.FIBER_WINBACK_UTC_RANGES = opennings.prod;
+		#end
 	}
 
 	override function changeListener(radioID:String, value:String)
@@ -197,11 +215,12 @@ class Intro extends TripletRadios
 		var whyLeave = status.get(WHY_LEAVE);
 		var ismove = whyLeave == MOVE_CAN_KEEP;
 		var canTranfer = DateToolsBB.isServiceOpened(
-			Constants.FIBER_WINBACK_BANK_HOLIDAYS,
-			Constants.FIBER_WINBACK_DAYS_OPENED_RANGE,
+			Main.FIBER_WINBACK_BANK_HOLIDAYS,
+			Main.FIBER_WINBACK_DAYS_OPENED_RANGE,
 			Main.FIBER_WINBACK_UTC_RANGES,
 			DateToolsBB.SWISS_TIME
 		);
+		//canTranfer = true;
 		return if (isWB)
 		{
 			ismove? MoveHow: CheckContractorVTI;
@@ -212,16 +231,31 @@ class Intro extends TripletRadios
 	override public function create():Void
 	{
 		super.create();
+		#if debug
+		trace("Intro::create::this.radiosMap", this.radiosMap );
+		#end
 		Main.STORAGE_DISPLAY.push(AGENT);
-		Process.INIT();
+		//Process.INIT();
 		MainApp.agent.removeAllTSToolGroups();
-		init();
+		#if debug
+		trace("Intro::create::MainApp.agent", MainApp.agent );
+		
+		#end
+		//init();
 		//openSubState(new PageLoader(UI.THEME.bg));
 		//var timeApi = new WorldTimeAPI();
 		//timeApi.onTimeZone = init;
 		//timeApi.getTimeZone();
 	}
-	function init()
+	override public function validate():Bool 
+	{
+		return if (status.get(WHY_LEAVE) == GIGA_BOX_DEFEKT && !MainApp.agent.isMember(FIX_LINE_GROUP))
+		{
+		    blinkItemFromTitle(WHY_LEAVE);
+			false;
+		} else super.validate();
+	}
+	/*function init()
 	{
 		Main.VERSION_TRACKER.scriptChangedSignal.add(onNewVersion);
 		Main.VERSION_TRACKER.request();
@@ -265,46 +299,46 @@ class Intro extends TripletRadios
 				DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
 			#end
 		}
-	}
+	}*/
 
-	function onStatus(status:Int)
-	{
-
-		if (status != 200)
-		{
-			trace(status);
-		}
-	}
-	function onTimeChecked(data:String)
-	{
-		var z:TimeZone = Json.parse(data);
-		//trace(z);
-		//trace(z);
-		try
-		{
-			DateToolsBB.SWISS_TIME = DateTimeUtc.fromString(z.datetime).toDate();
-		}
-		catch (e)
-		{
-			trace(e);
-			onError(e.message);
-		}
+	//function onStatus(status:Int)
+	//{
+//
+		//if (status != 200)
+		//{
+			//trace(status);
+		//}
+	//}
+	//function onTimeChecked(data:String)
+	//{
+		//var z:TimeZone = Json.parse(data);
+		////trace(z);
+		////trace(z);
+		//try
+		//{
+			//DateToolsBB.SWISS_TIME = DateTimeUtc.fromString(z.datetime).toDate();
+		//}
+		//catch (e)
+		//{
+			//trace(e);
+			//onError(e.message);
+		//}
 		//DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( 0, DateTimeUtc.fromString(z.datetime) );
-		#if debug
-		trace("Intro::onTimeChecked::DateToolsBB.SWISS_TIME", DateToolsBB.SWISS_TIME );
-		#end
-		closeSubState();
-	}
-	function onError(e:String)
-	{
-		//DateToolsBB.SWISS_TIME = Main.GREENWICH == 1 ? DateToolsBB.CLONE_DateTimeUtc( DateTimeUtc.now().nextHour()) : DateToolsBB.CLONE_DateTimeUtc( DateTimeUtc.now().nextHour().nextHour());
-		DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
-		#if debug
-		trace("Intro::onError::DateToolsBB.SWISS_TIME ", DateToolsBB.SWISS_TIME  );
-		#end
-
-		closeSubState();
-	}
+		//#if debug
+		//trace("Intro::onTimeChecked::DateToolsBB.SWISS_TIME", DateToolsBB.SWISS_TIME );
+		//#end
+		//closeSubState();
+	//}
+	//function onError(e:String)
+	//{
+		////DateToolsBB.SWISS_TIME = Main.GREENWICH == 1 ? DateToolsBB.CLONE_DateTimeUtc( DateTimeUtc.now().nextHour()) : DateToolsBB.CLONE_DateTimeUtc( DateTimeUtc.now().nextHour().nextHour());
+		//DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
+		//#if debug
+		//trace("Intro::onError::DateToolsBB.SWISS_TIME ", DateToolsBB.SWISS_TIME  );
+		//#end
+//
+		//closeSubState();
+	//}
 	public static function GET_VTI_ACTIVITY(s:String)
 	{
 		if (ACTIVITY_MAP.exists(s)) return ACTIVITY_MAP.get(s);

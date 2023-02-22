@@ -53,11 +53,11 @@ class _TotalFees extends Action
 	static inline var RefundActivationFees:String = "Refund Activation Fees";
 	static inline var WaiveETF:String = "Waive ETF";
 	static inline var TelessalesorDoor2door:String = "Telessales or Door 2 door";
-	static inline var Terminationisstandard:String = "Termination is standard";
+	public static inline var Terminationisstandard:String = "Termination is standard";
 	static inline var ETF:String = "ETF";
 	static inline var Minimumnoticedate:String = "Minimum notice date";
-	static inline var Noticeperiod:String = "Notice period";
-	static inline var Noticenonrespectedfees:String = "Notice non respected fees";
+	public static inline var Noticeperiod:String = "Notice period";
+	public static inline var Noticenonrespectedfees:String = "Notice non respected fees";
 	static inline var Moveadministrationfees:String = "Move administration fees";
 	static inline var TOTALTOPAY:String = "TOTAL TO PAY";
 	var hasMobileDiscount:Bool;

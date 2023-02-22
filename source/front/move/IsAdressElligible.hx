@@ -105,11 +105,12 @@ class IsAdressElligible extends TripletMultipleInput
 		var isWB = MainApp.agent.isMember(SaltAgent.WINBACK_GROUP_NAME);
 		//var now = Date.now();
 		var canTranfer = DateToolsBB.isServiceOpened(
-			Constants.FIBER_WINBACK_BANK_HOLIDAYS,
-			Constants.FIBER_WINBACK_DAYS_OPENED_RANGE,
+			Main.FIBER_WINBACK_BANK_HOLIDAYS,
+			Main.FIBER_WINBACK_DAYS_OPENED_RANGE,
 			Main.FIBER_WINBACK_UTC_RANGES,
 			DateToolsBB.SWISS_TIME
 		);
+		//canTranfer = true;
 		return if (isGigabox)
 		{
 			//trace("giga");
