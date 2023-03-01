@@ -12,9 +12,9 @@ import tstool.process.Process;
  * ...
  * @author bb
  */
-class MainIntro extends Descision 
+class MainIntro extends Descision
 {
-    override public function create():Void 
+	override public function create():Void
 	{
 		super.create();
 		Process.INIT();
@@ -30,7 +30,7 @@ class MainIntro extends Descision
 		this._nexts = [{step: canceled.WhatToDo, params: []}];
 		super.onNoClick();
 	}
-	 function init()
+	function init()
 	{
 		Main.VERSION_TRACKER.scriptChangedSignal.add(onNewVersion);
 		Main.VERSION_TRACKER.request();
@@ -53,7 +53,7 @@ class MainIntro extends Descision
 	function onNewVersion(needsUpdate:Bool):Void
 	{
 		#if debug
-		trace("Intro::onNewVersion");
+		trace("MainIntro::onNewVersion");
 		#end
 		if (needsUpdate)
 		{
@@ -62,16 +62,16 @@ class MainIntro extends Descision
 		else{
 			closeSubState();
 			MainApp.VERSION_TIMER_value = MainApp.VERSION_TIMER_DURATION;
-
+			Main.GREENWICH = DateToolsBB.isSummerTime(Date.now()) ?2:1;
 			#if debug
 
 			//openSubState(new PageLoader(UI.THEME.bg));
-            DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
+			DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
 			//MainApp.WORD_TIME.onTimeZone = onTimeChecked;
 			//MainApp.WORD_TIME.onError = this.onError;
 			//MainApp.WORD_TIME.getTimeZone();
 			#else
-				DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
+			DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
 			#end
 		}
 	}

@@ -1,7 +1,7 @@
 package;
 
 //import date.WorldTimeAPI;
-import date.WorldTimeAPI.TimeZone;
+//import date.WorldTimeAPI.TimeZone;
 import front.capture.CheckContractorVTI;
 import front.capture._WinbackIsClosed;
 import front.move.MoveHow;
@@ -75,9 +75,9 @@ class Intro extends TripletRadios
 	public static inline var WINBACK:String = "WINBACK";
 	public static inline var AGENT:String = "agent";
 	public static inline var CSR1:String = "CSR1";
-	//public static inline var FIX_LINE_GROUP:String = "CO Fixline Expert";
+	public static inline var FIX_LINE_GROUP:String = "CO Fixline Expert";
 	//public static inline var FIX_LINE_GROUP:String = "CO Customer Operations Management";
-	public static inline var FIX_LINE_GROUP:String = "Microsoft - Teams Members - Standard";
+	//public static inline var FIX_LINE_GROUP:String = "Microsoft - Teams Members - Standard";
 	public static inline var SWISS_TIME:String = "SWISS_TIME";
 	public static var WINBACKS:Array<String> = [
 				TECH_ISSUES,
@@ -144,13 +144,12 @@ class Intro extends TripletRadios
 		 * FETCH OPENNING HOURS on each update
 		 */
         var opennings = Json.parse(Assets.getText("assets/data/opennings.json"));
-		Main.GREENWICH = DateToolsBB.isSummerTime(Date.now()) ?2:1;
 		Main.FIBER_WINBACK_BANK_HOLIDAYS = opennings.wbBankHolidays;
 		#if debug
-		Main.FIBER_WINBACK_UTC_RANGES = opennings.test;
-		trace(Main.FIBER_WINBACK_UTC_RANGES);
+			Main.FIBER_WINBACK_UTC_RANGES = opennings.test;
+		//trace(Main.FIBER_WINBACK_UTC_RANGES);
 		#else
-		Main.FIBER_WINBACK_UTC_RANGES = opennings.prod;
+			Main.FIBER_WINBACK_UTC_RANGES = opennings.prod;
 		#end
 	}
 
@@ -220,6 +219,7 @@ class Intro extends TripletRadios
 			Main.FIBER_WINBACK_UTC_RANGES,
 			DateToolsBB.SWISS_TIME
 		);
+		
 		//canTranfer = true;
 		return if (isWB)
 		{

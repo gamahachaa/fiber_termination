@@ -42,7 +42,7 @@ class ComputeAdditionalFees extends Action
 	}
 	override public function create():Void
 	{
-		var jsonTitle = Json.parse(this._titleTxt);
+		//var jsonTitle = Json.parse(this._titleTxt);
 		var jsonDetail = Json.parse(this._detailTxt);
 		var noticeNotRespected:Bool = false;
 
@@ -61,14 +61,14 @@ class ComputeAdditionalFees extends Action
 		if (noticeNotRespected)
 		{
 			this._detailTxt = jsonDetail.notice_not_respected;
-			this._titleTxt = jsonTitle.notice_not_respected;
+			//this._titleTxt = jsonTitle.notice_not_respected;
 			var nbMonth = isStandardTerm ? 2 : 1;
 			this._detailTxt = Replace.flags(this._detailTxt, ["<NBMONTH>"], [Std.string(nbMonth)]);
-			this._titleTxt = Replace.flags(this._titleTxt, ["<NBMONTH>"], [Std.string(nbMonth)]);
+			//this._titleTxt = Replace.flags(this._titleTxt, ["<NBMONTH>"], [Std.string(nbMonth)]);
 		}
 		else{
 			this._detailTxt = jsonDetail.notice_respected;
-			this._titleTxt = jsonTitle.notice_respected;
+			//this._titleTxt = jsonTitle.notice_respected;
 		}
 		super.create();
 		#if debug

@@ -4,6 +4,9 @@ using string.StringUtils;
 
 import Intro;
 import Main;
+import canceled.CaptureTerminationOperator;
+import canceled.InputTermDates;
+import canceled.WhatToDo;
 import date.WorldTimeAPI.TimeZone;
 import fees._InputDates;
 import front.capture._DeathWording;
@@ -52,6 +55,8 @@ class CheckContractorVTI extends TripletMultipleInput
 	var is_sagem:Bool;
 	var isForWinBack:Bool;
 	var what:Interactions;
+	var isModification:Bool;
+	var isCancelation:Bool;
 
 	public function new()
 	{
@@ -280,9 +285,21 @@ class CheckContractorVTI extends TripletMultipleInput
 		//var canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)
 		//&& DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now)
 		//&& DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
+		isModification = Main.HISTORY.isClassInHistory(WhatToDo);
 
 		return
-		if (status == Intro.MOVE_CAN_KEEP)
+		if (isModification)
+		{
+			isCancelation = Main.HISTORY.isClassInteractionInHistory( WhatToDo, Yes );
+			if (isCancelation)
+			{
+				 CaptureTerminationOperator;
+			}
+			else{
+				 InputTermDates;
+			}
+		}
+		else if (status == Intro.MOVE_CAN_KEEP)
 		{
 			if ( Main.HISTORY.isClassInteractionInHistory(MoveHow, Yes) ) // abroad
 				_InputDates;
@@ -335,30 +352,28 @@ class CheckContractorVTI extends TripletMultipleInput
 
 	function canITrack(go:Bool)
 	{
-
-		//#end
 		if (go)
 		{
-			//#if debug
-
-			//#else
-			//Main.trackH.reset(true);
-
+			
 			Main.trackH.setActor(new xapi.Agent( MainApp.agent.iri, MainApp.agent.sAMAccountName));
 			Main.trackH.setVerb(Verb.initialized);
-			//Main.trackH.setActivity(status.removeWhite());
-			//Main.track.setStatementRef(null);
+			
 			var extensions:Map<String,Dynamic> = [];
 			extensions.set("https://vti.salt.ch/contractor/", Main.customer.contract.contractorID);
 			extensions.set("https://vti.salt.ch/voip/", Main.customer.voIP);
 			extensions.set(Browser.location.origin +"/troubleshooting/script_version/", Main.VERSION);
-			Main.trackH.setActivityObject(status.removeWhite(),null,null,"http://activitystrea.ms/schema/1.0/process",extensions);
-			//Main.trackH.setCustomer();
+			
+			if (isModification){
+				if (isCancelation){
+					Main.trackH.setActivityObject("cancel_termination",null,null,"http://activitystrea.ms/schema/1.0/process",extensions);
+				}
+				else{
+					Main.trackH.setActivityObject("modify_termination",null,null,"http://activitystrea.ms/schema/1.0/process",extensions);
+				}
+			}else Main.trackH.setActivityObject(status.removeWhite(),null,null,"http://activitystrea.ms/schema/1.0/process",extensions);
+			
 			Main.trackH.send();
 			Main.trackH.setVerb(Verb.resolved);
-			//Main.track.send();
-			//Main.track.setVerb("resolved");// will be overridden by ticket creation
-			//#end
 		}
 
 	}
