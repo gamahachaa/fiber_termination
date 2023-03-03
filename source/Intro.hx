@@ -26,6 +26,7 @@ import date.DateToolsBB;
 import tstool.process.Process;
 import js.Browser;
 import tstool.MainApp;
+import tstool.layout.History.Interactions;
 
 /**
  * ...
@@ -61,6 +62,8 @@ class Intro extends TripletRadios
 	static public inline var PROMO = "PROMO";
 	static public inline var DOUBLE_ORDER = "DOUBLE_ORDER";
 	static public inline var GIGA_BOX_DEFEKT = "GIGA_BOX_DEFEKT";
+	static public inline var MIGRATE_TO_HOME = "MIGRATE_TO_HOME";
+	static public inline var MIGRATE_TO_PROOFFICE = "MIGRATE_TO_PROOFFICE";
 
 	static var ACTIVITY_MAP:Map<String,String> = [
 				MOVE_LEAVE_CH  => "leaving_location_noteligible",
@@ -71,11 +74,14 @@ class Intro extends TripletRadios
 
 	var isWBCall:Bool;
 	var swissTime:Date;
+	//var isProOffice:Bool;
+	var domainInteraction:tstool.layout.History.Interactions;
 	public static inline var CSR2:String = "CSR2";
-	public static inline var WINBACK:String = "WINBACK";
+	//public static inline var WINBACK:String = "WINBACK";
 	public static inline var AGENT:String = "agent";
 	public static inline var CSR1:String = "CSR1";
 	public static inline var FIX_LINE_GROUP:String = "CO Fixline Expert";
+	public static inline var WINBACK_AD_GROUP:String = "CO Customer Operations 1stCont Galilee";
 	//public static inline var FIX_LINE_GROUP:String = "CO Customer Operations Management";
 	//public static inline var FIX_LINE_GROUP:String = "Microsoft - Teams Members - Standard";
 	public static inline var SWISS_TIME:String = "SWISS_TIME";
@@ -95,47 +101,146 @@ class Intro extends TripletRadios
 			];
 	public function new()
 	{
+		domainInteraction = Main.HISTORY.findFirstStepsClassInHistory(CaptureDomain).interaction;
+		//isProOffice = false;
+		var rds = if ( domainInteraction == Yes)
+		{
+			//isProOffice = true;
+			//Pro office
+			{
+				values:[
+					TECH_ISSUES,
+					BILLINGUNDERSTANDING,
+					BILLINGFEES,
+					BETTER_OFFER,
+					//PRODUCTAPPLETV,
+					//PRODUCTSALTTV,
+					PRODUCTTECHSPECS,
+					PRODUCTVOIP,
+					DEATH,
+					PLUG_IN_USE,
+					MOVE_CAN_KEEP,
+					//NOT_ELLIGIBLE,
+					CANCEL_TO_REACTIVATE,
+					//PROMO,
+					DOUBLE_ORDER,
+					MIGRATE_TO_HOME
+				],
+				labels:[
+					MainApp.translator.translate("",this._name, TECH_ISSUES, "headers"),
+					MainApp.translator.translate("",this._name, BILLINGUNDERSTANDING, "headers"),
+					MainApp.translator.translate("",this._name, BILLINGFEES, "headers"),
+					MainApp.translator.translate("",this._name, BETTER_OFFER, "headers"),
+					//MainApp.translator.translate("",this._name, PRODUCTAPPLETV, "headers"),
+					//MainApp.translator.translate("",this._name, PRODUCTSALTTV, "headers"),
+					MainApp.translator.translate("",this._name, PRODUCTTECHSPECS, "headers"),
+					MainApp.translator.translate("",this._name, PRODUCTVOIP, "headers"),
+					MainApp.translator.translate("",this._name, DEATH, "headers"),
+					MainApp.translator.translate("",this._name, PLUG_IN_USE, "headers"),
+					MainApp.translator.translate("",this._name, MOVE_CAN_KEEP, "headers"),
+					//MainApp.translator.translate("",this._name, NOT_ELLIGIBLE, "headers"),
+					MainApp.translator.translate("",this._name, CANCEL_TO_REACTIVATE, "headers"),
+					//MainApp.translator.translate("",this._name, PROMO, "headers"),
+					MainApp.translator.translate("",this._name, DOUBLE_ORDER, "headers"),
+					MainApp.translator.translate("",this._name, MIGRATE_TO_HOME, "headers")
+				]
+			}
+		}
+		else if (domainInteraction == No)
+		{
+			//home
+			{
+				values:[
+					TECH_ISSUES,
+					BILLINGUNDERSTANDING,
+					BILLINGFEES,
+					BETTER_OFFER,
+					PRODUCTAPPLETV,
+					PRODUCTSALTTV,
+					PRODUCTTECHSPECS,
+					PRODUCTVOIP,
+					DEATH,
+					PLUG_IN_USE,
+					MOVE_CAN_KEEP,
+					NOT_ELLIGIBLE,
+					CANCEL_TO_REACTIVATE,
+					PROMO,
+					DOUBLE_ORDER,
+					MIGRATE_TO_PROOFFICE
+					//,GIGA_BOX_DEFEKT
+				],
+				labels:[
+					MainApp.translator.translate("",this._name, TECH_ISSUES, "headers"),
+					MainApp.translator.translate("",this._name, BILLINGUNDERSTANDING, "headers"),
+					MainApp.translator.translate("",this._name, BILLINGFEES, "headers"),
+					MainApp.translator.translate("",this._name, BETTER_OFFER, "headers"),
+					MainApp.translator.translate("",this._name, PRODUCTAPPLETV, "headers"),
+					MainApp.translator.translate("",this._name, PRODUCTSALTTV, "headers"),
+					MainApp.translator.translate("",this._name, PRODUCTTECHSPECS, "headers"),
+					MainApp.translator.translate("",this._name, PRODUCTVOIP, "headers"),
+					MainApp.translator.translate("",this._name, DEATH, "headers"),
+					MainApp.translator.translate("",this._name, PLUG_IN_USE, "headers"),
+					MainApp.translator.translate("",this._name, MOVE_CAN_KEEP, "headers"),
+					MainApp.translator.translate("",this._name, NOT_ELLIGIBLE, "headers"),
+					MainApp.translator.translate("",this._name, CANCEL_TO_REACTIVATE, "headers"),
+					MainApp.translator.translate("",this._name, PROMO, "headers"),
+					MainApp.translator.translate("", this._name, DOUBLE_ORDER, "headers")
+					,MainApp.translator.translate("",this._name, MIGRATE_TO_PROOFFICE, "headers")
+				]
+			}
+		}
+		else
+		{
+			// Gigabox
+			{
+				values:[
+					TECH_ISSUES,
+					BILLINGUNDERSTANDING,
+					BILLINGFEES,
+					BETTER_OFFER,
+					PRODUCTAPPLETV,
+					PRODUCTSALTTV,
+					PRODUCTTECHSPECS,
+					//PRODUCTVOIP,
+					DEATH,
+					PLUG_IN_USE,
+					MOVE_CAN_KEEP,
+					/*NOT_ELLIGIBLE,*/
+					CANCEL_TO_REACTIVATE,
+					PROMO,
+					DOUBLE_ORDER,
+					GIGA_BOX_DEFEKT,
+					MIGRATE_TO_PROOFFICE
+				],
+				labels:[
+					MainApp.translator.translate("",this._name, TECH_ISSUES, "headers"),
+					MainApp.translator.translate("",this._name, BILLINGUNDERSTANDING, "headers"),
+					MainApp.translator.translate("",this._name, BILLINGFEES, "headers"),
+					MainApp.translator.translate("",this._name, BETTER_OFFER, "headers"),
+					MainApp.translator.translate("",this._name, PRODUCTAPPLETV, "headers"),
+					MainApp.translator.translate("",this._name, PRODUCTSALTTV, "headers"),
+					MainApp.translator.translate("",this._name, PRODUCTTECHSPECS, "headers"),
+					//MainApp.translator.translate("",this._name, PRODUCTVOIP, "headers"),
+					MainApp.translator.translate("",this._name, DEATH, "headers"),
+					MainApp.translator.translate("",this._name, PLUG_IN_USE, "headers"),
+					MainApp.translator.translate("",this._name, MOVE_CAN_KEEP, "headers"),
+					/*MainApp.translator.translate("",this._name, NOT_ELLIGIBLE, "headers"),       */
+					MainApp.translator.translate("",this._name, CANCEL_TO_REACTIVATE, "headers"),
+					MainApp.translator.translate("",this._name, PROMO, "headers"),
+					MainApp.translator.translate("",this._name, DOUBLE_ORDER, "headers"),
+					MainApp.translator.translate("", this._name, GIGA_BOX_DEFEKT,"headers"),
+					MainApp.translator.translate("",this._name, MIGRATE_TO_PROOFFICE, "headers")
+				]
+			}
+		}
 		super(
 			[
 		{
 			title: WHY_LEAVE,
 			hasTranslation:true,
 			widthMultiplier:1,
-			values: [
-				TECH_ISSUES,
-				BILLINGUNDERSTANDING,
-				BILLINGFEES,
-				BETTER_OFFER,
-				PRODUCTAPPLETV,
-				PRODUCTSALTTV,
-				PRODUCTTECHSPECS,
-				PRODUCTVOIP,
-				DEATH,
-				PLUG_IN_USE,
-				MOVE_CAN_KEEP,
-				NOT_ELLIGIBLE,
-				CANCEL_TO_REACTIVATE,
-				PROMO,
-				DOUBLE_ORDER,
-				GIGA_BOX_DEFEKT
-			],labels: [
-				MainApp.translator.translate("",this._name, TECH_ISSUES, "headers"),
-				MainApp.translator.translate("",this._name, BILLINGUNDERSTANDING, "headers"),
-				MainApp.translator.translate("",this._name, BILLINGFEES, "headers"),
-				MainApp.translator.translate("",this._name, BETTER_OFFER, "headers"),
-				MainApp.translator.translate("",this._name, PRODUCTAPPLETV, "headers"),
-				MainApp.translator.translate("",this._name, PRODUCTSALTTV, "headers"),
-				MainApp.translator.translate("",this._name, PRODUCTTECHSPECS, "headers"),
-				MainApp.translator.translate("",this._name, PRODUCTVOIP, "headers"),
-				MainApp.translator.translate("",this._name, DEATH, "headers"),
-				MainApp.translator.translate("",this._name, PLUG_IN_USE, "headers"),
-				MainApp.translator.translate("",this._name, MOVE_CAN_KEEP, "headers"),
-				MainApp.translator.translate("",this._name, NOT_ELLIGIBLE, "headers"),
-				MainApp.translator.translate("",this._name, CANCEL_TO_REACTIVATE, "headers"),
-				MainApp.translator.translate("",this._name, PROMO, "headers"),
-				MainApp.translator.translate("",this._name, DOUBLE_ORDER, "headers"),
-				MainApp.translator.translate("",this._name, GIGA_BOX_DEFEKT, "headers")
-			],
+			values: rds.values,
+			labels: rds.labels,
 			titleTranslation: MainApp.translator.translate("",this._name, WHY_LEAVE, "headers")
 		}
 			]
@@ -143,13 +248,13 @@ class Intro extends TripletRadios
 		/**
 		 * FETCH OPENNING HOURS on each update
 		 */
-        var opennings = Json.parse(Assets.getText("assets/data/opennings.json"));
+		var opennings = Json.parse(Assets.getText("assets/data/opennings.json"));
 		Main.FIBER_WINBACK_BANK_HOLIDAYS = opennings.wbBankHolidays;
 		#if debug
-			Main.FIBER_WINBACK_UTC_RANGES = opennings.test;
+		Main.FIBER_WINBACK_UTC_RANGES = opennings.test;
 		//trace(Main.FIBER_WINBACK_UTC_RANGES);
 		#else
-			Main.FIBER_WINBACK_UTC_RANGES = opennings.prod;
+		Main.FIBER_WINBACK_UTC_RANGES = opennings.prod;
 		#end
 	}
 
@@ -187,10 +292,10 @@ class Intro extends TripletRadios
 	override public function onNoClick():Void
 	{
 		//WINBACK
+		Process.STORE(AGENT,SaltAgent.WINBACK_GROUP_NAME);
+		MainApp.agent.addGroupAsMemberOf(SaltAgent.WINBACK_GROUP_NAME);
 		if (validate())
 		{
-			Process.STORE(AGENT,WINBACK);
-			MainApp.agent.addGroupAsMemberOf(SaltAgent.WINBACK_GROUP_NAME);
 
 			this._nexts = [ {step: getNexts(true), params: []}];
 			super.onNoClick();
@@ -199,146 +304,75 @@ class Intro extends TripletRadios
 	override public function onMidClick():Void
 	{
 		//CSR2
+		Process.STORE(AGENT,CSR2);
+		MainApp.agent.addGroupAsMemberOf(SaltAgent.CSR2_GROUP_NAME);
 		if (validate())
 		{
-
-			Process.STORE(AGENT,CSR2);
-			MainApp.agent.addGroupAsMemberOf(SaltAgent.CSR2_GROUP_NAME);
 
 			this._nexts = [ {step:  getNexts(false), params: []}];
 			super.onMidClick();
 		}
 	}
-	inline function getNexts(isWB:Bool):Class<Process>
+	inline function getNexts(isWinBackAgent:Bool):Class<Process>
 	{
 		var whyLeave = status.get(WHY_LEAVE);
-		var ismove = whyLeave == MOVE_CAN_KEEP;
+		//var ismove = whyLeave == MOVE_CAN_KEEP;
 		var canTranfer = DateToolsBB.isServiceOpened(
 			Main.FIBER_WINBACK_BANK_HOLIDAYS,
 			Main.FIBER_WINBACK_DAYS_OPENED_RANGE,
 			Main.FIBER_WINBACK_UTC_RANGES,
 			DateToolsBB.SWISS_TIME
 		);
-		
-		//canTranfer = true;
+
+		return if (!canTranfer && isWBCall && !isWinBackAgent && !(domainInteraction == Yes))
+		{
+			_WinbackIsClosed;
+			// winbackAgent
+			//ismove? MoveHow: CheckContractorVTI;
+		}
+		else if (whyLeave == MOVE_CAN_KEEP)
+		{
+			MoveHow;
+		}
+		else {
+			CheckContractorVTI;
+		}
+		/*
 		return if (isWB)
 		{
+			// winbackAgent
 			ismove? MoveHow: CheckContractorVTI;
 		}
-		else if (whyLeave == PLUG_IN_USE) CheckContractorVTI;
-		else !canTranfer && isWBCall ? _WinbackIsClosed : ismove? MoveHow: CheckContractorVTI;
+		else if (whyLeave == PLUG_IN_USE)
+		{
+			CheckContractorVTI;
+		}
+		else {
+			!canTranfer && isWBCall ? _WinbackIsClosed : ismove? MoveHow: CheckContractorVTI;
+		}*/
 	}
 	override public function create():Void
 	{
 		super.create();
-		#if debug
-		trace("Intro::create::this.radiosMap", this.radiosMap );
-		#end
+
 		Main.STORAGE_DISPLAY.push(AGENT);
-		//Process.INIT();
+
 		MainApp.agent.removeAllTSToolGroups();
-		#if debug
-		trace("Intro::create::MainApp.agent", MainApp.agent );
-		
-		#end
-		//init();
-		//openSubState(new PageLoader(UI.THEME.bg));
-		//var timeApi = new WorldTimeAPI();
-		//timeApi.onTimeZone = init;
-		//timeApi.getTimeZone();
 	}
-	override public function validate():Bool 
+	override public function validate():Bool
 	{
-		return if (status.get(WHY_LEAVE) == GIGA_BOX_DEFEKT && !MainApp.agent.isMember(FIX_LINE_GROUP))
+		return if (
+			status.get(WHY_LEAVE) == GIGA_BOX_DEFEKT
+			&&
+			!(MainApp.agent.isMember(FIX_LINE_GROUP) || MainApp.agent.isMember(SaltAgent.WINBACK_GROUP_NAME))
+		)
 		{
-		    blinkItemFromTitle(WHY_LEAVE);
+			blinkItemFromTitle(WHY_LEAVE);
 			false;
-		} else super.validate();
+		}
+		else super.validate();
 	}
-	/*function init()
-	{
-		Main.VERSION_TRACKER.scriptChangedSignal.add(onNewVersion);
-		Main.VERSION_TRACKER.request();
-		Main.trackH.reset(false);
-		Main.trackH.setDefaultContext(MainApp.translator.locale, "fiber.tech.qtool@salt.ch");
 
-		#if !debug
-		openSubState(new CheckUpdateSub(UI.THEME.bg));
-		#else
-		if (Main.DEBUG)
-		{
-			openSubState(new CheckUpdateSub(UI.THEME.bg));
-		}
-		else
-		{
-			onNewVersion(false);
-		}
-		#end
-	}
-	function onNewVersion(needsUpdate:Bool):Void
-	{
-		#if debug
-		trace("Intro::onNewVersion");
-		#end
-		if (needsUpdate)
-		{
-			Browser.location.reload(true);
-		}
-		else{
-			closeSubState();
-			MainApp.VERSION_TIMER_value = MainApp.VERSION_TIMER_DURATION;
-
-			#if debug
-
-			//openSubState(new PageLoader(UI.THEME.bg));
-            DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
-			//MainApp.WORD_TIME.onTimeZone = onTimeChecked;
-			//MainApp.WORD_TIME.onError = this.onError;
-			//MainApp.WORD_TIME.getTimeZone();
-			#else
-				DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
-			#end
-		}
-	}*/
-
-	//function onStatus(status:Int)
-	//{
-//
-		//if (status != 200)
-		//{
-			//trace(status);
-		//}
-	//}
-	//function onTimeChecked(data:String)
-	//{
-		//var z:TimeZone = Json.parse(data);
-		////trace(z);
-		////trace(z);
-		//try
-		//{
-			//DateToolsBB.SWISS_TIME = DateTimeUtc.fromString(z.datetime).toDate();
-		//}
-		//catch (e)
-		//{
-			//trace(e);
-			//onError(e.message);
-		//}
-		//DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( 0, DateTimeUtc.fromString(z.datetime) );
-		//#if debug
-		//trace("Intro::onTimeChecked::DateToolsBB.SWISS_TIME", DateToolsBB.SWISS_TIME );
-		//#end
-		//closeSubState();
-	//}
-	//function onError(e:String)
-	//{
-		////DateToolsBB.SWISS_TIME = Main.GREENWICH == 1 ? DateToolsBB.CLONE_DateTimeUtc( DateTimeUtc.now().nextHour()) : DateToolsBB.CLONE_DateTimeUtc( DateTimeUtc.now().nextHour().nextHour());
-		//DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
-		//#if debug
-		//trace("Intro::onError::DateToolsBB.SWISS_TIME ", DateToolsBB.SWISS_TIME  );
-		//#end
-//
-		//closeSubState();
-	//}
 	public static function GET_VTI_ACTIVITY(s:String)
 	{
 		if (ACTIVITY_MAP.exists(s)) return ACTIVITY_MAP.get(s);

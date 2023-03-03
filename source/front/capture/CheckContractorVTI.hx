@@ -57,12 +57,17 @@ class CheckContractorVTI extends TripletMultipleInput
 	var what:Interactions;
 	var isModification:Bool;
 	var isCancelation:Bool;
+	//var isProOffice:Bool;
+	var domainInteraction:Interactions;
 
 	public function new()
 	{
 		status = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
 		isForWinBack = Intro.WINBACKS.indexOf(status) >-1;
-
+		if(Main.HISTORY.isClassInHistory(CaptureDomain))
+			domainInteraction = Main.HISTORY.findFirstStepsClassInHistory(CaptureDomain).interaction;
+		else domainInteraction = Exit;
+        //isProOffice = Main.HISTORY.isClassInteractionInHistory(CaptureDomain, Yes);
 		var fileds:Array<ValidatedInputs> = [
 		{
 			ereg:new EReg(ExpReg.CONTRACTOR_EREG,"i"),
@@ -161,7 +166,7 @@ class CheckContractorVTI extends TripletMultipleInput
 				new Role(user, profile.get("plan").get("vtiUser"), profile.get("plan").get("vtiUserEmail")),
 				profile.exists("owner")? StringTools.trim(profile.get("owner").get("vtiOwnerEmailValidated").toLowerCase()) == "ok":false,
 				profile.exists("balance")?new Balance( profile.get("balance").get("vtiBalance"), profile.get("balance").get("vtiOverdue"), profile.get("balance").get("vtiOverdueDate")):null,
-				(profile.get("plan").exists("plan") ? (profile.get("plan").get("plan").indexOf("Giga")>-1?Gigabox:Fiber):Fiber)
+				domainInteraction == Yes ? Office : (profile.get("plan").exists("plan") && profile.get("plan").get("plan").indexOf("Giga") >-1)? Gigabox : Fiber
 			);
 		}
 
@@ -192,12 +197,24 @@ class CheckContractorVTI extends TripletMultipleInput
 		parser = new VTIdataParser(account);
 		parser.signal.add( onVtiAccountParsed );
 		DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
-		if (status == Intro.GIGA_BOX_DEFEKT)
+		if (domainInteraction == Mid)
 		{
 			this.btnMid.visible = true;
 			this.btnNo.visible = false;
 			this.btnYes.visible = false;
 			
+		}
+		else if (domainInteraction == Yes)
+		{ // Pro Office
+			this.btnMid.visible = false;
+			this.btnNo.visible = true;
+			this.btnYes.visible = false;
+		}
+		else if (domainInteraction == No)
+		{ // Pro Office
+			this.btnMid.visible = false;
+			this.btnNo.visible = true;
+			this.btnYes.visible = true;
 		}
 		else{
 			this.btnMid.visible = true;
@@ -206,7 +223,7 @@ class CheckContractorVTI extends TripletMultipleInput
 		}
 	}
 	
-	function onTimeChecked(data:String)
+	/*function onTimeChecked(data:String)
 	{
 		var z:TimeZone = Json.parse(data);
 		//trace(z);
@@ -231,7 +248,7 @@ class CheckContractorVTI extends TripletMultipleInput
 
 		closeSubState();
 		moveOn();
-	}
+	}*/
 	function moveOn()
 	{
 		this._nexts = [ {step: getNext()}];
@@ -281,10 +298,6 @@ class CheckContractorVTI extends TripletMultipleInput
 	}
 	inline function getNext():Class<Process>
 	{
-		//var now = DateToolsBB.SWISS_TIME;
-		//var canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)
-		//&& DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now)
-		//&& DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
 		isModification = Main.HISTORY.isClassInHistory(WhatToDo);
 
 		return
@@ -323,6 +336,14 @@ class CheckContractorVTI extends TripletMultipleInput
 		{
 			_DeathWording;
 		}
+		else if (status == Intro.MIGRATE_TO_HOME || status == Intro.MIGRATE_TO_PROOFFICE)
+		{
+			_MigrationCheckList;
+		}
+		else if (domainInteraction == Yes)
+		{
+			_InputDates;
+		}
 		else if (isForWinBack)
 		{
 			MainApp.agent.isMember(SaltAgent.WINBACK_GROUP_NAME)? RetainWithSalesSpeech: _TransferToWB;
@@ -341,6 +362,11 @@ class CheckContractorVTI extends TripletMultipleInput
 		Main.customer.contract.fix =  multipleInputs.getText(VOIP_NUM);
 		//Main.customer.contract.voip = "0" + Main.customer.contract.fix.substr(2);
 		Main.customer.contract.voip = Main.customer.contract.fix.intlToLocalMSISDN();
+		Main.customer.contract.service = switch (domainInteraction){
+			case Yes : Office;
+			case No : Fiber;
+			case _ : Gigabox;
+		}
 		Main.customer.iri = (what == No || what == Mid) ? Main.customer.contract.contractorID : Main.customer.contract.voip;
 		if (!isForWinBack) Main.customer.contract.mobile = multipleInputs.getText(CONTACT_NUM);
 

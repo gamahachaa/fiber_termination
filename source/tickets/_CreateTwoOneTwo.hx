@@ -16,9 +16,11 @@ class _CreateTwoOneTwo extends ActionTicket
 	public function new() 
 	{
 		var t =  SOTickets.FIX_212;
-		//var status = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
-		//var isForWinBack = Intro.WINBACKS.indexOf(Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value) >-1;
-		if (MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME) && Intro.WINBACKS.indexOf(Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value) >-1)
+        if (Main.customer.contract.service == Office)
+		{
+			t.queue = SOTickets.FIBER_SOHO_TERMINATION_SO;
+		}
+		else if (MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME) && Intro.WINBACKS.indexOf(Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value) >-1)
 		{
 			t.queue = SOTickets.FIBER_WINBACK_SO;
 		}

@@ -273,19 +273,19 @@ class _TotalFees extends Action
 	{
 		var now = Date.now();
 		#if debug
-		trace("fees._TotalFees::parseDates::now", now );
+		//trace("fees._TotalFees::parseDates::now", now );
 		#end
 		var thisYear = now.getFullYear();
 		#if debug
-		trace("fees._TotalFees::parseDates::thisYear ", thisYear  );
+		//trace("fees._TotalFees::parseDates::thisYear ", thisYear  );
 		#end
 		var isThisYerBi = (thisYear - 2000) % 4 == 0;
 		#if debug
-		trace("fees._TotalFees::parseDates::isThisYerBi ", isThisYerBi  );
+		//trace("fees._TotalFees::parseDates::isThisYerBi ", isThisYerBi  );
 		#end
 		var monthEnd = isThisYerBi ? [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 		#if debug
-		trace("fees._TotalFees::parseDates::monthEnd ", monthEnd  );
+		//trace("fees._TotalFees::parseDates::monthEnd ", monthEnd  );
 		#end
 		var activationDateInput = values.get(_InputDates.ACTIVATION_DATE);
 		var terminationDateInput = values.get(_InputDates.TERM_DATE);
@@ -294,13 +294,13 @@ class _TotalFees extends Action
 		var activDateTab = activationDateInput.split(dateSeparator);
 		activationDate = new Date(Std.parseInt(activDateTab[2]), Std.parseInt(activDateTab[1])-1, Std.parseInt(activDateTab[0]), 0, 0, 0);
 			#if debug
-			trace("parseDates::activationDate", activationDate );
+			//trace("parseDates::activationDate", activationDate );
 			#end
 		dateSeparator = terminationDateInput.indexOf(".") > -1 ? ".": "/";
 		var termDateTab = terminationDateInput.split( dateSeparator );
 		termDate = new Date(Std.parseInt(termDateTab[2]), Std.parseInt(termDateTab[1]) - 1, Std.parseInt(termDateTab[0]), 0, 0, 0);
 			#if debug
-			trace("parseDates::termDate", termDate );
+			//trace("parseDates::termDate", termDate );
 			#end
 		//var nowRoundMilli:Float = Date.now().getTime() - (Date.now().getTime() % Constants.ONE_DAY_MILLI);
         //var now = Date.now();
@@ -309,25 +309,25 @@ class _TotalFees extends Action
 		deltaTerminationActivationMilli = termDate.getTime() - activationDate.getTime();
 		deltaDatesMonth = Math.floor(deltaTerminationActivationMilli / _InputDates.ONE_MONTH);
 			#if debug
-			trace("parseDates::deltaDatesMonth", deltaDatesMonth );
+			//trace("parseDates::deltaDatesMonth", deltaDatesMonth );
 			#end
 		noticePeriodInDays = isTerminationStandard? 60 : 30;
 			#if debug
-			trace("parseDates::noticePeriodInDays", noticePeriodInDays );
+			//trace("parseDates::noticePeriodInDays", noticePeriodInDays );
 			#end
 		var noticePeriodDate:Date =  Date.fromTime(now.getTime() + (noticePeriodInDays * ONE_DAY));
 		#if debug
-		trace("fees._TotalFees::parseDates::noticePeriodDate", noticePeriodDate );
+		//trace("fees._TotalFees::parseDates::noticePeriodDate", noticePeriodDate );
 		#end
 		//var normalNoticePeriodMilli = nowRoundMilli + (noticePeriodInDays * ONE_DAY);
 		noticePeriodEndOfContractDate = new Date(noticePeriodDate.getFullYear(), noticePeriodDate.getMonth(), monthEnd[noticePeriodDate.getMonth()], 0, 0, 0);
 		//var normalNoticePeriodMilli = endOfTheMonth.getTime() + (noticePeriodInDays * ONE_DAY);
 		#if debug
-		trace("fees._TotalFees::parseDates::noticePeriodEndOfContractDate", noticePeriodEndOfContractDate );
+		//trace("fees._TotalFees::parseDates::noticePeriodEndOfContractDate", noticePeriodEndOfContractDate );
 		#end
 		noticePeriodRespected = noticePeriodEndOfContractDate.getTime() <= termDate.getTime() ;
 		#if debug
-		trace("parseDates::noticePeriodRespected ", noticePeriodRespected  );
+		//trace("parseDates::noticePeriodRespected ", noticePeriodRespected  );
 		#end
 	}
 	function computeFees()
@@ -356,14 +356,14 @@ class _TotalFees extends Action
 		totalFees = moveAdminFees > 0 ? moveAdminFees: finalETF + noticePeriodFees + (MainApp.agent.isMember(SaltAgent.WINBACK_GROUP_NAME)?cancelationFees:0);
 		//totalFees = moveAdminFees > 0 ? moveAdminFees: finalETF + noticePeriodFees; //removed cancelation fees
 		totalFees = Math.fround(totalFees * 100) / 100;
-			#if debug
-			trace("computeFees::fullETF", fullETF );
-			trace("computeFees::finalETF", finalETF );
-			trace("computeFees::moveAdminFees", moveAdminFees );
-			trace("computeFees::noticePeriodFees", noticePeriodFees );
-			trace("computeFees::cancelationFees", cancelationFees );
-			trace("computeFees::totalFees", totalFees );
-			#end
+			//#if debug
+			//trace("computeFees::fullETF", fullETF );
+			//trace("computeFees::finalETF", finalETF );
+			//trace("computeFees::moveAdminFees", moveAdminFees );
+			//trace("computeFees::noticePeriodFees", noticePeriodFees );
+			//trace("computeFees::cancelationFees", cancelationFees );
+			//trace("computeFees::totalFees", totalFees );
+			//#end
 	}
 
 	override public function pushToHistory(buttonTxt:String, interactionType:Interactions,?values:Map<String,Dynamic>=null):Void

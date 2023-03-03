@@ -22,7 +22,7 @@ class MainIntro extends Descision
 	}
 	override public function onYesClick():Void
 	{
-		this._nexts = [{step: Intro, params: []}];
+		this._nexts = [{step: CaptureDomain, params: []}];
 		super.onYesClick();
 	}
 	override public function onNoClick():Void

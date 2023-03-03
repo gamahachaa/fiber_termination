@@ -2,6 +2,7 @@ package front.move;
 
 import date.WorldTimeAPI;
 import fees._InputDates;
+import firetongue.Replace;
 import front.capture.CheckContractorVTI;
 import front.capture._TransferToWB;
 import front.capture._WinbackIsClosed;
@@ -81,7 +82,7 @@ class IsAdressElligible extends TripletMultipleInput
 			}
 		}
 			]
-		);
+		); 
 	}
 	override public function onYesClick():Void
 	{
@@ -132,12 +133,16 @@ class IsAdressElligible extends TripletMultipleInput
 	override public function create():Void
 	{
 		DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
+		this._titleTxt = Replace.flags(this._titleTxt, ["<PRODUCT>"], [Main.customer.contract.service == Office ? "ProOffice": "Home/Gigabox"]);
 		super.create();
-		//openSubState(new PageLoader(UI.THEME.bg));
-		
-		//MainApp.WORD_TIME.onTimeZone = init;
-        //MainApp.WORD_TIME.onError = this.onError;
-		//MainApp.WORD_TIME.getTimeZone();
+		#if debug
+		trace("front.move.IsAdressElligible::create::Main.customer.contract.service", Main.customer.contract.service );
+		#end
+		if (Main.customer.contract.service == Office)
+		{
+			this.btnMid.visible = false;
+		}
+
 
 	}
 

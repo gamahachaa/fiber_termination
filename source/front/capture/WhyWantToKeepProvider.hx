@@ -10,6 +10,7 @@ import tstool.layout.PageLoader;
 import tstool.layout.UI;
 import tstool.process.Descision;
 import tstool.process.Process;
+import tstool.salt.Agent;
 import tstool.utils.Constants;
 import date.DateToolsBB;
 
@@ -34,7 +35,10 @@ class WhyWantToKeepProvider extends Descision
 			DateToolsBB.SWISS_TIME
 		);
 		//canTranfer = true;
-		this._nexts = [{step: Process.STORAGE.get(Intro.AGENT) == Intro.WINBACK || canTranfer? _TransferToWB : _WinbackIsClosed, params: []}];
+		if ( Main.customer.contract.service == Office )
+		{
+			this._nexts = [{step: _InputDates}];
+		}else this._nexts = [{step: Process.STORAGE.get(Intro.AGENT) == Agent.WINBACK_GROUP_NAME || canTranfer? _TransferToWB : _WinbackIsClosed, params: []}];
 		super.onNoClick();
 	}
 	override public function create():Void
