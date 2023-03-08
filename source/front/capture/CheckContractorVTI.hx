@@ -64,10 +64,10 @@ class CheckContractorVTI extends TripletMultipleInput
 	{
 		status = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
 		isForWinBack = Intro.WINBACKS.indexOf(status) >-1;
-		if(Main.HISTORY.isClassInHistory(CaptureDomain))
+		if (Main.HISTORY.isClassInHistory(CaptureDomain))
 			domainInteraction = Main.HISTORY.findFirstStepsClassInHistory(CaptureDomain).interaction;
 		else domainInteraction = Exit;
-        //isProOffice = Main.HISTORY.isClassInteractionInHistory(CaptureDomain, Yes);
+		//isProOffice = Main.HISTORY.isClassInteractionInHistory(CaptureDomain, Yes);
 		var fileds:Array<ValidatedInputs> = [
 		{
 			ereg:new EReg(ExpReg.CONTRACTOR_EREG,"i"),
@@ -148,7 +148,8 @@ class CheckContractorVTI extends TripletMultipleInput
 		trace("onVtiAccountParsed");
 		trace(profile);
 		#end
-		if (!profile.exists("meta") || !profile.exists("plan")) {
+		if (!profile.exists("meta") || !profile.exists("plan"))
+		{
 			trace('missing META ${!profile.exists("meta")} or plan ${!profile.exists("plan")}"');
 			return;
 		}
@@ -202,16 +203,18 @@ class CheckContractorVTI extends TripletMultipleInput
 			this.btnMid.visible = true;
 			this.btnNo.visible = false;
 			this.btnYes.visible = false;
-			
+
 		}
 		else if (domainInteraction == Yes)
-		{ // Pro Office
+		{
+			// Pro Office
 			this.btnMid.visible = false;
 			this.btnNo.visible = true;
 			this.btnYes.visible = false;
 		}
 		else if (domainInteraction == No)
-		{ // Pro Office
+		{
+			// Pro Office
 			this.btnMid.visible = false;
 			this.btnNo.visible = true;
 			this.btnYes.visible = true;
@@ -222,7 +225,7 @@ class CheckContractorVTI extends TripletMultipleInput
 			this.btnYes.visible = true;
 		}
 	}
-	
+
 	/*function onTimeChecked(data:String)
 	{
 		var z:TimeZone = Json.parse(data);
@@ -234,12 +237,12 @@ class CheckContractorVTI extends TripletMultipleInput
 			trace(e);
 			onError(e.message);
 		}
-        //DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( 0, DateTimeUtc.fromString(z.datetime) );
+	    //DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( 0, DateTimeUtc.fromString(z.datetime) );
 		closeSubState();
 		moveOn();
-		
+
 	}
-    function onError(e:String)
+	function onError(e:String)
 	{
 		DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
 		#if debug
@@ -306,10 +309,11 @@ class CheckContractorVTI extends TripletMultipleInput
 			isCancelation = Main.HISTORY.isClassInteractionInHistory( WhatToDo, Yes );
 			if (isCancelation)
 			{
-				 CaptureTerminationOperator;
+				CaptureTerminationOperator;
 			}
-			else{
-				 InputTermDates;
+			else
+			{
+				InputTermDates;
 			}
 		}
 		else if (status == Intro.MOVE_CAN_KEEP)
@@ -362,7 +366,8 @@ class CheckContractorVTI extends TripletMultipleInput
 		Main.customer.contract.fix =  multipleInputs.getText(VOIP_NUM);
 		//Main.customer.contract.voip = "0" + Main.customer.contract.fix.substr(2);
 		Main.customer.contract.voip = Main.customer.contract.fix.intlToLocalMSISDN();
-		Main.customer.contract.service = switch (domainInteraction){
+		Main.customer.contract.service = switch (domainInteraction)
+		{
 			case Yes : Office;
 			case No : Fiber;
 			case _ : Gigabox;
@@ -372,32 +377,38 @@ class CheckContractorVTI extends TripletMultipleInput
 
 	Main.customer.dataSet.set(Constants.CUST_DATA_PRODUCT, [Constants.CUST_DATA_PRODUCT_BOX => switch(what) {case Yes: Constants.CUST_DATA_PRODUCT_BOX_ARCADYAN; case No:Constants.CUST_DATA_PRODUCT_BOX_SAGEM; case Mid:Constants.CUST_DATA_PRODUCT_BOX_FWA; case _:Constants.CUST_DATA_PRODUCT_BOX_ARCADYAN; }]);
 		setReminder();
-        //openSubState(new PageLoader(UI.THEME.bg));
-		//MainApp.WORD_TIME.getTimeZone();
+		
+		Main.STORAGE_DISPLAY.push(Constants.SERVICE);
+		Process.STORAGE.set( Constants.SERVICE, Std.string(Main.customer.contract.service));
+		
 	}
 
 	function canITrack(go:Bool)
 	{
 		if (go)
 		{
-			
+
 			Main.trackH.setActor(new xapi.Agent( MainApp.agent.iri, MainApp.agent.sAMAccountName));
 			Main.trackH.setVerb(Verb.initialized);
-			
+
 			var extensions:Map<String,Dynamic> = [];
 			extensions.set("https://vti.salt.ch/contractor/", Main.customer.contract.contractorID);
 			extensions.set("https://vti.salt.ch/voip/", Main.customer.voIP);
 			extensions.set(Browser.location.origin +"/troubleshooting/script_version/", Main.VERSION);
-			
-			if (isModification){
-				if (isCancelation){
+
+			if (isModification)
+			{
+				if (isCancelation)
+				{
 					Main.trackH.setActivityObject("cancel_termination",null,null,"http://activitystrea.ms/schema/1.0/process",extensions);
 				}
-				else{
+				else
+				{
 					Main.trackH.setActivityObject("modify_termination",null,null,"http://activitystrea.ms/schema/1.0/process",extensions);
 				}
-			}else Main.trackH.setActivityObject(status.removeWhite(),null,null,"http://activitystrea.ms/schema/1.0/process",extensions);
-			
+			}
+			else Main.trackH.setActivityObject(status.removeWhite(),null,null,"http://activitystrea.ms/schema/1.0/process",extensions);
+
 			Main.trackH.send();
 			Main.trackH.setVerb(Verb.resolved);
 		}

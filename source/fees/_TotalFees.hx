@@ -66,16 +66,14 @@ class _TotalFees extends Action
 	var moveToaHomeContractedHome:Bool;
 	override public function create():Void
 	{
+		
 		valuesToStore = [];
 		whyLeave = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
 		#if debug
 		trace("create::whyLeave", whyLeave );
 		#end
 		hasMobileDiscount = Main.HISTORY.isClassInteractionInHistory(HasMobileDiscount, Yes);
-		//elligibleAtAdress = Main.HISTORY.isClassInteractionInHistory(IsAdressElligible, Yes);
 
-		//notElligibleAtAdress = ((whyLeave == Intro.NOT_ELLIGIBLE && Main.HISTORY.isClassInteractionInHistory(CheckFWAElligibility, Mid))|| Main.HISTORY.isClassInteractionInHistory(IsAdressElligible, No));
-		//notElligibleAtAdress = (whyLeave == Intro.FWA_ELLIGIBLE || Main.HISTORY.isClassInteractionInHistory(IsAdressElligible, No));
 		notElligibleAtAdress = Main.HISTORY.isClassInteractionInHistory(IsAdressElligible, No);
 		#if debug
 		trace("create::notElligibleAtAdress", notElligibleAtAdress );
@@ -332,7 +330,10 @@ class _TotalFees extends Action
 	}
 	function computeFees()
 	{
-		//parseDates();
+		// check if B2B
+		var domainInteraction: Interactions = if (Main.HISTORY.isClassInHistory(CaptureDomain))
+			Main.HISTORY.findFirstStepsClassInHistory(CaptureDomain).interaction;
+		else Exit; 
 
 		//moveAdminFees = (whyLeave == Intro.MOVE_CAN_KEEP && !notElligibleAtAdress) ? 49.95 : 0;
 		moveAdminFees = (whyLeave == Intro.MOVE_CAN_KEEP && isTerminationStandard) ? 49.95 : 0;
@@ -351,35 +352,15 @@ class _TotalFees extends Action
 		}
         reducedETF = fullETF != finalETF;
 		if (moveToaHomeContractedHome) noticePeriodFees = 0;
-		else noticePeriodFees = (noticePeriodRespected )? 0 : (isTerminationStandard ? 2: 1) * (hasMobileDiscount? 39.95:49.95);
+		else noticePeriodFees = (noticePeriodRespected )? 0 : (isTerminationStandard ? 2: 1) * (hasMobileDiscount? HasMobileDiscount.MOBILE_DISCOUNT: domainInteraction == Yes ? 59.95: 49.95);
 		cancelationFees = isBoxNOTSent ? 199.95 : 0;
 		totalFees = moveAdminFees > 0 ? moveAdminFees: finalETF + noticePeriodFees + (MainApp.agent.isMember(SaltAgent.WINBACK_GROUP_NAME)?cancelationFees:0);
 		//totalFees = moveAdminFees > 0 ? moveAdminFees: finalETF + noticePeriodFees; //removed cancelation fees
 		totalFees = Math.fround(totalFees * 100) / 100;
-			//#if debug
-			//trace("computeFees::fullETF", fullETF );
-			//trace("computeFees::finalETF", finalETF );
-			//trace("computeFees::moveAdminFees", moveAdminFees );
-			//trace("computeFees::noticePeriodFees", noticePeriodFees );
-			//trace("computeFees::cancelationFees", cancelationFees );
-			//trace("computeFees::totalFees", totalFees );
-			//#end
 	}
 
 	override public function pushToHistory(buttonTxt:String, interactionType:Interactions,?values:Map<String,Dynamic>=null):Void
 	{
-
-		//super.pushToHistory(buttonTxt, interactionType, [
-		//"refundActivationFees" => refundActivationFees,
-		//"isTerminationStandard" => isTerminationStandard,
-		//"cancelationFees" => cancelationFees,
-		//"noticePeriodInDays" => noticePeriodInDays,
-		//"noticePeriodFees" => noticePeriodFees,
-		//"moveAdminFees" => moveAdminFees,
-		//"fullETF" => fullETF,
-		//"finalETF" => finalETF,
-		//"waiveETF" => waiveETF
-		//]);
 		super.pushToHistory(buttonTxt, interactionType, valuesToStore);
 	}
 }

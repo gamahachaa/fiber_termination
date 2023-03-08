@@ -261,7 +261,7 @@ class Intro extends TripletRadios
 	override function changeListener(radioID:String, value:String)
 	{
 		super.changeListener(radioID, value);
-		this.btnNo.visible = true;
+		this.btnNo.visible = domainInteraction != Yes;
 		this.btnYes.visible = true;
 		this.btnMid.visible = true;
 		switch (value)
@@ -354,9 +354,8 @@ class Intro extends TripletRadios
 	override public function create():Void
 	{
 		super.create();
-
+        if (domainInteraction == Yes) this.btnNo.visible = false;
 		Main.STORAGE_DISPLAY.push(AGENT);
-
 		MainApp.agent.removeAllTSToolGroups();
 	}
 	override public function validate():Bool
