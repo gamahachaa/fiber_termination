@@ -13,7 +13,7 @@ import tstool.MainApp;
 import tstool.layout.History.Interactions;
 import tstool.process.Action;
 import tstool.process.Process;
-import tstool.salt.Agent as SaltAgent;
+import tstool.salt.SaltAgent;
 import tstool.utils.Constants;
 //import winback.OkForForFWA;
 

@@ -10,7 +10,7 @@ import flow.End;
 import Intro;
 import front.capture._TransferToWB;
 import front.move._AskForOTO;
-//import front.move._InputNewHomeContractDetails;
+
 import haxe.Json;
 import haxe.PosInfos;
 import tstool.utils.Constants;
@@ -19,11 +19,11 @@ import date.DateToolsBB.Opennings;
 import xapi.Agent;
 import xapi.Verb;
 import xapi.types.StatementRef;
-//import layout.LoginCan;
+
 import tstool.layout.Login;
 import tstool.layout.UI;
 import tstool.process.Process;
-//import flixel.system.FlxAssets;
+
 import flixel.text.FlxText.FlxTextFormat;
 import flixel.text.FlxText.FlxTextFormatMarkerPair;
 import flixel.util.FlxColor;
@@ -33,11 +33,8 @@ import tstool.MainApp;
 import js.Browser;
 import js.html.Location;
 import lime.utils.Assets;
-//import openfl.display.Sprite;
+
 import tstool.layout.History;
-//import tstool.layout.Login;
-//import tstool.layout.SaltColor;
-//import tstool.salt.Agent;
 import tstool.salt.Customer;
 import tstool.utils.Csv;
 import tstool.utils.Translator;
@@ -52,12 +49,8 @@ import tstool.utils.XapiTracker;
 
 class Main extends MainApp
 {
-	//var xapiHelper:XapiHelper;
-	
-	//public static var LIB_FOLDER:String;
-	public static inline var LIB_FOLDER_LOGIN:String = "/commonlibs/";
+
 	public static inline var TMP_FILTER_ASSET_PATH:String = "assets/data/tmp/";
-	//public static var MAIL_WRAPPER_URL:String = LIB_FOLDER + "php/mail/index.php";
 	
 	public static var HISTORY:History;
 	public static var adminFile:tstool.utils.Csv;
@@ -74,14 +67,14 @@ class Main extends MainApp
 	public static var VERSION_TRACKER:VersionTracker;
 	public static var LOCATION:Location;
 	public static var DEBUG:Bool;
-	public static var _mainDebug:Bool;
+	//public static var _mainDebug:Bool;
 	public static var FIBER_WINBACK_UTC_RANGES:Array<Opennings>;
 	public static var GREENWICH:Int;
 	public static inline var DEBUG_LEVEL:Int = 0;
-	public static var LANGS:Array<String> = ["fr-FR","de-DE","en-GB","it-IT"];
+	//public static var LANGS:Array<String> = ["fr-FR","de-DE","en-GB","it-IT"];
 	public static inline var LAST_STEP:Class<FlxState> = End;
 	public static inline var START_STEP:Class<Process> = MainIntro;
-	public static inline var INTRO_PIC:String = "intro/favicon.png";
+	
 	static public var FIBER_WINBACK_BANK_HOLIDAYS:Array<String>;
 	static public inline var FIBER_WINBACK_DAYS_OPENED_RANGE:String = "1,2,3,4,5";
 	
@@ -91,26 +84,13 @@ class Main extends MainApp
 	
 	public function new() 
 	{
-		super({
-				cookie:"fibercmt_20210902.user",
-				scriptName:"fiber_cmt",
-				libFolder: LIB_FOLDER_LOGIN
-				
-		});
-		//var opennings = Json.parse(Assets.getText("assets/data/opennings.json"));
-		//GREENWICH = DateToolsBB.isSummerTime(Date.now()) ?2:1;
-		//FIBER_WINBACK_BANK_HOLIDAYS = opennings.wbBankHolidays;
-		//#if debug
-		//FIBER_WINBACK_UTC_RANGES = opennings.test;
-		//#else
-		//FIBER_WINBACK_UTC_RANGES = opennings.prod;
-		//#end
+		super();
 
 		HISTORY = MainApp.stack;
 		trackH =  MainApp.xapiHelper;
 
 		DEBUG = MainApp.debug;
-		_mainDebug = MainApp.debug;
+		//_mainDebug = MainApp.debug;
 		VERSION_TRACKER = MainApp.versionTracker;
 		customer = MainApp.cust;
 

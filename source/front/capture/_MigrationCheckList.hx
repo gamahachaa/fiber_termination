@@ -20,6 +20,7 @@ class _MigrationCheckList extends ActionCheck
 	static public inline var INFO_NO_MORE_TV_SERVICE:String = "infoNoMoreTvService";
 	static public inline var WANTS_TO_KEEP_A_VOIPNUM:String = "wantsToKeepAVoipnum";
 	static public inline var WANTS_TO_KEEP_HIS_VOIPNUM:String = "wantsToKeepHisVoipnum";
+	static public inline var INFO_FEES:String = "infoFeesChanges";
 	var statusIntro:String;
 	var domainInteraction:Interactions;
 
@@ -59,6 +60,7 @@ class _MigrationCheckList extends ActionCheck
 				[
 					WISH_DATE_INFO,
 					UNIQUE_FEES_INFO,
+					INFO_FEES,
 					INVOICE_CLEARED_INFO,
 					INFO_VOICEMAIL_OUT,
 					INFO_FNP,
@@ -97,6 +99,7 @@ class _MigrationCheckList extends ActionCheck
 				[
 					WISH_DATE_INFO,
 					UNIQUE_FEES_INFO,
+					INFO_FEES,
 					INVOICE_CLEARED_INFO,
 					INFO_VOICEMAIL_OUT,
 					INFO_FNP,
@@ -129,7 +132,8 @@ class _MigrationCheckList extends ActionCheck
 				[ {step: InputWantedVoip}];
 			else {
 				if(domainInteraction == Mid)[ {step: MakeAProOfficeContract}];
-				else [ {step: _MigrationTicket}];
+				else [ {step: _InputNewContractor}];
+				//else [ {step: _MigrationTicket}];
 			}
 			super.onClick();
 		}

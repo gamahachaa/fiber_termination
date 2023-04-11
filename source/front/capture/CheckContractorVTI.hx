@@ -38,7 +38,7 @@ import tstool.utils.VTIdataParser;
 import winback.OkForForFWA;
 import winback.RetainWithSalesSpeech;
 import xapi.Verb;
-import tstool.salt.Agent as SaltAgent;
+import tstool.salt.SaltAgent;
 
 /**
  * ...
@@ -150,7 +150,10 @@ class CheckContractorVTI extends TripletMultipleInput
 		#end
 		if (!profile.exists("meta") || !profile.exists("plan"))
 		{
-			trace('missing META ${!profile.exists("meta")} or plan ${!profile.exists("plan")}"');
+			if(!profile.exists("meta"))
+				trace('missing META');
+			if(!profile.exists("plan"))
+				trace('missing plan');
 			return;
 		}
 		else{

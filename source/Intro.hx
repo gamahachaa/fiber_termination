@@ -17,7 +17,7 @@ import tstool.process.CheckUpdateSub;
 //import haxe.ds.StringMap;
 //import tstool.layout.UI;
 import tstool.process.TripletRadios;
-import tstool.salt.Agent as SaltAgent;
+import tstool.salt.SaltAgent;
 import tstool.utils.Constants;
 import date.DateToolsBB;
 //import lime.system.Clipboard;
@@ -60,6 +60,7 @@ class Intro extends TripletRadios
 	static public inline var NOT_ELLIGIBLE = "leaving_location_not_eligible"; // NOTELLIGIBLEATNEWADRESS | leaving_location_not_eligible ; Move: not eligible
 	static public inline var MOVE_LEAVE_CH = "BYE BYE SWITZERLAND";
 	static public inline var PROMO = "PROMO";
+	static public inline var GIBABOX_TEST = "GIBABOX_TEST";
 	static public inline var DOUBLE_ORDER = "DOUBLE_ORDER";
 	static public inline var GIGA_BOX_DEFEKT = "GIGA_BOX_DEFEKT";
 	static public inline var MIGRATE_TO_HOME = "MIGRATE_TO_HOME";
@@ -97,6 +98,7 @@ class Intro extends TripletRadios
 				OTHER,
 				PLUG_IN_USE,
 				CANCEL_TO_REACTIVATE,
+				GIBABOX_TEST,
 				PROMO
 			];
 	public function new()
@@ -207,7 +209,7 @@ class Intro extends TripletRadios
 					MOVE_CAN_KEEP,
 					/*NOT_ELLIGIBLE,*/
 					CANCEL_TO_REACTIVATE,
-					PROMO,
+					GIBABOX_TEST,
 					DOUBLE_ORDER,
 					GIGA_BOX_DEFEKT,
 					MIGRATE_TO_PROOFFICE
@@ -226,7 +228,7 @@ class Intro extends TripletRadios
 					MainApp.translator.translate("",this._name, MOVE_CAN_KEEP, "headers"),
 					/*MainApp.translator.translate("",this._name, NOT_ELLIGIBLE, "headers"),       */
 					MainApp.translator.translate("",this._name, CANCEL_TO_REACTIVATE, "headers"),
-					MainApp.translator.translate("",this._name, PROMO, "headers"),
+					MainApp.translator.translate("",this._name, GIBABOX_TEST, "headers"),
 					MainApp.translator.translate("",this._name, DOUBLE_ORDER, "headers"),
 					MainApp.translator.translate("", this._name, GIGA_BOX_DEFEKT,"headers"),
 					MainApp.translator.translate("",this._name, MIGRATE_TO_PROOFFICE, "headers")

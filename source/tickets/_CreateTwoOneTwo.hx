@@ -3,7 +3,7 @@ package tickets;
 import flow._AddMemoVti;
 import tstool.MainApp;
 import tstool.process.ActionTicket;
-import tstool.salt.Agent;
+import tstool.salt.SaltAgent;
 import tstool.salt.SOTickets;
 
 /**
@@ -20,7 +20,7 @@ class _CreateTwoOneTwo extends ActionTicket
 		{
 			t.queue = SOTickets.FIBER_SOHO_TERMINATION_SO;
 		}
-		else if (MainApp.agent.isMember(Agent.WINBACK_GROUP_NAME) && Intro.WINBACKS.indexOf(Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value) >-1)
+		else if (MainApp.agent.isMember(SaltAgent.WINBACK_GROUP_NAME) && Intro.WINBACKS.indexOf(Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value) >-1)
 		{
 			t.queue = SOTickets.FIBER_WINBACK_SO;
 		}

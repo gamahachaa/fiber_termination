@@ -33,7 +33,8 @@ class InputWantedVoip extends ActionMultipleInput
 	{
 		if (validate())
 		{
-			this._nexts = [{step: _MigrationTicket}] ;
+			this._nexts = [{step: _InputNewContractor}] ;
+			//this._nexts = [{step: _MigrationTicket}] ;
 			super.onClick();
 		}
 	}

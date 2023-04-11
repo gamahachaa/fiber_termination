@@ -10,7 +10,7 @@ import tstool.layout.PageLoader;
 import tstool.layout.UI;
 import tstool.process.Descision;
 import tstool.process.Process;
-import tstool.salt.Agent;
+import tstool.salt.SaltAgent;
 import tstool.utils.Constants;
 import date.DateToolsBB;
 
@@ -38,19 +38,13 @@ class WhyWantToKeepProvider extends Descision
 		if ( Main.customer.contract.service == Office )
 		{
 			this._nexts = [{step: _InputDates}];
-		}else this._nexts = [{step: Process.STORAGE.get(Intro.AGENT) == Agent.WINBACK_GROUP_NAME || canTranfer? _TransferToWB : _WinbackIsClosed, params: []}];
+		}else this._nexts = [{step: Process.STORAGE.get(Intro.AGENT) == SaltAgent.WINBACK_GROUP_NAME || canTranfer? _TransferToWB : _WinbackIsClosed, params: []}];
 		super.onNoClick();
 	}
 	override public function create():Void
 	{
 		super.create();
 		DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
-		//openSubState(new PageLoader(UI.THEME.bg));
-		
-		//MainApp.WORD_TIME.onTimeZone = init;
-		//MainApp.WORD_TIME.onError = this.onError;
-		//MainApp.WORD_TIME.getTimeZone();
-		//
 	}
 
 	function init(data:String)

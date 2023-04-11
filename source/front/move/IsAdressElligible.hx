@@ -14,7 +14,7 @@ import tstool.layout.UI;
 import tstool.process.Process;
 //import tstool.process.Triplet;
 import tstool.process.TripletMultipleInput;
-import tstool.salt.Agent as SaltAgent;
+import tstool.salt.SaltAgent;
 import tstool.utils.Constants;
 import date.DateToolsBB;
 import regex.ExpReg;
