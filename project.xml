@@ -17,6 +17,7 @@
 	<!--These window settings apply to all targets-->
 	<!--<window width="0" height="0" fps="60" background="#FF4C4D4D" hardware="true" vsync="true" />-->
 	<window width="1400" height="880" fps="60" background="#FF4C4D4D" hardware="true" vsync="true" />
+	<window if="debug" background="#FFD95350"/>
 	
 	<!--HTML5-specific-->
 	<window if="html5" resizable="true" />
@@ -120,6 +121,6 @@
 	<!-- _________________________________ Custom _______________________________ -->
 	
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
-	
+	<icon path="assets/images/favicon.png" />
 	<haxeflag name = "--macro" value="tstool.macros.TranslationVerificator.test(['Main'])"/>
 </project>

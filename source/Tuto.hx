@@ -20,7 +20,7 @@ class Tuto extends Action
 	}
 	override public function onClick():Void
 	{
-		this._nexts = [{step: Intro, params: []}];
+		this._nexts = [{step: Main.START_STEP, params: []}];
 		super.onClick();
 	}
 	

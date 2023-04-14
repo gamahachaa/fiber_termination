@@ -8,11 +8,9 @@ import front.move.vti.InputMoveDateandOTOinVTI;
 //import tickets._CreateTwoOneThree;
 import tstool.MainApp;
 import tstool.process.TripletMultipleInput;
-import tstool.salt.Agent as SaltAgent;
+import tstool.salt.SaltAgent;
 import tstool.utils.Constants;
-//import tstool.process.ActionMultipleInput;
-//import tstool.process.Descision;
-//import tstool.process.DescisionMultipleInput;
+
 import tstool.process.Process;
 import regex.ExpReg;
 
