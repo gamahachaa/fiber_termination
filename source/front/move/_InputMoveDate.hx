@@ -1,5 +1,6 @@
 package front.move;
 
+import fees._InputDates;
 import fees._TotalFees;
 import front.capture._TransferToWB;
 import tstool.layout.History.Interactions;
@@ -43,10 +44,13 @@ class _InputMoveDate extends DescisionMultipleInput
 	{
 		if (validateNo())
 		{
-		this._nexts = [ {step: _TransferToWB, params: []}];
-		super.onNoClick();
+			if ( Main.customer.contract.service == Office )
+			{
+				this._nexts = [{step: _InputDates}];
+			} else this._nexts = [ {step: _TransferToWB, params: []}];
+			super.onNoClick();
 		}
-		
+
 	}
 	inline function getNext():Class<Process>
 	{

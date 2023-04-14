@@ -27,7 +27,7 @@ class _TransferToWB extends ActionTicket
 						){
 			SOTickets.FIX_641_TECH;
 		}
-		else if (issue == Intro.PROMO)
+		else if (issue == Intro.PROMO || issue == Intro.GIBABOX_TEST)
 		{
 			SOTickets.FIX_641_NONTECH_PROMO;
 		}

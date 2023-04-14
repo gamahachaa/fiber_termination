@@ -4,6 +4,9 @@ using string.StringUtils;
 
 import Intro;
 import Main;
+import canceled.CaptureTerminationOperator;
+import canceled.InputTermDates;
+import canceled.WhatToDo;
 import date.WorldTimeAPI.TimeZone;
 import fees._InputDates;
 import front.capture._DeathWording;
@@ -35,7 +38,7 @@ import tstool.utils.VTIdataParser;
 import winback.OkForForFWA;
 import winback.RetainWithSalesSpeech;
 import xapi.Verb;
-import tstool.salt.Agent as SaltAgent;
+import tstool.salt.SaltAgent;
 
 /**
  * ...
@@ -52,12 +55,19 @@ class CheckContractorVTI extends TripletMultipleInput
 	var is_sagem:Bool;
 	var isForWinBack:Bool;
 	var what:Interactions;
+	var isModification:Bool;
+	var isCancelation:Bool;
+	//var isProOffice:Bool;
+	var domainInteraction:Interactions;
 
 	public function new()
 	{
 		status = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
 		isForWinBack = Intro.WINBACKS.indexOf(status) >-1;
-
+		if (Main.HISTORY.isClassInHistory(CaptureDomain))
+			domainInteraction = Main.HISTORY.findFirstStepsClassInHistory(CaptureDomain).interaction;
+		else domainInteraction = Exit;
+		//isProOffice = Main.HISTORY.isClassInteractionInHistory(CaptureDomain, Yes);
 		var fileds:Array<ValidatedInputs> = [
 		{
 			ereg:new EReg(ExpReg.CONTRACTOR_EREG,"i"),
@@ -138,8 +148,12 @@ class CheckContractorVTI extends TripletMultipleInput
 		trace("onVtiAccountParsed");
 		trace(profile);
 		#end
-		if (!profile.exists("meta") || !profile.exists("plan")) {
-			trace('missing META ${!profile.exists("meta")} or plan ${!profile.exists("plan")}"');
+		if (!profile.exists("meta") || !profile.exists("plan"))
+		{
+			if(!profile.exists("meta"))
+				trace('missing META');
+			if(!profile.exists("plan"))
+				trace('missing plan');
 			return;
 		}
 		else{
@@ -156,7 +170,7 @@ class CheckContractorVTI extends TripletMultipleInput
 				new Role(user, profile.get("plan").get("vtiUser"), profile.get("plan").get("vtiUserEmail")),
 				profile.exists("owner")? StringTools.trim(profile.get("owner").get("vtiOwnerEmailValidated").toLowerCase()) == "ok":false,
 				profile.exists("balance")?new Balance( profile.get("balance").get("vtiBalance"), profile.get("balance").get("vtiOverdue"), profile.get("balance").get("vtiOverdueDate")):null,
-				(profile.get("plan").exists("plan") ? (profile.get("plan").get("plan").indexOf("Giga")>-1?Gigabox:Fiber):Fiber)
+				domainInteraction == Yes ? Office : (profile.get("plan").exists("plan") && profile.get("plan").get("plan").indexOf("Giga") >-1)? Gigabox : Fiber
 			);
 		}
 
@@ -187,13 +201,35 @@ class CheckContractorVTI extends TripletMultipleInput
 		parser = new VTIdataParser(account);
 		parser.signal.add( onVtiAccountParsed );
 		DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
-		//MainApp.WORD_TIME.onTimeZone = onTimeChecked;
-		//MainApp.WORD_TIME.onError = this.onError;
-		//timeApi.onStatus = this.onStatus;
-		
+		if (domainInteraction == Mid)
+		{
+			this.btnMid.visible = true;
+			this.btnNo.visible = false;
+			this.btnYes.visible = false;
+
+		}
+		else if (domainInteraction == Yes)
+		{
+			// Pro Office
+			this.btnMid.visible = false;
+			this.btnNo.visible = true;
+			this.btnYes.visible = false;
+		}
+		else if (domainInteraction == No)
+		{
+			// Pro Office
+			this.btnMid.visible = false;
+			this.btnNo.visible = true;
+			this.btnYes.visible = true;
+		}
+		else{
+			this.btnMid.visible = true;
+			this.btnNo.visible = true;
+			this.btnYes.visible = true;
+		}
 	}
-	
-	function onTimeChecked(data:String)
+
+	/*function onTimeChecked(data:String)
 	{
 		var z:TimeZone = Json.parse(data);
 		//trace(z);
@@ -204,12 +240,12 @@ class CheckContractorVTI extends TripletMultipleInput
 			trace(e);
 			onError(e.message);
 		}
-        //DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( 0, DateTimeUtc.fromString(z.datetime) );
+	    //DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( 0, DateTimeUtc.fromString(z.datetime) );
 		closeSubState();
 		moveOn();
-		
+
 	}
-    function onError(e:String)
+	function onError(e:String)
 	{
 		DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
 		#if debug
@@ -218,7 +254,7 @@ class CheckContractorVTI extends TripletMultipleInput
 
 		closeSubState();
 		moveOn();
-	}
+	}*/
 	function moveOn()
 	{
 		this._nexts = [ {step: getNext()}];
@@ -268,13 +304,22 @@ class CheckContractorVTI extends TripletMultipleInput
 	}
 	inline function getNext():Class<Process>
 	{
-		var now = DateToolsBB.SWISS_TIME;
-		var canTranfer = !DateToolsBB.isBankHolidayString(Constants.FIBER_WINBACK_BANK_HOLIDAYS)
-		&& DateToolsBB.isWithinDaysString(Constants.FIBER_WINBACK_DAYS_OPENED_RANGE, now)
-		&& DateToolsBB.isWithinHours(Constants.FIBER_WINBACK_OPEN_UTC, Constants.FIBER_WINBACK_CLOSE_UTC, now);
+		isModification = Main.HISTORY.isClassInHistory(WhatToDo);
 
 		return
-		if (status == Intro.MOVE_CAN_KEEP)
+		if (isModification)
+		{
+			isCancelation = Main.HISTORY.isClassInteractionInHistory( WhatToDo, Yes );
+			if (isCancelation)
+			{
+				CaptureTerminationOperator;
+			}
+			else
+			{
+				InputTermDates;
+			}
+		}
+		else if (status == Intro.MOVE_CAN_KEEP)
 		{
 			if ( Main.HISTORY.isClassInteractionInHistory(MoveHow, Yes) ) // abroad
 				_InputDates;
@@ -282,7 +327,7 @@ class CheckContractorVTI extends TripletMultipleInput
 				_InputNewHomeContractDetails;
 			else IsAdressElligible;
 		}
-		else if (status == Intro.DOUBLE_ORDER)
+		else if (status == Intro.DOUBLE_ORDER || status == Intro.GIGA_BOX_DEFEKT)
 		{
 			_CreateTwoOneTwo;
 		}
@@ -297,6 +342,14 @@ class CheckContractorVTI extends TripletMultipleInput
 		else if (status == Intro.DEATH)
 		{
 			_DeathWording;
+		}
+		else if (status == Intro.MIGRATE_TO_HOME || status == Intro.MIGRATE_TO_PROOFFICE)
+		{
+			_MigrationCheckList;
+		}
+		else if (domainInteraction == Yes)
+		{
+			_InputDates;
 		}
 		else if (isForWinBack)
 		{
@@ -316,41 +369,51 @@ class CheckContractorVTI extends TripletMultipleInput
 		Main.customer.contract.fix =  multipleInputs.getText(VOIP_NUM);
 		//Main.customer.contract.voip = "0" + Main.customer.contract.fix.substr(2);
 		Main.customer.contract.voip = Main.customer.contract.fix.intlToLocalMSISDN();
+		Main.customer.contract.service = switch (domainInteraction)
+		{
+			case Yes : Office;
+			case No : Fiber;
+			case _ : Gigabox;
+		}
 		Main.customer.iri = (what == No || what == Mid) ? Main.customer.contract.contractorID : Main.customer.contract.voip;
 		if (!isForWinBack) Main.customer.contract.mobile = multipleInputs.getText(CONTACT_NUM);
 
 	Main.customer.dataSet.set(Constants.CUST_DATA_PRODUCT, [Constants.CUST_DATA_PRODUCT_BOX => switch(what) {case Yes: Constants.CUST_DATA_PRODUCT_BOX_ARCADYAN; case No:Constants.CUST_DATA_PRODUCT_BOX_SAGEM; case Mid:Constants.CUST_DATA_PRODUCT_BOX_FWA; case _:Constants.CUST_DATA_PRODUCT_BOX_ARCADYAN; }]);
 		setReminder();
-        //openSubState(new PageLoader(UI.THEME.bg));
-		//MainApp.WORD_TIME.getTimeZone();
+		
+		Main.STORAGE_DISPLAY.push(Constants.SERVICE);
+		Process.STORAGE.set( Constants.SERVICE, Std.string(Main.customer.contract.service));
+		
 	}
 
 	function canITrack(go:Bool)
 	{
-
-		//#end
 		if (go)
 		{
-			//#if debug
-
-			//#else
-			//Main.trackH.reset(true);
 
 			Main.trackH.setActor(new xapi.Agent( MainApp.agent.iri, MainApp.agent.sAMAccountName));
 			Main.trackH.setVerb(Verb.initialized);
-			//Main.trackH.setActivity(status.removeWhite());
-			//Main.track.setStatementRef(null);
+
 			var extensions:Map<String,Dynamic> = [];
 			extensions.set("https://vti.salt.ch/contractor/", Main.customer.contract.contractorID);
 			extensions.set("https://vti.salt.ch/voip/", Main.customer.voIP);
 			extensions.set(Browser.location.origin +"/troubleshooting/script_version/", Main.VERSION);
-			Main.trackH.setActivityObject(status.removeWhite(),null,null,"http://activitystrea.ms/schema/1.0/process",extensions);
-			//Main.trackH.setCustomer();
+
+			if (isModification)
+			{
+				if (isCancelation)
+				{
+					Main.trackH.setActivityObject("cancel_termination",null,null,"http://activitystrea.ms/schema/1.0/process",extensions);
+				}
+				else
+				{
+					Main.trackH.setActivityObject("modify_termination",null,null,"http://activitystrea.ms/schema/1.0/process",extensions);
+				}
+			}
+			else Main.trackH.setActivityObject(status.removeWhite(),null,null,"http://activitystrea.ms/schema/1.0/process",extensions);
+
 			Main.trackH.send();
 			Main.trackH.setVerb(Verb.resolved);
-			//Main.track.send();
-			//Main.track.setVerb("resolved");// will be overridden by ticket creation
-			//#end
 		}
 
 	}

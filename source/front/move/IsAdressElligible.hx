@@ -2,6 +2,7 @@ package front.move;
 
 import date.WorldTimeAPI;
 import fees._InputDates;
+import firetongue.Replace;
 import front.capture.CheckContractorVTI;
 import front.capture._TransferToWB;
 import front.capture._WinbackIsClosed;
@@ -13,7 +14,7 @@ import tstool.layout.UI;
 import tstool.process.Process;
 //import tstool.process.Triplet;
 import tstool.process.TripletMultipleInput;
-import tstool.salt.Agent as SaltAgent;
+import tstool.salt.SaltAgent;
 import tstool.utils.Constants;
 import date.DateToolsBB;
 import regex.ExpReg;
@@ -81,7 +82,7 @@ class IsAdressElligible extends TripletMultipleInput
 			}
 		}
 			]
-		);
+		); 
 	}
 	override public function onYesClick():Void
 	{
@@ -105,11 +106,12 @@ class IsAdressElligible extends TripletMultipleInput
 		var isWB = MainApp.agent.isMember(SaltAgent.WINBACK_GROUP_NAME);
 		//var now = Date.now();
 		var canTranfer = DateToolsBB.isServiceOpened(
-			Constants.FIBER_WINBACK_BANK_HOLIDAYS,
-			Constants.FIBER_WINBACK_DAYS_OPENED_RANGE,
+			Main.FIBER_WINBACK_BANK_HOLIDAYS,
+			Main.FIBER_WINBACK_DAYS_OPENED_RANGE,
 			Main.FIBER_WINBACK_UTC_RANGES,
 			DateToolsBB.SWISS_TIME
 		);
+		//canTranfer = true;
 		return if (isGigabox)
 		{
 			//trace("giga");
@@ -131,12 +133,16 @@ class IsAdressElligible extends TripletMultipleInput
 	override public function create():Void
 	{
 		DateToolsBB.SWISS_TIME = DateToolsBB.CLONE_DateTimeUtc( Main.GREENWICH );
+		this._titleTxt = Replace.flags(this._titleTxt, ["<PRODUCT>"], [Main.customer.contract.service == Office ? "ProOffice": "Home/Gigabox"]);
 		super.create();
-		//openSubState(new PageLoader(UI.THEME.bg));
-		
-		//MainApp.WORD_TIME.onTimeZone = init;
-        //MainApp.WORD_TIME.onError = this.onError;
-		//MainApp.WORD_TIME.getTimeZone();
+		#if debug
+		trace("front.move.IsAdressElligible::create::Main.customer.contract.service", Main.customer.contract.service );
+		#end
+		if (Main.customer.contract.service == Office)
+		{
+			this.btnMid.visible = false;
+		}
+
 
 	}
 
