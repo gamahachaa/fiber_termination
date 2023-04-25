@@ -5,7 +5,7 @@ set BINDIR=%2\export\html5\bin
 
 echo %BINDIR%
 
-powershell -Command "git --git-dir=%BINDIR%\.git --work-tree=%BINDIR% add *"
+powershell -Command "git --git-dir=%BINDIR%\.git --work-tree=%BINDIR% add ."
 
 if %1%==debug (
     goto :dev

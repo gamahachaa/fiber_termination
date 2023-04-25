@@ -13,7 +13,8 @@ class _MigrationTicket extends ActionTicket
 
 	public function new() 
 	{
-		var ticket = SOTickets.FIX_2110;
+		var statusIntro = Main.HISTORY.findValueOfFirstClassInHistory(Intro, Intro.WHY_LEAVE).value;
+		var ticket = statusIntro == Intro.MIGRATE_TO_HOME ? SOTickets.FIX_2110_TO_HOME: SOTickets.FIX_2110_TOPROOFFICE;
 		super(ticket);
 	}
 	override public function onClick():Void

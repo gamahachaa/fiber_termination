@@ -1,7 +1,7 @@
 package front.capture;
 
 import haxe.Json;
-import tickets._MigrationTicket;
+//import tickets._MigrationTicket;
 import tstool.layout.History.Interactions;
 import tstool.process.ActionCheck;
 

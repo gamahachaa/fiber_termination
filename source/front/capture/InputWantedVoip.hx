@@ -1,7 +1,7 @@
 package front.capture;
 
 import regex.ExpReg;
-import tickets._MigrationTicket;
+//import tickets._MigrationTicket;
 import tstool.process.ActionMultipleInput;
 import tstool.utils.Constants;
 

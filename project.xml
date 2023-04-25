@@ -60,7 +60,7 @@
 	
 
 	
-	<haxelib name="uglifyjs" unless="debug" />
+	<haxelib name="uglifyjs"/>
 	<!-- SHARED LIB -->
 	
 	<!--<include path="./howl.js" />-->
