@@ -101,12 +101,23 @@ powershell -Command "git --git-dir=%BINDIR%\.git --work-tree=%BINDIR% add ."
 powershell -Command "git --git-dir=%BINDIR%\.git --work-tree=%BINDIR% commit -am pushing_to_test"
 powershell -Command "git --git-dir=%BINDIR%\.git --work-tree=%BINDIR% push origin dev"
 
+powershell -Command "git checkout dev"
+powershell -Command "git add ."
+powershell -Command "git commit -am auto_commit_to_dev"
+powershell -Command "git push origin dev"
+
 goto :completed
 
 :release
 powershell -Command "git --git-dir=%BINDIR%\.git --work-tree=%BINDIR% add ."
 powershell -Command "git --git-dir=%BINDIR%\.git --work-tree=%BINDIR% commit -am pushing_to_prod"
 powershell -Command "git --git-dir=%BINDIR%\.git --work-tree=%BINDIR% push origin master"
+
+powershell -Command "git checkout master"
+powershell -Command "git merge dev"
+powershell -Command "git commit -am auto_commit_to_master"
+powershell -Command "git push origin master"
+powershell -Command "git checkout dev"
 
 goto :completed
 
