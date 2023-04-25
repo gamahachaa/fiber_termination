@@ -1,36 +1,13 @@
 package;
 
-//import fees.TestSendTemplate;
-//import fees._InputDates;
 import flixel.FlxG;
-//import flixel.FlxGame;
 import flixel.FlxState;
-//import flixel.input.keyboard.FlxKey;
 import flow.End;
-//import Intro;
-//import front.capture._TransferToWB;
-//import front.move._AskForOTO;
-
-//import haxe.Json;
 import haxe.PosInfos;
-//import tstool.utils.Constants;
-//import date.DateToolsBB;
 import date.DateToolsBB.Opennings;
-//import xapi.Agent;
-//import xapi.Verb;
-//import xapi.types.StatementRef;
-//
-//import tstool.layout.Login;
-//import tstool.layout.UI;
 import tstool.process.Process;
-
-
 import tstool.MainApp;
-
-//import js.Browser;
 import js.html.Location;
-//import lime.utils.Assets;
-
 import tstool.layout.History;
 import tstool.salt.Customer;
 import tstool.utils.Csv;
@@ -53,11 +30,7 @@ class Main extends MainApp
 	public static var adminFile:tstool.utils.Csv;
 	public static var tongue:Translator;
 	public static var customer:Customer;
-	//#if debug
 	public static var trackH:tstool.utils.XapiTracker;
-	//#else
-	//public static var track:XapiTracker;
-	//#end
 	public static var VERSION:String;
 	public static var STORAGE_DISPLAY:Array<String> = [];
 	
