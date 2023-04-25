@@ -1,38 +1,35 @@
 package;
 
-import fees.TestSendTemplate;
-import fees._InputDates;
+//import fees.TestSendTemplate;
+//import fees._InputDates;
 import flixel.FlxG;
-import flixel.FlxGame;
+//import flixel.FlxGame;
 import flixel.FlxState;
-import flixel.input.keyboard.FlxKey;
+//import flixel.input.keyboard.FlxKey;
 import flow.End;
-import Intro;
-import front.capture._TransferToWB;
-import front.move._AskForOTO;
+//import Intro;
+//import front.capture._TransferToWB;
+//import front.move._AskForOTO;
 
-import haxe.Json;
+//import haxe.Json;
 import haxe.PosInfos;
-import tstool.utils.Constants;
-import date.DateToolsBB;
+//import tstool.utils.Constants;
+//import date.DateToolsBB;
 import date.DateToolsBB.Opennings;
-import xapi.Agent;
-import xapi.Verb;
-import xapi.types.StatementRef;
-
-import tstool.layout.Login;
-import tstool.layout.UI;
+//import xapi.Agent;
+//import xapi.Verb;
+//import xapi.types.StatementRef;
+//
+//import tstool.layout.Login;
+//import tstool.layout.UI;
 import tstool.process.Process;
 
-import flixel.text.FlxText.FlxTextFormat;
-import flixel.text.FlxText.FlxTextFormatMarkerPair;
-import flixel.util.FlxColor;
-import flixel.util.FlxSave;
+
 import tstool.MainApp;
 
-import js.Browser;
+//import js.Browser;
 import js.html.Location;
-import lime.utils.Assets;
+//import lime.utils.Assets;
 
 import tstool.layout.History;
 import tstool.salt.Customer;
